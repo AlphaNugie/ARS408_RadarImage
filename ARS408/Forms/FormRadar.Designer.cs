@@ -1,0 +1,304 @@
+﻿namespace ARS408.Forms
+{
+    partial class FormRadar
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.button_Add = new System.Windows.Forms.Button();
+            this.button_Save = new System.Windows.Forms.Button();
+            this.button_Delete = new System.Windows.Forms.Button();
+            this.dataGridView_Main = new System.Windows.Forms.DataGridView();
+            this.Column_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_IpAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_OwnerGroupId = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column_ConnectionMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column_UsingLocal = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column_IpAddressLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_PortLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_DegreeYoz = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_DegreeXoy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_DegreeXoz = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_DegreeGeneral = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_Direction = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column_DefenseMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column_Remark = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_Changed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Main)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // button_Add
+            // 
+            this.button_Add.Location = new System.Drawing.Point(12, 12);
+            this.button_Add.Name = "button_Add";
+            this.button_Add.Size = new System.Drawing.Size(74, 30);
+            this.button_Add.TabIndex = 14;
+            this.button_Add.Text = "新增";
+            this.button_Add.UseVisualStyleBackColor = true;
+            this.button_Add.Click += new System.EventHandler(this.Button_Add_Click);
+            // 
+            // button_Save
+            // 
+            this.button_Save.Location = new System.Drawing.Point(92, 12);
+            this.button_Save.Name = "button_Save";
+            this.button_Save.Size = new System.Drawing.Size(74, 30);
+            this.button_Save.TabIndex = 15;
+            this.button_Save.Text = "保存";
+            this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.Click += new System.EventHandler(this.Button_Save_Click);
+            // 
+            // button_Delete
+            // 
+            this.button_Delete.Location = new System.Drawing.Point(172, 12);
+            this.button_Delete.Name = "button_Delete";
+            this.button_Delete.Size = new System.Drawing.Size(74, 30);
+            this.button_Delete.TabIndex = 16;
+            this.button_Delete.Text = "删除";
+            this.button_Delete.UseVisualStyleBackColor = true;
+            this.button_Delete.Click += new System.EventHandler(this.Button_Delete_Click);
+            // 
+            // dataGridView_Main
+            // 
+            this.dataGridView_Main.AllowUserToAddRows = false;
+            this.dataGridView_Main.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_Main.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column_Id,
+            this.Column_Name,
+            this.Column_IpAddress,
+            this.Column_Port,
+            this.Column_OwnerGroupId,
+            this.Column_ConnectionMode,
+            this.Column_UsingLocal,
+            this.Column_IpAddressLocal,
+            this.Column_PortLocal,
+            this.Column_DegreeYoz,
+            this.Column_DegreeXoy,
+            this.Column_DegreeXoz,
+            this.Column_DegreeGeneral,
+            this.Column_Direction,
+            this.Column_DefenseMode,
+            this.Column_Remark,
+            this.Column_Changed});
+            this.dataGridView_Main.Location = new System.Drawing.Point(12, 48);
+            this.dataGridView_Main.Name = "dataGridView_Main";
+            this.dataGridView_Main.RowHeadersWidth = 51;
+            this.dataGridView_Main.RowTemplate.Height = 27;
+            this.dataGridView_Main.Size = new System.Drawing.Size(1139, 614);
+            this.dataGridView_Main.TabIndex = 17;
+            this.dataGridView_Main.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_Main_CellValueChanged);
+            // 
+            // Column_Id
+            // 
+            this.Column_Id.DataPropertyName = "RADAR_ID";
+            this.Column_Id.HeaderText = "ID";
+            this.Column_Id.MinimumWidth = 6;
+            this.Column_Id.Name = "Column_Id";
+            this.Column_Id.Visible = false;
+            this.Column_Id.Width = 125;
+            // 
+            // Column_Name
+            // 
+            this.Column_Name.DataPropertyName = "RADAR_NAME";
+            this.Column_Name.HeaderText = "雷达名称";
+            this.Column_Name.MinimumWidth = 125;
+            this.Column_Name.Name = "Column_Name";
+            this.Column_Name.Width = 125;
+            // 
+            // Column_IpAddress
+            // 
+            this.Column_IpAddress.DataPropertyName = "IP_ADDRESS";
+            this.Column_IpAddress.HeaderText = "模块IP地址";
+            this.Column_IpAddress.MinimumWidth = 125;
+            this.Column_IpAddress.Name = "Column_IpAddress";
+            this.Column_IpAddress.Width = 125;
+            // 
+            // Column_Port
+            // 
+            this.Column_Port.DataPropertyName = "PORT";
+            this.Column_Port.HeaderText = "端口号";
+            this.Column_Port.MinimumWidth = 85;
+            this.Column_Port.Name = "Column_Port";
+            this.Column_Port.Width = 85;
+            // 
+            // Column_OwnerGroupId
+            // 
+            this.Column_OwnerGroupId.DataPropertyName = "OWNER_GROUP_ID";
+            this.Column_OwnerGroupId.HeaderText = "雷达组";
+            this.Column_OwnerGroupId.MinimumWidth = 90;
+            this.Column_OwnerGroupId.Name = "Column_OwnerGroupId";
+            this.Column_OwnerGroupId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column_OwnerGroupId.Width = 90;
+            // 
+            // Column_ConnectionMode
+            // 
+            this.Column_ConnectionMode.DataPropertyName = "CONN_MODE_ID";
+            this.Column_ConnectionMode.HeaderText = "模式";
+            this.Column_ConnectionMode.MinimumWidth = 85;
+            this.Column_ConnectionMode.Name = "Column_ConnectionMode";
+            this.Column_ConnectionMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column_ConnectionMode.Width = 85;
+            // 
+            // Column_UsingLocal
+            // 
+            this.Column_UsingLocal.DataPropertyName = "USING_LOCAL";
+            this.Column_UsingLocal.FalseValue = "0";
+            this.Column_UsingLocal.HeaderText = "指定本地";
+            this.Column_UsingLocal.MinimumWidth = 100;
+            this.Column_UsingLocal.Name = "Column_UsingLocal";
+            this.Column_UsingLocal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column_UsingLocal.TrueValue = "1";
+            this.Column_UsingLocal.Width = 125;
+            // 
+            // Column_IpAddressLocal
+            // 
+            this.Column_IpAddressLocal.DataPropertyName = "IP_ADDRESS_LOCAL";
+            this.Column_IpAddressLocal.HeaderText = "本地IP";
+            this.Column_IpAddressLocal.MinimumWidth = 125;
+            this.Column_IpAddressLocal.Name = "Column_IpAddressLocal";
+            this.Column_IpAddressLocal.Visible = false;
+            this.Column_IpAddressLocal.Width = 125;
+            // 
+            // Column_PortLocal
+            // 
+            this.Column_PortLocal.DataPropertyName = "PORT_LOCAL";
+            this.Column_PortLocal.HeaderText = "本地端口";
+            this.Column_PortLocal.MinimumWidth = 100;
+            this.Column_PortLocal.Name = "Column_PortLocal";
+            this.Column_PortLocal.Width = 125;
+            // 
+            // Column_DegreeYoz
+            // 
+            this.Column_DegreeYoz.DataPropertyName = "DEGREE_YOZ";
+            this.Column_DegreeYoz.HeaderText = "YOZ";
+            this.Column_DegreeYoz.MinimumWidth = 90;
+            this.Column_DegreeYoz.Name = "Column_DegreeYoz";
+            this.Column_DegreeYoz.Width = 90;
+            // 
+            // Column_DegreeXoy
+            // 
+            this.Column_DegreeXoy.DataPropertyName = "DEGREE_XOY";
+            this.Column_DegreeXoy.HeaderText = "XOY";
+            this.Column_DegreeXoy.MinimumWidth = 90;
+            this.Column_DegreeXoy.Name = "Column_DegreeXoy";
+            this.Column_DegreeXoy.Width = 90;
+            // 
+            // Column_DegreeXoz
+            // 
+            this.Column_DegreeXoz.DataPropertyName = "DEGREE_XOZ";
+            this.Column_DegreeXoz.HeaderText = "XOZ";
+            this.Column_DegreeXoz.MinimumWidth = 90;
+            this.Column_DegreeXoz.Name = "Column_DegreeXoz";
+            this.Column_DegreeXoz.Width = 90;
+            // 
+            // Column_DegreeGeneral
+            // 
+            this.Column_DegreeGeneral.DataPropertyName = "DEGREE_GENERAL";
+            this.Column_DegreeGeneral.HeaderText = "整体偏转";
+            this.Column_DegreeGeneral.MinimumWidth = 100;
+            this.Column_DegreeGeneral.Name = "Column_DegreeGeneral";
+            this.Column_DegreeGeneral.Width = 125;
+            // 
+            // Column_Direction
+            // 
+            this.Column_Direction.DataPropertyName = "DIRECTION_ID";
+            this.Column_Direction.HeaderText = "朝向";
+            this.Column_Direction.MinimumWidth = 85;
+            this.Column_Direction.Name = "Column_Direction";
+            this.Column_Direction.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column_Direction.Width = 85;
+            // 
+            // Column_DefenseMode
+            // 
+            this.Column_DefenseMode.DataPropertyName = "DEFENSE_MODE_ID";
+            this.Column_DefenseMode.HeaderText = "防御模式";
+            this.Column_DefenseMode.MinimumWidth = 105;
+            this.Column_DefenseMode.Name = "Column_DefenseMode";
+            this.Column_DefenseMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column_DefenseMode.Width = 105;
+            // 
+            // Column_Remark
+            // 
+            this.Column_Remark.DataPropertyName = "REMARK";
+            this.Column_Remark.HeaderText = "备注";
+            this.Column_Remark.MinimumWidth = 145;
+            this.Column_Remark.Name = "Column_Remark";
+            this.Column_Remark.Width = 145;
+            // 
+            // Column_Changed
+            // 
+            this.Column_Changed.DataPropertyName = "CHANGED";
+            this.Column_Changed.HeaderText = "是否改变";
+            this.Column_Changed.MinimumWidth = 6;
+            this.Column_Changed.Name = "Column_Changed";
+            this.Column_Changed.Visible = false;
+            this.Column_Changed.Width = 125;
+            // 
+            // FormRadar
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1163, 674);
+            this.Controls.Add(this.dataGridView_Main);
+            this.Controls.Add(this.button_Add);
+            this.Controls.Add(this.button_Save);
+            this.Controls.Add(this.button_Delete);
+            this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Name = "FormRadar";
+            this.Text = "雷达字典";
+            this.Load += new System.EventHandler(this.FormRadar_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Main)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Button button_Add;
+        private System.Windows.Forms.Button button_Save;
+        private System.Windows.Forms.Button button_Delete;
+        private System.Windows.Forms.DataGridView dataGridView_Main;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_Id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_IpAddress;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_Port;
+        private System.Windows.Forms.DataGridViewComboBoxColumn Column_OwnerGroupId;
+        private System.Windows.Forms.DataGridViewComboBoxColumn Column_ConnectionMode;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column_UsingLocal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_IpAddressLocal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_PortLocal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_DegreeYoz;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_DegreeXoy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_DegreeXoz;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_DegreeGeneral;
+        private System.Windows.Forms.DataGridViewComboBoxColumn Column_Direction;
+        private System.Windows.Forms.DataGridViewComboBoxColumn Column_DefenseMode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_Remark;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_Changed;
+    }
+}
