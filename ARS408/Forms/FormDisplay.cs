@@ -382,6 +382,7 @@ namespace ARS408.Forms
             int min = this.RcsMinimum, max = this.RcsMaximum;
             this.trackBar_RcsMin.Value = min;
             this.trackBar_RcsMax.Value = max;
+            this.timer_UIUpdate.Start();
 
             this.pictureBox_Dots.MouseWheel += new MouseEventHandler(PictureBox_Dots_MouseWheel);
         }
@@ -977,8 +978,10 @@ namespace ARS408.Forms
             //TODO RCS过滤进度条值变化后改变全局变量还是单独变量
             //this.RcsMinimum = Math.Min(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
             //this.RcsMaximum = Math.Max(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
-            BaseConst.RcsMinimum = Math.Min(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
-            BaseConst.RcsMaximum = Math.Max(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
+            //BaseConst.RcsMinimum = Math.Min(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
+            //BaseConst.RcsMaximum = Math.Max(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
+            BaseConst.RcsMinimum = this.trackBar_RcsMin.Value;
+            BaseConst.RcsMaximum = this.trackBar_RcsMax.Value;
             this.label_RcsMin.Text = this.RcsMinimum.ToString();
             this.label_RcsMax.Text = this.RcsMaximum.ToString();
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ARS408.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,6 +70,11 @@ namespace ARS408.Model
         /// 所属雷达组
         /// </summary>
         public int OwnerGroupId { get; set; }
+
+        /// <summary>
+        /// 雷达组类型，1 臂架，2 溜桶，3 门腿
+        /// </summary>
+        public RadarGroupType GroupType { get; set; }
 
         /// <summary>
         /// XOY平面内旋转角度

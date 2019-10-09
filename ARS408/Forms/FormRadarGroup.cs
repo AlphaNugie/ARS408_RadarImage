@@ -1,4 +1,5 @@
 ﻿using ARS408.Core;
+using ARS408.Model;
 using CommonLib.Function;
 using CommonLib.UIControlUtil;
 using System;

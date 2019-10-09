@@ -249,13 +249,19 @@ namespace ARS408.Model
         public void DataPush<T>(T general)
         {
             dynamic g = (dynamic)general;
+            double rcs = g.RCS;
             //bool flag = general is ObjectGeneral ? g.ProbOfExistMinimum < this.ParentForm.ProbOfExistMinimum : false; //（假如是目标）判断存在概率的可能最小值是否小于允许的最低值
             //TODO 输出结果过滤条件1
             //假如列表元素饱和
             //或距边界范围超出阈值
             //或RCS值不在范围内
             //则忽略
-            if (this.ListBufferCount >= this.BufferSize || (BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres) || (this.ParentForm != null && (g.RCS < this.ParentForm.RcsMinimum || g.RCS > this.ParentForm.RcsMaximum))/* || flag*/)
+            //if (this.ListBufferCount >= this.BufferSize || (BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres) || (this.ParentForm != null && (g.RCS < this.ParentForm.RcsMinimum || g.RCS > this.ParentForm.RcsMaximum))/* || flag*/)
+            bool flag1 = this.ListBufferCount >= this.BufferSize, //缓冲区是否已满
+                 flag2 = BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres, //距边界距离是否超出阈值
+                 flag3 = this.ParentForm != null && !rcs.Between(this.ParentForm.RcsMinimum, this.ParentForm.RcsMaximum), //RCS值是否不在范围内
+                 flag4 = this.Radar != null && this.Radar.GroupType == RadarGroupType.Bucket && g.ModiCoors.Z < (0 - BaseConst.BucketHeight);
+            if (flag1 || flag2 || flag3 || flag4/* || flag*/)
                 return;
             dynamic list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object;
             list.Add(general);
@@ -293,13 +299,10 @@ namespace ARS408.Model
         /// </summary>
         public void DataPushFinalize()
         {
-            if (this.BufferSize == 0 || this.ListBufferCount == 0)
-                return;
+            //if (this.BufferSize == 0 || this.ListBufferCount == 0)
+            //    return;
 
             bool is_cluster_mode = this.CurrentSensorMode == SensorMode.Cluster;
-            //dynamic buffer = is_cluster_mode ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object;
-            //dynamic comparison = is_cluster_mode ? ClusterGeneral.Comparison : ObjectGeneral.Comparison;
-            //buffer.Sort(comparison);
             if (is_cluster_mode)
             {
                 this.ListBuffer_Cluster.Sort((a, b) => a.DistanceToBorder.CompareTo(b.DistanceToBorder)); //根据距检测区的最短距离排序
@@ -318,49 +321,23 @@ namespace ARS408.Model
                 this.ListTrigger_Object.AddRange(this.ListBuffer_Object);
                 this.ListBuffer_Object.Clear();
             }
-            //if (is_cluster_mode)
-            //{
-            //    //trigger = (dynamic)this.ListTrigger_Cluster;
-            //    //IEnumerable<ClusterGeneral> list = this.ListBuffer_Cluster.OrderBy(c => c.DistanceToBorder);
-            //    //buffer = (dynamic)list;
-            //    //this.ClustersAtThreat = this.ListBuffer_Cluster.Where(c => c.ThreatLevel > 0).ToList(); //找出威胁级数大于0的点，按距检测区的最短距离排序
-            //    //this.ClusterMostThreat = list.Count() > 0 ? list.First() : null; //找出距离最小的点
-            //}
-            //else
-            //{
-            //    //trigger = (dynamic)this.ListTrigger_Object;
-            //    //IEnumerable<ObjectGeneral> list = this.ListBuffer_Object.OrderBy(o => o.DistanceToBorder);
-            //    //buffer = (dynamic)list;
-            //    //this.ObjectsAtThreat = this.ListBuffer_Object.Where(o => o.ThreatLevel > 0).ToList();
-            //    //this.ObjectMostThreat = list.Count() > 0 ? list.First() : null;
-            //}
-            //dynamic trigger = is_cluster_mode ? (dynamic)this.ListTrigger_Cluster : (dynamic)this.ListTrigger_Object,
-            ////buffer按距检测区的最短距离排序
-            //buffer = is_cluster_mode ? (dynamic)this.ListBuffer_Cluster.OrderBy(c => c.DistanceToBorder) : (dynamic)this.ListBuffer_Object.OrderBy(o => o.DistanceToBorder);
-            //trigger.Clear();
-            //trigger.AddRange(buffer);
-            //if (is_cluster_mode)
-            //    this.ListBuffer_Cluster.Clear();
-            //else
-            //    this.ListBuffer_Object.Clear();
-            //buffer.Clear();
             this.BufferSize = 0;
         }
     }
 
-    /// <summary>
-    /// 传感器模式
-    /// </summary>
-    public enum SensorMode
-    {
-        /// <summary>
-        /// 集群模式
-        /// </summary>
-        Cluster = 0,
+    ///// <summary>
+    ///// 传感器模式
+    ///// </summary>
+    //public enum SensorMode
+    //{
+    //    /// <summary>
+    //    /// 集群模式
+    //    /// </summary>
+    //    Cluster = 0,
 
-        /// <summary>
-        /// 目标模式
-        /// </summary>
-        Object = 1
-    }
+    //    /// <summary>
+    //    /// 目标模式
+    //    /// </summary>
+    //    Object = 1
+    //}
 }

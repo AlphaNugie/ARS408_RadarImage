@@ -62,6 +62,7 @@
     <Compile Include="Core\DataService_Shiploader.cs" />
     <Compile Include="Core\DataService_Sqlite.cs" />
     <Compile Include="Core\DataService_ThreatLevel.cs" />
+    <Compile Include="Core\Enums.cs" />
     <Compile Include="Forms\FormInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +127,7 @@
     <Compile Include="Model\ObjectStatus.cs" />
     <Compile Include="Model\OpcUtilHelper.cs" />
     <Compile Include="Model\Radar.cs" />
+    <Compile Include="Model\RadarGroup.cs" />
     <Compile Include="Model\RadarState.cs" />
     <Compile Include="Model\SensorMessage.cs" />
     <Compile Include="Program.cs" />

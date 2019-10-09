@@ -172,6 +172,7 @@ namespace ARS408.Forms
                 IpAddressLocal = row["ip_address_local"].ToString(),
                 PortLocal = int.Parse(row["port_local"].ToString()),
                 OwnerGroupId = int.Parse(row["owner_group_id"].ToString()),
+                GroupType = (RadarGroupType)int.Parse(row["group_type"].ToString()),
                 DegreeYoz = double.Parse(row["degree_yoz"].ToString()),
                 DegreeXoy = double.Parse(row["degree_xoy"].ToString()),
                 DegreeXoz = double.Parse(row["degree_xoz"].ToString()),
