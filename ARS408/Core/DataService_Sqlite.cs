@@ -19,15 +19,6 @@ namespace ARS408.Core
         public DataTable GetAllLevels()
         {
             return this.GetAllLevels(0);
-//            string sqlString = @"
-//select 'loader_' || s.shiploader_id id, s.shiploader_name name, 'ROOT' parent_id from t_base_shiploader_info s
-// union all
-//select 'group_' || g.group_id id, g.group_name name, 'loader_' || g.owner_shiploader_id parent_id from t_base_radargroup_info g
-// union all
-//--select 'radar_' || r.radar_id id, r.ip_address||':'||r.port name, 'group_' || r.owner_group_id parent_id from t_base_radar_info r order by name
-//select 'radar_' || r.radar_id id, r.radar_name name, 'group_' || r.owner_group_id parent_id from t_base_radar_info r order by name
-//";
-//            return this.provider.Query(sqlString);
         }
 
         /// <summary>
@@ -77,6 +68,16 @@ where {0} = 0 or shiploader_id = {0}
         public DataTable GetDefenseModes()
         {
             string sqlString = "select * from t_base_defense_mode order by mode_id";
+            return this.provider.Query(sqlString);
+        }
+
+        /// <summary>
+        /// 获取所有存在概率，value为概率最小值，name为概率范围名称
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetAllExistProbs()
+        {
+            string sqlString = "select value, name from t_list_exist_prob order by value";
             return this.provider.Query(sqlString);
         }
     }

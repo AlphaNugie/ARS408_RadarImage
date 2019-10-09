@@ -142,6 +142,7 @@ namespace ARS408.Model
             {
                 this.prob_exist = value;
                 this.ProbOfExistString = this.prob_exist.GetDescription();
+                this.ProbOfExistMinimum = double.Parse(this.prob_exist.GetAlias());
             }
         }
 
@@ -149,6 +150,11 @@ namespace ARS408.Model
         /// 存在概率描述
         /// </summary>
         public string ProbOfExistString { get; set; }
+
+        /// <summary>
+        /// 存在概率的可能最小值
+        /// </summary>
+        public double ProbOfExistMinimum { get; set; }
 
         /// <summary>
         /// 基础信息

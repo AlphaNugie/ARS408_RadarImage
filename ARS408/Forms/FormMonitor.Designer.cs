@@ -29,11 +29,13 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel_Main = new System.Windows.Forms.TableLayoutPanel();
-            this.treeView = new System.Windows.Forms.TreeView();
-            this.tabControl = new System.Windows.Forms.TabControl();
+            this.treeView_Main = new System.Windows.Forms.TreeView();
+            this.tabControl_Main = new System.Windows.Forms.TabControl();
             this.button_StartOrEnd = new System.Windows.Forms.Button();
             this.button_Info = new System.Windows.Forms.Button();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel_Main.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel_Main
@@ -42,40 +44,42 @@
             this.tableLayoutPanel_Main.ColumnCount = 2;
             this.tableLayoutPanel_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel_Main.Controls.Add(this.treeView, 0, 0);
-            this.tableLayoutPanel_Main.Controls.Add(this.tabControl, 1, 0);
+            this.tableLayoutPanel_Main.Controls.Add(this.flowLayoutPanel1, 0, 0);
+            this.tableLayoutPanel_Main.Controls.Add(this.treeView_Main, 0, 1);
+            this.tableLayoutPanel_Main.Controls.Add(this.tabControl_Main, 1, 1);
             this.tableLayoutPanel_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel_Main.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel_Main.Name = "tableLayoutPanel_Main";
-            this.tableLayoutPanel_Main.RowCount = 1;
+            this.tableLayoutPanel_Main.RowCount = 2;
+            this.tableLayoutPanel_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel_Main.Size = new System.Drawing.Size(1099, 600);
             this.tableLayoutPanel_Main.TabIndex = 0;
             // 
-            // treeView
+            // treeView_Main
             // 
-            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.Location = new System.Drawing.Point(3, 3);
-            this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(194, 594);
-            this.treeView.TabIndex = 4;
-            this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseDoubleClick);
+            this.treeView_Main.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView_Main.Location = new System.Drawing.Point(3, 39);
+            this.treeView_Main.Name = "treeView_Main";
+            this.treeView_Main.Size = new System.Drawing.Size(194, 558);
+            this.treeView_Main.TabIndex = 4;
+            this.treeView_Main.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseDoubleClick);
             // 
-            // tabControl
+            // tabControl_Main
             // 
-            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl.Location = new System.Drawing.Point(203, 3);
-            this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(893, 594);
-            this.tabControl.TabIndex = 5;
-            this.tabControl.DoubleClick += new System.EventHandler(this.TabControl_DoubleClick);
+            this.tabControl_Main.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl_Main.Location = new System.Drawing.Point(203, 39);
+            this.tabControl_Main.Name = "tabControl_Main";
+            this.tabControl_Main.SelectedIndex = 0;
+            this.tabControl_Main.Size = new System.Drawing.Size(893, 558);
+            this.tabControl_Main.TabIndex = 5;
+            this.tabControl_Main.DoubleClick += new System.EventHandler(this.TabControl_DoubleClick);
             // 
             // button_StartOrEnd
             // 
-            this.button_StartOrEnd.Location = new System.Drawing.Point(133, 0);
+            this.button_StartOrEnd.Location = new System.Drawing.Point(3, 3);
             this.button_StartOrEnd.Name = "button_StartOrEnd";
-            this.button_StartOrEnd.Size = new System.Drawing.Size(75, 23);
+            this.button_StartOrEnd.Size = new System.Drawing.Size(75, 27);
             this.button_StartOrEnd.TabIndex = 1;
             this.button_StartOrEnd.Text = "开始";
             this.button_StartOrEnd.UseVisualStyleBackColor = true;
@@ -83,21 +87,32 @@
             // 
             // button_Info
             // 
-            this.button_Info.Location = new System.Drawing.Point(212, 0);
+            this.button_Info.Location = new System.Drawing.Point(84, 3);
             this.button_Info.Name = "button_Info";
-            this.button_Info.Size = new System.Drawing.Size(75, 23);
+            this.button_Info.Size = new System.Drawing.Size(75, 27);
             this.button_Info.TabIndex = 2;
             this.button_Info.Text = "信息";
             this.button_Info.UseVisualStyleBackColor = true;
             this.button_Info.Click += new System.EventHandler(this.button_Info_Click);
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.Controls.Add(this.button_StartOrEnd);
+            this.flowLayoutPanel1.Controls.Add(this.button_Info);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(1, 1);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(1);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(198, 34);
+            this.flowLayoutPanel1.TabIndex = 5;
+            // 
             // FormMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1099, 600);
-            this.Controls.Add(this.button_Info);
-            this.Controls.Add(this.button_StartOrEnd);
             this.Controls.Add(this.tableLayoutPanel_Main);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -106,6 +121,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMonitor_FormClosing);
             this.Load += new System.EventHandler(this.FormMonitor_Load);
             this.tableLayoutPanel_Main.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -113,9 +129,10 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel_Main;
-        private System.Windows.Forms.TreeView treeView;
-        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TreeView treeView_Main;
+        private System.Windows.Forms.TabControl tabControl_Main;
         private System.Windows.Forms.Button button_StartOrEnd;
         private System.Windows.Forms.Button button_Info;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

@@ -132,6 +132,21 @@ property float rcs";
         public static int Port_Local = 0;
 
         /// <summary>
+        /// RCS最小值
+        /// </summary>
+        public static int RcsMinimum { get; set; }
+
+        /// <summary>
+        /// RCS最大值
+        /// </summary>
+        public static int RcsMaximum { get; set; }
+
+        /// <summary>
+        /// 允许的存在概率最低值
+        /// </summary>
+        public static double ProbOfExistMinimum { get; set; }
+
+        /// <summary>
         /// 报警级数数值
         /// </summary>
         public static double[] ThreatLevelValues = new double[] { 0 };
@@ -142,17 +157,13 @@ property float rcs";
     /// </summary>
     public class BaseFunc
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public void UpdateLocalIp()
-        {
-            IPHostEntry ipHostEntry = Dns.GetHostEntry(Environment.MachineName);
-            string hostName = ipHostEntry.HostName.ToString();
-
-            if (ipHostEntry.AddressList.Length > 0)
-                BaseConst.IpAddress_Local = ipHostEntry.AddressList[0].ToString();
-        }
+        ///// <summary>
+        ///// 更新本地IP
+        ///// </summary>
+        //public static void UpdateLocalIp()
+        //{
+        //    BaseConst.IpAddress_Local = Functions.GetLocalIp();
+        //}
 
         /// <summary>
         /// 根据雷达散射截面属性获取颜色
@@ -245,7 +256,9 @@ property float rcs";
                 BaseConst.Port = ushort.Parse(BaseConst.IniHelper.ReadData("Connection", "Port"));
                 BaseConst.ConnectionMode = int.Parse(BaseConst.IniHelper.ReadData("Connection", "ConnectionMode"));
                 BaseConst.UsingLocal = BaseConst.IniHelper.ReadData("Connection", "UsingLocal").Equals("1");
-                BaseConst.IpAddress_Local = BaseConst.IniHelper.ReadData("Connection", "IpAddressLocal");
+                //BaseFunc.UpdateLocalIp();
+                BaseConst.IpAddress_Local = Functions.GetLocalIp();
+                //BaseConst.IpAddress_Local = BaseConst.IniHelper.ReadData("Connection", "IpAddressLocal");
                 BaseConst.Port_Local = int.Parse(BaseConst.IniHelper.ReadData("Connection", "PortLocal"));
                 DataTable table = (new DataService_ThreatLevel()).GetThreatLevels();
                 if (table != null && table.Rows.Count > 0)
@@ -289,7 +302,10 @@ property float rcs";
                     BaseConst.PlyFileClient.FileName = BaseConst.IniHelper.ReadData("Main", "PlyFileName");
                     BaseConst.R = double.Parse(BaseConst.IniHelper.ReadData("Main", "PixelRadarRatio"));
                     BaseConst.T = float.Parse(BaseConst.IniHelper.ReadData("Main", "Thickness"));
-                    BaseConst.BorderDistThres = double.Parse(BaseConst.IniHelper.ReadData("Main", "BorderDistThres"));
+                    BaseConst.BorderDistThres = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BorderDistThres"));
+                    BaseConst.ProbOfExistMinimum = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ProbOfExistMinimum"));
+                    BaseConst.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMinimum"));
+                    BaseConst.RcsMaximum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMaximum"));
                     BaseConst.ReceiveRestTime = int.Parse(BaseConst.IniHelper.ReadData("Connection", "ReceiveRestTime"));
                 }
                 catch (Exception) { }

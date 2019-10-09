@@ -366,48 +366,56 @@ namespace ARS408.Model
         /// 无效
         /// </summary>
         [EnumDescription("无效")]
+        [EnumAlias("-1")]
         Invalid = 0,
 
         /// <summary>
         /// 小于25%
         /// </summary>
         [EnumDescription("<25%")]
+        [EnumAlias("0")]
         Lt025 = 1,
 
         /// <summary>
         /// 小于50%
         /// </summary>
         [EnumDescription("<50%")]
+        [EnumAlias("0.25")]
         Lt050 = 2,
 
         /// <summary>
         /// 小于75%
         /// </summary>
         [EnumDescription("<75%")]
+        [EnumAlias("0.5")]
         Lt075 = 3,
 
         /// <summary>
         /// 小于90%
         /// </summary>
         [EnumDescription("<90%")]
+        [EnumAlias("0.75")]
         Lt090 = 4,
 
         /// <summary>
         /// 小于99%
         /// </summary>
         [EnumDescription("<99%")]
+        [EnumAlias("0.9")]
         Lt099 = 5,
 
         /// <summary>
         /// 小于99.9%
         /// </summary>
         [EnumDescription("<99.9%")]
+        [EnumAlias("0.99")]
         Lt999 = 6,
 
         /// <summary>
         /// 小于等于100%
         /// </summary>
         [EnumDescription("<=100%")]
+        [EnumAlias("0.999")]
         Lte100 = 7
     }
     #endregion

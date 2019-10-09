@@ -134,15 +134,32 @@ namespace ARS408.Forms
         /// </summary>
         public bool IsShown { get; set; }
 
+        //TODO RCS反映全局变量每个页面单独一个变量
+
         /// <summary>
         /// RCS最小值
         /// </summary>
-        public int RcsMinimum { get; set; }
+        public int RcsMinimum { get { return BaseConst.RcsMinimum; } }
 
         /// <summary>
         /// RCS最大值
         /// </summary>
-        public int RcsMaximum { get; set; }
+        public int RcsMaximum { get { return BaseConst.RcsMaximum; } }
+
+        ///// <summary>
+        ///// RCS最小值
+        ///// </summary>
+        //public int RcsMinimum { get; set; }
+
+        ///// <summary>
+        ///// RCS最大值
+        ///// </summary>
+        //public int RcsMaximum { get; set; }
+
+        /// <summary>
+        /// 允许的存在概率最低值
+        /// </summary>
+        public double ProbOfExistMinimum { get; set; }
         #endregion
         #region OPC属性
         /// <summary>
@@ -213,6 +230,12 @@ namespace ARS408.Forms
             //this.IpAddress_Local = radar == null ? BaseConst.IpAddress_Local : radar.IpAddressLocal;
             this.IpAddress_Local = BaseConst.IpAddress_Local;
             this.Port_Local = radar == null ? BaseConst.Port_Local : radar.PortLocal;
+            //TODO RCS值由何决定
+            //this.RcsMinimum = radar == null ? BaseConst.RcsMinimum : radar.RcsMinimum;
+            //this.RcsMaximum = radar == null ? BaseConst.RcsMaximum : radar.RcsMaximum;
+            //this.RcsMinimum = BaseConst.RcsMinimum;
+            //this.RcsMaximum = BaseConst.RcsMaximum;
+            this.ProbOfExistMinimum = radar == null ? BaseConst.ProbOfExistMinimum : radar.ProbOfExistMinimum;
 
             //this.TcpClient = new DerivedTcpClient() { HoldLocalPort = true };
             this.TcpClient = new DerivedTcpClient();
@@ -231,8 +254,8 @@ namespace ARS408.Forms
             this.Name = this.Title;
             this.Text = this.Title;
             this.S = this.scale_original;
-            this.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Main", "RcsMinimum"));
-            this.RcsMaximum = int.Parse(BaseConst.IniHelper.ReadData("Main", "RcsMaximum"));
+            //this.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMinimum"));
+            //this.RcsMaximum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMaximum"));
 
             this.InitControls();
         }
@@ -344,9 +367,15 @@ namespace ARS408.Forms
             this.tabControl_Main.SelectedTab = this.tabPage_vertex; //选中图像页
             this.textBox_IpAddress.Text = this.IpAddress;
             this.numeric_Port.Value = this.Port;
+
             this.comboBox_TcpOrUdp.DataSource = this.dataService.GetConnModes();
             this.comboBox_TcpOrUdp.SelectedIndexChanged += new System.EventHandler(this.ComboBox_TcpOrUdp_SelectedIndexChanged);
             this.comboBox_TcpOrUdp.SelectedValue = this.ConnectionMode;
+
+            this.comboBox_ProbMinimum.DataSource = this.dataService.GetAllExistProbs();
+            this.comboBox_ProbMinimum.SelectedIndexChanged += new System.EventHandler(this.ComboBox_ProbMinimum_SelectedIndexChanged);
+            this.comboBox_ProbMinimum.SelectedValue = this.ProbOfExistMinimum;
+
             this.checkBox_UsingLocal.Checked = this.UsingLocal;
             this.textBox_IpAddress_Local.Text = this.IpAddress_Local;
             this.numeric_Port_Local.Value = this.Port_Local;
@@ -377,8 +406,9 @@ namespace ARS408.Forms
             BaseConst.IniHelper.WriteData("Connection", "UsingLocal", this.checkBox_UsingLocal.Checked ? "1" : "0");
             BaseConst.IniHelper.WriteData("Connection", "IpAddressLocal", this.textBox_IpAddress_Local.Text);
             BaseConst.IniHelper.WriteData("Connection", "PortLocal", this.numeric_Port_Local.Value.ToString());
-            BaseConst.IniHelper.WriteData("Main", "RcsMinimum", this.RcsMinimum.ToString());
-            BaseConst.IniHelper.WriteData("Main", "RcsMaximum", this.RcsMaximum.ToString());
+            BaseConst.IniHelper.WriteData("Detection", "RcsMinimum", this.RcsMinimum.ToString());
+            BaseConst.IniHelper.WriteData("Detection", "RcsMaximum", this.RcsMaximum.ToString());
+            BaseConst.IniHelper.WriteData("Detection", "ProbOfExistMinimum", this.ProbOfExistMinimum.ToString());
         }
 
         /// <summary>
@@ -747,12 +777,12 @@ namespace ARS408.Forms
         {
             this.received += eventArgs.ReceivedInfo_HexString;
             this.Infos.Timer = 0;
-            try
-            {
-                if (this.IsShown)
-                    this.textBox_Input.SafeInvoke(() => { this.textBox_Input.Text = this.received.Length > 100 ? this.received.Substring(0, 100) : this.received; });
-            }
-            catch (Exception e) { }
+            if (this.IsShown)
+                this.textBox_Input.SafeInvoke(() =>
+                {
+                    try { this.textBox_Input.Text = this.received.Length > 501 ? this.received.Substring(0, 500) : this.received; }
+                    catch (Exception e) { }
+                });
         }
 
         /// <summary>
@@ -890,9 +920,20 @@ namespace ARS408.Forms
             this.button_Connect.Enabled = !this.button_UdpInit.Enabled;
         }
 
+        private void ComboBox_ProbMinimum_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.ProbOfExistMinimum = double.Parse(this.comboBox_ProbMinimum.SelectedValue.ToString());
+        }
+
         private void Timer_WriteItems_Tick(object sender, EventArgs e)
         {
             this.WriteItemValues();
+        }
+
+        private void Timer_UIUpdate_Tick(object sender, EventArgs e)
+        {
+            this.trackBar_RcsMax.Value = this.RcsMaximum;
+            this.trackBar_RcsMin.Value = this.RcsMinimum;
         }
 
         private void CheckBox_UsingLocal_CheckedChanged(object sender, EventArgs e)
@@ -933,8 +974,11 @@ namespace ARS408.Forms
 
         private void TrackBar_ValueChanged(object sender, EventArgs e)
         {
-            this.RcsMinimum = Math.Min(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
-            this.RcsMaximum = Math.Max(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
+            //TODO RCS过滤进度条值变化后改变全局变量还是单独变量
+            //this.RcsMinimum = Math.Min(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
+            //this.RcsMaximum = Math.Max(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
+            BaseConst.RcsMinimum = Math.Min(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
+            BaseConst.RcsMaximum = Math.Max(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
             this.label_RcsMin.Text = this.RcsMinimum.ToString();
             this.label_RcsMax.Text = this.RcsMaximum.ToString();
         }

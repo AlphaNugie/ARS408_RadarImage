@@ -152,7 +152,7 @@ namespace ARS408.Forms
             }
 
             this.InitForms(); //初始化窗体对象
-            this.treeView.BindTreeViewDataSource(this.DataSource, this.parent_field, this.key_field, this.display_field);
+            this.treeView_Main.BindTreeViewDataSource(this.DataSource, this.parent_field, this.key_field, this.display_field);
         }
 
         private Radar GetRadarFromDataRow(DataRow row)
@@ -239,7 +239,7 @@ namespace ARS408.Forms
         /// <param name="form">没有雷达信息为空时显示的窗体</param>
         private void ShowForm(Radar radar, Form form)
         {
-            if (this.tabControl.InvokeRequired)
+            if (this.tabControl_Main.InvokeRequired)
             {
                 ShowFormHandler handler = new ShowFormHandler(this.ShowForm);
                 this.Invoke(handler, radar);
@@ -253,14 +253,15 @@ namespace ARS408.Forms
                 return;
             }
 
-            string name = radar != null ? radar.Name : form.Text;
+            //string name = radar != null ? radar.Name : form.Text;
+            string name = radar != null ? radar.Name : form.Name;
             //假如Tab页已存在，选中该页面
-            foreach (TabPage tabPage in this.tabControl.TabPages)
+            foreach (TabPage tabPage in this.tabControl_Main.TabPages)
             {
                 //if (tabPage.Name.Equals(string.Format("{0}:{1}", radar.IpAddress, radar.Port)))
                 if (tabPage.Name.Equals(name))
                 {
-                    this.tabControl.SelectedTab = tabPage;
+                    this.tabControl_Main.SelectedTab = tabPage;
                     return;
                 }
             }
@@ -274,11 +275,12 @@ namespace ARS408.Forms
             display.FormBorderStyle = FormBorderStyle.None; //页面无边框
             page.Controls.Add(display);
             page.Text = display.Text;
-            page.Name = display.Text;
+            //page.Name = display.Text;
+            page.Name = name;
             page.AutoScroll = true;
 
-            this.tabControl.TabPages.Add(page);
-            this.tabControl.SelectedTab = page;
+            this.tabControl_Main.TabPages.Add(page);
+            this.tabControl_Main.SelectedTab = page;
             display.Show();
             if (display is FormDisplay)
                 ((FormDisplay)display).IsShown = true;
@@ -291,10 +293,13 @@ namespace ARS408.Forms
         private void DisposeTabPage(TabPage page)
         {
             Control control = page.Controls[0];
+            //雷达信息分页不关闭
+            if (control is Form && control.Name.Equals("FormInfo"))
+                return;
             if (control is FormDisplay)
-                ((FormDisplay)page.Controls[0]).IsShown = false;
+                ((FormDisplay)control).IsShown = false;
             else
-                ((Form)page.Controls[0]).Close();
+                ((Form)control).Close();
             page.Controls.Clear();
             page.Dispose();
         }
@@ -304,7 +309,7 @@ namespace ARS408.Forms
         /// </summary>
         private void DisposeTabPages_all()
         {
-            foreach (TabPage page in this.tabControl.TabPages) this.DisposeTabPage(page);
+            foreach (TabPage page in this.tabControl_Main.TabPages) this.DisposeTabPage(page);
         }
 
         //private Radar GetRadarByIpPort(string ip_port)

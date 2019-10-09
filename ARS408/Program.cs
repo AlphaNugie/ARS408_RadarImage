@@ -19,10 +19,12 @@ namespace ARS408
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            //int t = '0' - '0';
             BaseFunc.InitConfigs(); //配置初始化
+
+            #region 测试
+            //int t = '0' - '0';
 
             //double x = 1, y = 1, z = 1;
             //int m = 1;
@@ -80,13 +82,18 @@ namespace ARS408
             //string message = messageid.GetDescription();
 
             //int temp = 1;
+            #endregion
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Form form;
 
             form = new FormMain();
-            form = new FormDisplay();
+            string argstring = args == null ? string.Empty : ";" + string.Join(";", args).ToUpper() + ";";
+            //if (args != null && args.Contains(single"))
+            if (argstring.Contains(";SINGLE;"))
+                form = new FormDisplay();
 
             //Application.Run(new FormMain());
             Application.Run(form);

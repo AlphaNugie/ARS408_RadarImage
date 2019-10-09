@@ -174,12 +174,32 @@ namespace ARS408.Model
         /// 雷达碰撞状态标签2
         /// </summary>
         public string ItemNameCollisionState2 { get; set; }
+
+        /// <summary>
+        /// RCS最小值
+        /// </summary>
+        public int RcsMinimum { get; set; }
+
+        /// <summary>
+        /// RCS最大值
+        /// </summary>
+        public int RcsMaximum { get; set; }
+
+        /// <summary>
+        /// 存在概率最低值
+        /// </summary>
+        public double ProbOfExistMinimum { get; set; }
         #endregion
 
         /// <summary>
         /// 默认构造器
         /// </summary>
-        public Radar() { }
+        public Radar()
+        {
+            this.RcsMinimum = -64;
+            this.RcsMaximum = 64;
+            this.ProbOfExistMinimum = -1;
+        }
 
         /// <summary>
         /// 更新修改后XYZ坐标的系数

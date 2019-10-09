@@ -88,7 +88,7 @@ namespace ARS408.Model
                 return array;
             }
         }
-            //return this.ObjectMostThreat == null ? new char[] { '0', '0' } : this.ObjectMostThreat.ThreatLevelBinary.ToCharArray(); } }
+        //return this.ObjectMostThreat == null ? new char[] { '0', '0' } : this.ObjectMostThreat.ThreatLevelBinary.ToCharArray(); } }
         #endregion
 
         /// <summary>
@@ -241,7 +241,6 @@ namespace ARS408.Model
         public int ListBufferCount { get { return this.CurrentSensorMode == SensorMode.Cluster ? this.ListBuffer_Cluster.Count : this.ListBuffer_Object.Count; } }
         public int ListTriggerCount { get { return this.CurrentSensorMode == SensorMode.Cluster ? this.ListTrigger_Cluster.Count : this.ListTrigger_Object.Count; } }
 
-
         /// <summary>
         /// 将一般信息压入缓冲区
         /// </summary>
@@ -250,11 +249,13 @@ namespace ARS408.Model
         public void DataPush<T>(T general)
         {
             dynamic g = (dynamic)general;
+            //bool flag = general is ObjectGeneral ? g.ProbOfExistMinimum < this.ParentForm.ProbOfExistMinimum : false; //（假如是目标）判断存在概率的可能最小值是否小于允许的最低值
+            //TODO 输出结果过滤条件1
             //假如列表元素饱和
             //或距边界范围超出阈值
             //或RCS值不在范围内
             //则忽略
-            if (this.ListBufferCount >= this.BufferSize || (BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres) || (this.ParentForm != null && (g.RCS < this.ParentForm.RcsMinimum || g.RCS > this.ParentForm.RcsMaximum)))
+            if (this.ListBufferCount >= this.BufferSize || (BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres) || (this.ParentForm != null && (g.RCS < this.ParentForm.RcsMinimum || g.RCS > this.ParentForm.RcsMaximum))/* || flag*/)
                 return;
             dynamic list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object;
             list.Add(general);
@@ -278,6 +279,10 @@ namespace ARS408.Model
                     ObjectGeneral general = this.ListBuffer_Object.Find(c => c.Id == quality.Id);
                     general.MeasState = quality.MeasState;
                     general.ProbOfExist = quality.ProbOfExist;
+                    //TODO 输出结果过滤条件2
+                    //（假如是目标）判断存在概率的可能最小值是否小于允许的最低值
+                    if (general.ProbOfExistMinimum < this.ParentForm.ProbOfExistMinimum)
+                        this.ListBuffer_Object.Remove(general);
                 }
             }
             catch (Exception) { }
