@@ -31,21 +31,21 @@ namespace ARS408.Forms
         /// </summary>
         public FormInfo() : this(null) { }
 
-        private void button_Start_Click(object sender, EventArgs e)
+        private void Button_Start_Click(object sender, EventArgs e)
         {
             this.timer1.Start();
             this.button_Start.Enabled = false;
             this.button_Stop.Enabled = true;
         }
 
-        private void button_Stop_Click(object sender, EventArgs e)
+        private void Button_Stop_Click(object sender, EventArgs e)
         {
             this.timer1.Stop();
             this.button_Start.Enabled = true;
             this.button_Stop.Enabled = false;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1_Tick(object sender, EventArgs e)
         {
             if (this.monitor == null)
                 return;

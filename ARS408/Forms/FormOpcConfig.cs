@@ -38,7 +38,6 @@ namespace ARS408.Forms
         public FormOpcConfig()
         {
             InitializeComponent();
-            //this.IniHelper = new IniFileHelper(BaseConst.IniFilePath);
             this.Provider = new SqliteProvider();
             this.DataService = new DataService_Shiploader();
             this.InitControls();

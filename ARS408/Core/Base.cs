@@ -1,6 +1,5 @@
 ﻿using ARS408.Model;
 using CommonLib.Clients.Object;
-using CommonLib.Enums;
 using CommonLib.Function;
 using System;
 using System.Collections.Generic;
@@ -8,10 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ARS408.Core
 {
@@ -152,6 +148,16 @@ property float rcs";
         public static double BucketHeight { get; set; }
 
         /// <summary>
+        /// 下方障碍物距离的阈值
+        /// </summary>
+        public static double ObsBelowThres { get; set; }
+
+        /// <summary>
+        /// 溜桶下方障碍物四周边界距离最大值（可为负值）
+        /// </summary>
+        public static double ObsBelowFrontier { get; set; }
+
+        /// <summary>
         /// 报警级数数值
         /// </summary>
         public static double[] ThreatLevelValues = new double[] { 0 };
@@ -162,14 +168,6 @@ property float rcs";
     /// </summary>
     public class BaseFunc
     {
-        ///// <summary>
-        ///// 更新本地IP
-        ///// </summary>
-        //public static void UpdateLocalIp()
-        //{
-        //    BaseConst.IpAddress_Local = Functions.GetLocalIp();
-        //}
-
         /// <summary>
         /// 根据雷达散射截面属性获取颜色
         /// </summary>
@@ -228,12 +226,9 @@ property float rcs";
         {
             switch (prop)
             {
-                case DynProp.Moving:
-                    return Color.FromArgb(154, 205, 50);
+                #region 忽略
                 //case DynProp.Stationary:
                 //    return Color.FromArgb(211, 211, 211);
-                case DynProp.Oncoming:
-                    return Color.FromArgb(0, 255, 127);
                 //case DynProp.StationaryCandidate:
                 //    return Color.FromArgb(255, 255, 224);
                 //case DynProp.CrossingStationary:
@@ -242,6 +237,11 @@ property float rcs";
                 //    return Color.FromArgb(245, 245, 220);
                 //case DynProp.CrossingMoving:
                 //    return Color.FromArgb(173, 255, 47);
+                #endregion
+                case DynProp.Moving:
+                    return Color.FromArgb(154, 205, 50);
+                case DynProp.Oncoming:
+                    return Color.FromArgb(0, 255, 127);
                 case DynProp.Stopped:
                     return Color.FromArgb(255, 69, 0);
                 default:
@@ -311,6 +311,8 @@ property float rcs";
                     BaseConst.BorderDistThres = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BorderDistThres"));
                     BaseConst.ProbOfExistMinimum = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ProbOfExistMinimum"));
                     BaseConst.BucketHeight = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BucketHeight"));
+                    BaseConst.ObsBelowThres = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ObsBelowThres"));
+                    BaseConst.ObsBelowFrontier = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ObsBelowFrontier"));
                     //BaseConst.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMinimum"));
                     //BaseConst.RcsMaximum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMaximum"));
                     BaseConst.ReceiveRestTime = int.Parse(BaseConst.IniHelper.ReadData("Connection", "ReceiveRestTime"));

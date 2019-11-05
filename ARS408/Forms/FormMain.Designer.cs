@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,10 +39,16 @@
             this.toolStripMenu_Shiploaders = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenu_RadarGroup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenu_Radar = new System.Windows.Forms.ToolStripMenuItem();
-            this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabControl_Main = new System.Windows.Forms.TabControl();
             this.toolStrip_ThreatLevels = new System.Windows.Forms.ToolStripMenuItem();
+            this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_OpcConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl_Main = new System.Windows.Forms.TabControl();
+            this.tcpServer_Watchdog = new SocketHelper.AxTcpServer(this.components);
+            this.button_Send = new System.Windows.Forms.Button();
+            this.label_Receive = new System.Windows.Forms.Label();
+            this.label_State = new System.Windows.Forms.Label();
+            this.label_Error = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,6 +127,13 @@
             this.toolStripMenu_Radar.Text = "雷达";
             this.toolStripMenu_Radar.Click += new System.EventHandler(this.ToolStripMenu_Radar_Click);
             // 
+            // toolStrip_ThreatLevels
+            // 
+            this.toolStrip_ThreatLevels.Name = "toolStrip_ThreatLevels";
+            this.toolStrip_ThreatLevels.Size = new System.Drawing.Size(224, 26);
+            this.toolStrip_ThreatLevels.Text = "威胁级数";
+            this.toolStrip_ThreatLevels.Click += new System.EventHandler(this.ToolStrip_ThreatLevels_Click);
+            // 
             // 设置ToolStripMenuItem
             // 
             this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -127,6 +141,13 @@
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
             this.设置ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.设置ToolStripMenuItem.Text = "设置";
+            // 
+            // toolStrip_OpcConfig
+            // 
+            this.toolStrip_OpcConfig.Name = "toolStrip_OpcConfig";
+            this.toolStrip_OpcConfig.Size = new System.Drawing.Size(153, 26);
+            this.toolStrip_OpcConfig.Text = "OPC配置";
+            this.toolStrip_OpcConfig.Click += new System.EventHandler(this.ToolStrip_OpcConfig_Click);
             // 
             // tabControl_Main
             // 
@@ -141,19 +162,66 @@
             this.tabControl_Main.TabIndex = 1;
             this.tabControl_Main.DoubleClick += new System.EventHandler(this.TabControl_Main_DoubleClick);
             // 
-            // toolStrip_ThreatLevels
+            // tcpServer_Watchdog
             // 
-            this.toolStrip_ThreatLevels.Name = "toolStrip_ThreatLevels";
-            this.toolStrip_ThreatLevels.Size = new System.Drawing.Size(224, 26);
-            this.toolStrip_ThreatLevels.Text = "威胁级数";
-            this.toolStrip_ThreatLevels.Click += new System.EventHandler(this.ToolStrip_ThreatLevels_Click);
+            this.tcpServer_Watchdog.CheckTime = 1000;
+            this.tcpServer_Watchdog.HeartbeatPacket = "X";
+            this.tcpServer_Watchdog.IsheartCheck = true;
+            this.tcpServer_Watchdog.ServerIp = "127.0.0.1";
+            this.tcpServer_Watchdog.ServerPort = 5001;
+            this.tcpServer_Watchdog.TcpServerRecevice += new SocketHelper.AxTcpServer.ReceviceEventHandler(this.TcpServer_Watchdog_TcpServerRecevice);
+            this.tcpServer_Watchdog.OnErrorMsg += new SocketHelper.AxTcpServer.ErrorMsgEventHandler(this.TcpServer_Watchdog_OnErrorMsg);
+            this.tcpServer_Watchdog.OnStateInfo += new SocketHelper.AxTcpServer.StateInfoEventHandler(this.TcpServer_Watchdog_OnStateInfo);
             // 
-            // toolStrip_OpcConfig
+            // button_Send
             // 
-            this.toolStrip_OpcConfig.Name = "toolStrip_OpcConfig";
-            this.toolStrip_OpcConfig.Size = new System.Drawing.Size(224, 26);
-            this.toolStrip_OpcConfig.Text = "OPC配置";
-            this.toolStrip_OpcConfig.Click += new System.EventHandler(this.ToolStrip_OpcConfig_Click);
+            this.button_Send.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button_Send.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Send.Location = new System.Drawing.Point(0, 656);
+            this.button_Send.Name = "button_Send";
+            this.button_Send.Size = new System.Drawing.Size(1343, 30);
+            this.button_Send.TabIndex = 7;
+            this.button_Send.Text = "button_Send";
+            this.button_Send.UseVisualStyleBackColor = true;
+            this.button_Send.Visible = false;
+            // 
+            // label_Receive
+            // 
+            this.label_Receive.AutoSize = true;
+            this.label_Receive.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label_Receive.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label_Receive.Location = new System.Drawing.Point(0, 686);
+            this.label_Receive.Name = "label_Receive";
+            this.label_Receive.Size = new System.Drawing.Size(108, 20);
+            this.label_Receive.TabIndex = 6;
+            this.label_Receive.Text = "label_Receive";
+            // 
+            // label_State
+            // 
+            this.label_State.AutoSize = true;
+            this.label_State.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label_State.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label_State.Location = new System.Drawing.Point(0, 706);
+            this.label_State.Name = "label_State";
+            this.label_State.Size = new System.Drawing.Size(89, 20);
+            this.label_State.TabIndex = 5;
+            this.label_State.Text = "label_State";
+            // 
+            // label_Error
+            // 
+            this.label_Error.AutoSize = true;
+            this.label_Error.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label_Error.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label_Error.Location = new System.Drawing.Point(0, 726);
+            this.label_Error.Name = "label_Error";
+            this.label_Error.Size = new System.Drawing.Size(87, 20);
+            this.label_Error.TabIndex = 4;
+            this.label_Error.Text = "label_Error";
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick_1);
             // 
             // FormMain
             // 
@@ -161,6 +229,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1343, 746);
+            this.Controls.Add(this.button_Send);
+            this.Controls.Add(this.label_Receive);
+            this.Controls.Add(this.label_State);
+            this.Controls.Add(this.label_Error);
             this.Controls.Add(this.tabControl_Main);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -192,5 +264,11 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenu_Radar;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_ThreatLevels;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_OpcConfig;
+        private SocketHelper.AxTcpServer tcpServer_Watchdog;
+        private System.Windows.Forms.Button button_Send;
+        private System.Windows.Forms.Label label_Receive;
+        private System.Windows.Forms.Label label_State;
+        private System.Windows.Forms.Label label_Error;
+        private System.Windows.Forms.Timer timer1;
     }
 }

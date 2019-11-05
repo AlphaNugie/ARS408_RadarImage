@@ -103,7 +103,7 @@
             // 
             // timer1
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // button_Start
             // 
@@ -113,7 +113,7 @@
             this.button_Start.TabIndex = 2;
             this.button_Start.Text = "启动";
             this.button_Start.UseVisualStyleBackColor = true;
-            this.button_Start.Click += new System.EventHandler(this.button_Start_Click);
+            this.button_Start.Click += new System.EventHandler(this.Button_Start_Click);
             // 
             // button_Stop
             // 
@@ -124,7 +124,7 @@
             this.button_Stop.TabIndex = 2;
             this.button_Stop.Text = "停止";
             this.button_Stop.UseVisualStyleBackColor = true;
-            this.button_Stop.Click += new System.EventHandler(this.button_Stop_Click);
+            this.button_Stop.Click += new System.EventHandler(this.Button_Stop_Click);
             // 
             // textBox_Radar1
             // 

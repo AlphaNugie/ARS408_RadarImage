@@ -134,7 +134,7 @@ namespace ARS408.Forms
         /// </summary>
         public bool IsShown { get; set; }
 
-        //TODO RCS反映全局变量每个页面单独一个变量
+        //TODO RCS反映全局变量还是每个页面单独一个变量
 
         /// <summary>
         /// RCS最小值

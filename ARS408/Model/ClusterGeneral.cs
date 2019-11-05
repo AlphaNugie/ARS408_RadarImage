@@ -235,6 +235,8 @@ namespace ARS408.Model
                 double x = northsouth ? this.ModiCoors.X : this.ModiCoors.Y, y = northsouth ? this.ModiCoors.Y : this.ModiCoors.X, z = this.ModiCoors.Z;
                 int m = this.Radar.DefenseMode;
                 this.DistanceToBorder = Math.Sqrt((Math.Sign(4 - m) == 1 ? 1 : 0) * Math.Pow(x, 2) + (Math.Sign(3 - m) == 1 ? 1 : 0) * Math.Pow(y, 2) + (Math.Sign(2 - m) == 1 ? 1 : 0) * Math.Pow(z, 2));
+                if (m == 3)
+                    this.DistanceToBorder *= Math.Sign(x);
             }
         }
 

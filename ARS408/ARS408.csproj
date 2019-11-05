@@ -42,6 +42,9 @@
       <HintPath>..\..\..\..\OPC\DLL\Interop.OPCAutomation.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="SocketHelper">
+      <HintPath>..\..\..\..\_Old_Assembly\SocketHelper\SocketHelper\bin\Debug\SocketHelper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

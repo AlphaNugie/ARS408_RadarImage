@@ -138,10 +138,9 @@ namespace ARS408.Forms
         {
             try
             {
-                //this.DataSource = this.dataService.GetAllLevels();
-                //DataTable table = (new DataService_Radar()).GetAllRadarsOrderbyId();
                 this.DataSource = this.dataService.GetAllLevels(this.shiploader_id);
-                DataTable radars = (new DataService_Radar()).GetRadarsOrderbyId(this.shiploader_id);
+                //DataTable radars = (new DataService_Radar()).GetRadarsOrderbyId(this.shiploader_id);
+                DataTable radars = (new DataService_Radar()).GetRadars(this.shiploader_id, "radar_name");
                 this.DataSourceList = radars == null ? null : radars.Rows.Cast<DataRow>().Select(row => this.GetRadarFromDataRow(row)).ToList();
             }
             catch (Exception e)
@@ -353,13 +352,19 @@ namespace ARS408.Forms
             DataFrameMessages infos = null;
             if (radar != null && (display = this.DictForms[radar]) != null && (infos = display.Infos) != null)
             {
-                ObjectGeneral obj = infos.ObjectMostThreat;
+                ObjectGeneral obj = infos.ObjectMostThreat, obj_other = infos.ObjectHighest;
                 result = string.Format(@"
   ""radar_{0}"": [
   ""effective"": {1},
   ""distance"": {2},
-  ""threat"": {3}
-  ],", radar.PortLocal + "_" + radar.Name/*radar.Id*/, infos.RadarState.Working, obj == null ? 0 : obj.DistanceToBorder, obj == null ? 0 : obj.ThreatLevel);
+  ""below"": {3}
+  ],", radar.PortLocal + "_" + radar.Name/*radar.Id*/, infos.RadarState.Working, obj == null ? 0 : obj.DistanceToBorder, obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z);
+  //              result = string.Format(@"
+  //""radar_{0}"": [
+  //""effective"": {1},
+  //""distance"": {2},
+  //""threat"": {3}
+  //],", radar.PortLocal + "_" + radar.Name/*radar.Id*/, infos.RadarState.Working, obj == null ? 0 : obj.DistanceToBorder, obj == null ? 0 : obj.ThreatLevel);
             }
 
             return result;
