@@ -233,8 +233,11 @@ namespace ARS408.Model
                 this.ModiCoors.Z = this.Radar.ZmodifiedRatios.Xratio * this.DistLong + this.Radar.ZmodifiedRatios.Yratio * this.DistLat;
                 bool northsouth = this.Radar.Direction == 2 || this.Radar.Direction == 4; //是否朝向北或南
                 double x = northsouth ? this.ModiCoors.X : this.ModiCoors.Y, y = northsouth ? this.ModiCoors.Y : this.ModiCoors.X, z = this.ModiCoors.Z;
-                int m = this.Radar.DefenseMode;
-                this.DistanceToBorder = Math.Sqrt((Math.Sign(4 - m) == 1 ? 1 : 0) * Math.Pow(x, 2) + (Math.Sign(3 - m) == 1 ? 1 : 0) * Math.Pow(y, 2) + (Math.Sign(2 - m) == 1 ? 1 : 0) * Math.Pow(z, 2));
+                int m = this.Radar.DefenseMode; //防御模式：1 点，2 线，3 面
+                //d = (a*x^2+b*z^2+c*y^2)^0.5，其中a, b, c由4-m, 3-m, 2-m的值决定，假如大于0则为1，小于等于0为0（公式形如Math.Sign(4 - m) == 1 ? 1 : 0）
+                //含义：面模式，a=1,b=c=0；线模式，a=b=1,c=0；点模式，a=b=c=1
+                //this.DistanceToBorder = Math.Sqrt((Math.Sign(4 - m) == 1 ? 1 : 0) * Math.Pow(x, 2) + (Math.Sign(3 - m) == 1 ? 1 : 0) * Math.Pow(y, 2) + (Math.Sign(2 - m) == 1 ? 1 : 0) * Math.Pow(z, 2));
+                this.DistanceToBorder = Math.Sqrt((Math.Sign(4 - m) == 1 ? 1 : 0) * Math.Pow(x, 2) + (Math.Sign(3 - m) == 1 ? 1 : 0) * Math.Pow(z, 2) + (Math.Sign(2 - m) == 1 ? 1 : 0) * Math.Pow(y, 2));
                 if (m == 3)
                     this.DistanceToBorder *= Math.Sign(x);
             }

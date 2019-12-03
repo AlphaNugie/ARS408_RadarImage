@@ -47,7 +47,7 @@ namespace ARS408.Forms
         public DataFrameMessages Infos { get { return this.infos; } }
 
         /// <summary>
-        /// 雷达信息对象
+        /// 雷达信息对象，假如为null，则代表为单雷达显示模式
         /// </summary>
         public Radar Radar { get; set; }
 
@@ -398,6 +398,8 @@ namespace ARS408.Forms
             this.thread_writeitems.Abort();
             //this.timer_WriteItems.Stop();
             this.finalized = true;
+            BaseConst.IniHelper.WriteData("Detection", "RcsMinimum", this.RcsMinimum.ToString());
+            BaseConst.IniHelper.WriteData("Detection", "RcsMaximum", this.RcsMaximum.ToString());
             if (this.Radar != null)
                 return;
 
@@ -407,8 +409,8 @@ namespace ARS408.Forms
             BaseConst.IniHelper.WriteData("Connection", "UsingLocal", this.checkBox_UsingLocal.Checked ? "1" : "0");
             BaseConst.IniHelper.WriteData("Connection", "IpAddressLocal", this.textBox_IpAddress_Local.Text);
             BaseConst.IniHelper.WriteData("Connection", "PortLocal", this.numeric_Port_Local.Value.ToString());
-            BaseConst.IniHelper.WriteData("Detection", "RcsMinimum", this.RcsMinimum.ToString());
-            BaseConst.IniHelper.WriteData("Detection", "RcsMaximum", this.RcsMaximum.ToString());
+            //BaseConst.IniHelper.WriteData("Detection", "RcsMinimum", this.RcsMinimum.ToString());
+            //BaseConst.IniHelper.WriteData("Detection", "RcsMaximum", this.RcsMaximum.ToString());
             BaseConst.IniHelper.WriteData("Detection", "ProbOfExistMinimum", this.ProbOfExistMinimum.ToString());
         }
 
@@ -462,7 +464,7 @@ namespace ARS408.Forms
             {
                 if (usingTcp)
                 {
-                    this.TcpClient.ReceiveRestTime = BaseConst.ReceiveRestTime;
+                    this.TcpClient.ReceiveRestTime = this.Radar == null ? this.TcpClient.ReceiveRestTime : BaseConst.ReceiveRestTime; //假如为多雷达，则1秒刷新，否则维持不变
                     this.TcpClient.ReceiveBufferSize = 4096;
                     if (this.checkBox_UsingLocal.Checked)
                         this.TcpClient.Connect(this.IpAddress, this.Port, this.IpAddress_Local, this.Port_Local);

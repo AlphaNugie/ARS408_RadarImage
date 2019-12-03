@@ -345,20 +345,73 @@ namespace ARS408.Forms
             return main;
         }
 
+        /// <summary>
+        /// 获取包含溜桶陆地、海洋、北侧、南侧四个方向的最近距离
+        /// </summary>
+        /// <returns></returns>
+        public string GetBucketSideDistances()
+        {
+            IEnumerable<Radar> radars = this.DictForms.Keys;
+            string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3};shore_north:{4};shore_south:{5}",
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 3).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 1).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 2).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 4).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("北")).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("南")).Select(r => this.GetRadarMinDistance(r)))
+                );
+            //string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3}",
+            //BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 3).Select(r => this.GetRadarMinDistance(r))),
+            //BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 1).Select(r => this.GetRadarMinDistance(r))),
+            //BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 2).Select(r => this.GetRadarMinDistance(r))),
+            //BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 4).Select(r => this.GetRadarMinDistance(r)))
+            //);
+            return result;
+        }
+
+        /// <summary>
+        /// 根据Radar对象获取雷达最近距离
+        /// </summary>
+        /// <param name="radar">Radar实体类对象</param>
+        /// <returns></returns>
+        public double GetRadarMinDistance(Radar radar)
+        {
+            DataFrameMessages infos;
+            ObjectGeneral obj = null;
+            if (radar != null && this.DictForms[radar] != null && (infos = this.DictForms[radar].Infos) != null)
+                obj = infos.ObjectMostThreat;
+            return obj == null ? 0 : obj.DistanceToBorder;
+        }
+
+        /// <summary>
+        /// 根据Radar对象获取雷达信息字符串
+        /// </summary>
+        /// <param name="radar">Radar实体类对象</param>
+        /// <returns></returns>
         public string GetRadarString(Radar radar)
         {
             string result = string.Empty;
-            FormDisplay display = null;
-            DataFrameMessages infos = null;
+            FormDisplay display;
+            DataFrameMessages infos;
             if (radar != null && (display = this.DictForms[radar]) != null && (infos = display.Infos) != null)
             {
-                ObjectGeneral obj = infos.ObjectMostThreat, obj_other = infos.ObjectHighest;
+                dynamic obj = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectMostThreat : (dynamic)infos.ClusterMostThreat, obj_other = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectHighest : (dynamic)infos.ClusterHighest;
+                double obj_dist = obj == null ? 0 : obj.DistanceToBorder, obj_height = obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z;
                 result = string.Format(@"
   ""radar_{0}"": [
   ""effective"": {1},
   ""distance"": {2},
   ""below"": {3}
-  ],", radar.PortLocal + "_" + radar.Name/*radar.Id*/, infos.RadarState.Working, obj == null ? 0 : obj.DistanceToBorder, obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z);
+  ],", radar.PortLocal + "_" + radar.Name, infos.RadarState.Working, obj_dist, obj_height);
+
+  //              ObjectGeneral obj = infos.ObjectMostThreat, obj_other = infos.ObjectHighest;
+  //              result = string.Format(@"
+  //""radar_{0}"": [
+  //""effective"": {1},
+  //""distance"": {2},
+  //""below"": {3}
+  //],", radar.PortLocal + "_" + radar.Name, infos.RadarState.Working, obj == null ? 0 : obj.DistanceToBorder, obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z);
+
   //              result = string.Format(@"
   //""radar_{0}"": [
   //""effective"": {1},
@@ -417,7 +470,7 @@ namespace ARS408.Forms
             }
         }
 
-        private void button_StartOrEnd_Click(object sender, EventArgs e)
+        private void Button_StartOrEnd_Click(object sender, EventArgs e)
         {
             bool flag = this.button_StartOrEnd.Text.Equals("开始");
             foreach (FormDisplay form in this.DictForms.Values)

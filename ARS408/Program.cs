@@ -84,6 +84,10 @@ namespace ARS408
             //int temp = 1;
             #endregion
 
+            double x = 100, y = 200, h = 20, phi = 75; //本地XY坐标与海拔，大臂航向
+            double rc = 45, hc = 10, lamda = 47.9457; //定位天线距俯仰轴距离，俯仰轴海拔，坝基方向与真北夹角
+            double x_prime = x - Math.Sqrt(Math.Pow(rc, 2) - Math.Pow(hc - h, 2)) * Math.Cos(phi - lamda);
+            double y_prime = y - Math.Sqrt(Math.Pow(rc, 2) - Math.Pow(hc - h, 2)) * Math.Sin(phi - lamda);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

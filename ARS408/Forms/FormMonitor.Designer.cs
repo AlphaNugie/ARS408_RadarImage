@@ -83,7 +83,7 @@
             this.button_StartOrEnd.TabIndex = 1;
             this.button_StartOrEnd.Text = "开始";
             this.button_StartOrEnd.UseVisualStyleBackColor = true;
-            this.button_StartOrEnd.Click += new System.EventHandler(this.button_StartOrEnd_Click);
+            this.button_StartOrEnd.Click += new System.EventHandler(this.Button_StartOrEnd_Click);
             // 
             // button_Info
             // 

@@ -270,35 +270,48 @@ namespace ARS408.Model
         public void DataPush<T>(T general)
         {
             dynamic g = (dynamic)general;
-            double rcs = g.RCS, below = 0 - BaseConst.BucketHeight - g.ModiCoors.Z;
+            double x = g.ModiCoors.X, z = g.ModiCoors.Z;
+            double rcs = g.RCS, below = 0 - BaseConst.BucketHeight - z;
             //TODO 溜桶下方物体检测：另外添加2个ListBuffer，分别对应cluster和object，添加溜桶下方2米之内、水平距离离雷达不超过1米的点，DataPushFinalize时一起压入ListTrigger
 
-            //TODO 输出结果过滤条件1
-            //假如列表元素饱和
-            //或距边界范围超出阈值
-            //或RCS值不在范围内
-            //或溜桶雷达Z方向坐标低于大铲最低点
-            //则忽略
+            bool is_shore = this.Radar != null && this.Radar.GroupType == RadarGroupType.Shore;
             bool flag1 = this.ListBufferCount >= this.BufferSize, //缓冲区是否已满
                  flag2 = BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres, //距边界距离是否超出阈值
                  flag3 = this.ParentForm != null && !rcs.Between(this.ParentForm.RcsMinimum, this.ParentForm.RcsMaximum), //RCS值是否不在范围内
-                 flag4 = this.Radar != null && this.Radar.GroupType == RadarGroupType.Bucket && g.ModiCoors.Z < (0 - BaseConst.BucketHeight); //溜桶雷达Z方向坐标是否低于大铲最低点
-            bool flag_other = below.Between(0, BaseConst.ObsBelowThres) && g.DistanceToBorder < BaseConst.ObsBelowFrontier; //障碍物在溜桶下方的距离在2米(ObsBelowThres)内，且距边界距离不超过1米(ObsBelowFrontier)
+                 flag4 = this.Radar != null && this.Radar.GroupType == RadarGroupType.Bucket && z < (0 - BaseConst.BucketHeight); //溜桶雷达Z方向坐标是否低于大铲最低点
+            bool flag_other = below.Between(0, BaseConst.ObsBelowThres) && g.DistanceToBorder < BaseConst.ObsBelowFrontier; //障碍物在溜桶下方的距离在阈值(ObsBelowThres)内，且距边界距离不超过1米(ObsBelowFrontier)
             dynamic list;
-            if (!(flag1 || flag2 || flag3 || flag4))
+            //TODO 岸基雷达过滤方式：缓冲区未满，RCS值在范围内，有效区域为Z轴（竖直）方向±1米，X轴（南北）方向±5米
+            if (is_shore)
             {
-                list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object;
-                list.Add(general);
+                if (!(flag1 || flag3) && z.Between(-1, 1) && x.Between(-5, 5))
+                    (list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object).Add(general);
             }
-            else if (!flag1 && flag_other)
+            else
             {
-                list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster_Other : (dynamic)this.ListBuffer_Object_Other;
-                list.Add(general);
+                //TODO 非岸基输出结果过滤条件1：缓冲区未满，距边界范围在阈值内，RCS值在范围内，溜桶雷达Z方向坐标不低于大铲最低点
+                if (!(flag1 || flag2 || flag3 || flag4))
+                    (list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object).Add(general);
+                //TODO 溜桶下方障碍物过滤条件：缓冲区未满，RCS值在范围内，障碍物在溜桶下方的距离在阈值内、且距边界距离不超过1米
+                else if (!(flag1 || flag3) && flag_other)
+                    (list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster_Other : (dynamic)this.ListBuffer_Object_Other).Add(general);
             }
-            //if (flag1 || flag2 || flag3 || flag4)
-            //    return;
-            //dynamic list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object;
-            //list.Add(general);
+            //if (is_shore && !(flag1 || flag3) && z.Between(-1, 1) && x.Between(-5, 5))
+            //{
+            //    list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object;
+            //    list.Add(general);
+            //}
+            //else if (!is_shore && !(flag1 || flag2 || flag3 || flag4))
+            //{
+            //    list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster : (dynamic)this.ListBuffer_Object;
+            //    list.Add(general);
+            //}
+            ////else if (!flag1 && flag_other)
+            //else if (!(flag1 || flag3) && flag_other)
+            //{
+            //    list = general is ClusterGeneral ? (dynamic)this.ListBuffer_Cluster_Other : (dynamic)this.ListBuffer_Object_Other;
+            //    list.Add(general);
+            //}
         }
 
         public void DataQualityUpdate<T>(T q)

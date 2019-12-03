@@ -263,9 +263,10 @@ namespace ARS408.Model
                 bool northsouth = this.Radar.Direction == 2 || this.Radar.Direction == 4; //是否朝向北或南
                 double x = northsouth ? this.ModiCoors.X : this.ModiCoors.Y, y = northsouth ? this.ModiCoors.Y : this.ModiCoors.X, z = this.ModiCoors.Z; //根据方向调换X/Y的值
                 int m = this.Radar.DefenseMode; //防御模式：1 点，2 线，3 面
-                //d = (a*x^2+b*y^2+c*z^2)^0.5，其中a, b, c由4-m, 3-m, 2-m的值决定，假如大于0则为1，小于等于0为0（公式形如Math.Sign(4 - m) == 1 ? 1 : 0）
+                //d = (a*x^2+b*z^2+c*y^2)^0.5，其中a, b, c由4-m, 3-m, 2-m的值决定，假如大于0则为1，小于等于0为0（公式形如Math.Sign(4 - m) == 1 ? 1 : 0）
                 //含义：面模式，a=1,b=c=0；线模式，a=b=1,c=0；点模式，a=b=c=1
-                this.DistanceToBorder = Math.Sqrt((Math.Sign(4 - m) == 1 ? 1 : 0) * Math.Pow(x, 2) + (Math.Sign(3 - m) == 1 ? 1 : 0) * Math.Pow(y, 2) + (Math.Sign(2 - m) == 1 ? 1 : 0) * Math.Pow(z, 2));
+                //this.DistanceToBorder = Math.Sqrt((Math.Sign(4 - m) == 1 ? 1 : 0) * Math.Pow(x, 2) + (Math.Sign(3 - m) == 1 ? 1 : 0) * Math.Pow(y, 2) + (Math.Sign(2 - m) == 1 ? 1 : 0) * Math.Pow(z, 2));
+                this.DistanceToBorder = Math.Sqrt((Math.Sign(4 - m) == 1 ? 1 : 0) * Math.Pow(x, 2) + (Math.Sign(3 - m) == 1 ? 1 : 0) * Math.Pow(z, 2) + (Math.Sign(2 - m) == 1 ? 1 : 0) * Math.Pow(y, 2));
                 //TODO 假如防御模式为面，再添加处理步骤：乘以x的符号，效果为使边界距离带符号
                 if (m == 3)
                     this.DistanceToBorder *= Math.Sign(x);

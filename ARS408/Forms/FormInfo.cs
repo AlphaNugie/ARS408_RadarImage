@@ -62,9 +62,13 @@ namespace ARS408.Forms
             TextBox textBox;
             foreach (Radar radar in this.monitor.DictForms.Keys)
             {
-                textBox = (TextBox)this.Controls.Find("textBox_Radar" + i, false)[0];
-                textBox.Text = this.monitor.GetRadarString(radar);
-                i++;
+                try
+                {
+                    textBox = (TextBox)this.Controls.Find("textBox_Radar" + i, false)[0];
+                    textBox.Text = this.monitor.GetRadarString(radar);
+                    i++;
+                }
+                catch (Exception) { }
             }
         }
     }

@@ -169,6 +169,21 @@ property float rcs";
     public class BaseFunc
     {
         /// <summary>
+        /// 获取数据集中所有不为0的数中最小的数
+        /// </summary>
+        /// <param name="set"></param>
+        /// <returns></returns>
+        public static double GetMinValueExceptZero(IEnumerable<double> set)
+        {
+            if (set == null)
+                return 0;
+            set = set.Where(d => d != 0);
+            double min = 0;
+            try { min = set.Count() == 0 ? 0 : set.Min(); } catch (Exception) { }
+            return min;
+        }
+
+        /// <summary>
         /// 根据雷达散射截面属性获取颜色
         /// </summary>
         /// <param name="r">雷达散射截面</param>

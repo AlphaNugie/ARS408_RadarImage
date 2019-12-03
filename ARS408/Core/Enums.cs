@@ -25,7 +25,12 @@ namespace ARS408.Core
         /// <summary>
         /// 门腿
         /// </summary>
-        Feet = 3
+        Feet = 3,
+
+        /// <summary>
+        /// 岸基
+        /// </summary>
+        Shore = 4
     }
 
     /// <summary>

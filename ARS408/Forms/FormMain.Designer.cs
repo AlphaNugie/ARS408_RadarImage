@@ -34,6 +34,7 @@
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenu_Monitor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenu_AutoMonitor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenu_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.字典ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenu_Shiploaders = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +45,6 @@
             this.toolStrip_OpcConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl_Main = new System.Windows.Forms.TabControl();
             this.tcpServer_Watchdog = new SocketHelper.AxTcpServer(this.components);
-            this.button_Send = new System.Windows.Forms.Button();
             this.label_Receive = new System.Windows.Forms.Label();
             this.label_State = new System.Windows.Forms.Label();
             this.label_Error = new System.Windows.Forms.Label();
@@ -71,6 +71,7 @@
             this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenu_Monitor,
             this.toolStripSeparator1,
+            this.toolStripMenu_AutoMonitor,
             this.toolStripMenu_Exit});
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
             this.文件ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
@@ -87,6 +88,14 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(179, 6);
+            // 
+            // toolStripMenu_AutoMonitor
+            // 
+            this.toolStripMenu_AutoMonitor.CheckOnClick = true;
+            this.toolStripMenu_AutoMonitor.Name = "toolStripMenu_AutoMonitor";
+            this.toolStripMenu_AutoMonitor.Size = new System.Drawing.Size(182, 26);
+            this.toolStripMenu_AutoMonitor.Text = "自动开始监视";
+            this.toolStripMenu_AutoMonitor.CheckedChanged += new System.EventHandler(this.toolStripMenu_AutoMonitor_CheckedChanged);
             // 
             // toolStripMenu_Exit
             // 
@@ -109,28 +118,28 @@
             // toolStripMenu_Shiploaders
             // 
             this.toolStripMenu_Shiploaders.Name = "toolStripMenu_Shiploaders";
-            this.toolStripMenu_Shiploaders.Size = new System.Drawing.Size(224, 26);
+            this.toolStripMenu_Shiploaders.Size = new System.Drawing.Size(152, 26);
             this.toolStripMenu_Shiploaders.Text = "装船机";
             this.toolStripMenu_Shiploaders.Click += new System.EventHandler(this.ToolStripMenu_Shiploaders_Click);
             // 
             // toolStripMenu_RadarGroup
             // 
             this.toolStripMenu_RadarGroup.Name = "toolStripMenu_RadarGroup";
-            this.toolStripMenu_RadarGroup.Size = new System.Drawing.Size(224, 26);
+            this.toolStripMenu_RadarGroup.Size = new System.Drawing.Size(152, 26);
             this.toolStripMenu_RadarGroup.Text = "雷达组";
             this.toolStripMenu_RadarGroup.Click += new System.EventHandler(this.ToolStripMenu_RadarGroup_Click);
             // 
             // toolStripMenu_Radar
             // 
             this.toolStripMenu_Radar.Name = "toolStripMenu_Radar";
-            this.toolStripMenu_Radar.Size = new System.Drawing.Size(224, 26);
+            this.toolStripMenu_Radar.Size = new System.Drawing.Size(152, 26);
             this.toolStripMenu_Radar.Text = "雷达";
             this.toolStripMenu_Radar.Click += new System.EventHandler(this.ToolStripMenu_Radar_Click);
             // 
             // toolStrip_ThreatLevels
             // 
             this.toolStrip_ThreatLevels.Name = "toolStrip_ThreatLevels";
-            this.toolStrip_ThreatLevels.Size = new System.Drawing.Size(224, 26);
+            this.toolStrip_ThreatLevels.Size = new System.Drawing.Size(152, 26);
             this.toolStrip_ThreatLevels.Text = "威胁级数";
             this.toolStrip_ThreatLevels.Click += new System.EventHandler(this.ToolStrip_ThreatLevels_Click);
             // 
@@ -173,18 +182,6 @@
             this.tcpServer_Watchdog.OnErrorMsg += new SocketHelper.AxTcpServer.ErrorMsgEventHandler(this.TcpServer_Watchdog_OnErrorMsg);
             this.tcpServer_Watchdog.OnStateInfo += new SocketHelper.AxTcpServer.StateInfoEventHandler(this.TcpServer_Watchdog_OnStateInfo);
             // 
-            // button_Send
-            // 
-            this.button_Send.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button_Send.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Send.Location = new System.Drawing.Point(0, 656);
-            this.button_Send.Name = "button_Send";
-            this.button_Send.Size = new System.Drawing.Size(1343, 30);
-            this.button_Send.TabIndex = 7;
-            this.button_Send.Text = "button_Send";
-            this.button_Send.UseVisualStyleBackColor = true;
-            this.button_Send.Visible = false;
-            // 
             // label_Receive
             // 
             this.label_Receive.AutoSize = true;
@@ -221,7 +218,8 @@
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick_1);
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // FormMain
             // 
@@ -229,7 +227,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1343, 746);
-            this.Controls.Add(this.button_Send);
             this.Controls.Add(this.label_Receive);
             this.Controls.Add(this.label_State);
             this.Controls.Add(this.label_Error);
@@ -242,6 +239,7 @@
             this.Name = "FormMain";
             this.Text = "毫米波雷达";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -265,10 +263,10 @@
         private System.Windows.Forms.ToolStripMenuItem toolStrip_ThreatLevels;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_OpcConfig;
         private SocketHelper.AxTcpServer tcpServer_Watchdog;
-        private System.Windows.Forms.Button button_Send;
         private System.Windows.Forms.Label label_Receive;
         private System.Windows.Forms.Label label_State;
         private System.Windows.Forms.Label label_Error;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenu_AutoMonitor;
     }
 }

@@ -19,6 +19,7 @@ namespace ARS408.Forms
     public partial class FormMain : Form
     {
         #region 私有变量
+        private FormMonitor first_monitor;
         private DataService_Shiploader DataService_Shiploader = new DataService_Shiploader();
         private string tcp_info_error = string.Empty;
         private string tcp_info_state = string.Empty;
@@ -36,6 +37,18 @@ namespace ARS408.Forms
         }
 
         /// <summary>
+        /// 窗体加载
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            //假如勾选自动开始监视，打开监视页面
+            if (this.toolStripMenu_AutoMonitor.Checked = BaseConst.IniHelper.ReadData("Main", "AutoMonitor").Equals("1"))
+                this.StartMonitor();
+        }
+
+        /// <summary>
         /// 窗体关闭事件
         /// </summary>
         /// <param name="sender"></param>
@@ -44,6 +57,8 @@ namespace ARS408.Forms
         {
             foreach (TabPage page in this.tabControl_Main.TabPages)
                 this.DisposeTabPage(page);
+            this.tcpServer_Watchdog.Stop();
+            this.timer1.Stop();
         }
 
         #region 功能
@@ -52,12 +67,24 @@ namespace ARS408.Forms
         /// </summary>
         private void Init_Watchdog()
         {
-            this.tcpServer_Watchdog.ServerIp = BaseConst.IniHelper.ReadData("Connection", "MainServerIp");
-            this.tcpServer_Watchdog.ServerPort = int.Parse(BaseConst.IniHelper.ReadData("Connection", "MainServerPort"));
-            this.tcpServer_Watchdog.IsheartCheck = BaseConst.IniHelper.ReadData("Connection", "SendHeartBeat").Equals("1");
-            this.tcpServer_Watchdog.HeartbeatPacket = BaseConst.IniHelper.ReadData("Connection", "HeartBeatString");
-            this.tcpServer_Watchdog.CheckTime = int.Parse(BaseConst.IniHelper.ReadData("Connection", "HeartBeatInterval"));
+            this.tcpServer_Watchdog.ServerIp = BaseConst.IniHelper.ReadData("Watchdog", "MainServerIp");
+            this.tcpServer_Watchdog.ServerPort = int.Parse(BaseConst.IniHelper.ReadData("Watchdog", "MainServerPort"));
+            this.tcpServer_Watchdog.IsheartCheck = BaseConst.IniHelper.ReadData("Watchdog", "SendHeartBeat").Equals("1");
+            this.tcpServer_Watchdog.HeartbeatPacket = BaseConst.IniHelper.ReadData("Watchdog", "HeartBeatString");
+            this.tcpServer_Watchdog.CheckTime = int.Parse(BaseConst.IniHelper.ReadData("Watchdog", "HeartBeatInterval"));
             this.tcpServer_Watchdog.Start();
+        }
+
+        /// <summary>
+        /// 打开监视页面
+        /// </summary>
+        private void StartMonitor()
+        {
+            DataTable table = this.DataService_Shiploader.GetAllShiploadersOrderbyId();
+            if (table == null || table.Rows.Count == 0)
+                return;
+
+            table.Rows.Cast<DataRow>().ToList().ForEach(row => this.ShowForm(this.first_monitor = new FormMonitor(int.Parse(row["shiploader_id"].ToString())), DockStyle.Fill));
         }
 
         /// <summary>
@@ -188,11 +215,12 @@ namespace ARS408.Forms
         /// <param name="e"></param>
         private void ToolStripMenu_Monitor_Click(object sender, EventArgs e)
         {
-            DataTable table = this.DataService_Shiploader.GetAllShiploadersOrderbyId();
-            if (table == null || table.Rows.Count == 0)
-                return;
+            this.StartMonitor();
+            //DataTable table = this.DataService_Shiploader.GetAllShiploadersOrderbyId();
+            //if (table == null || table.Rows.Count == 0)
+            //    return;
 
-            table.Rows.Cast<DataRow>().ToList().ForEach(row => this.ShowForm(new FormMonitor(int.Parse(row["shiploader_id"].ToString())), DockStyle.Fill));
+            //table.Rows.Cast<DataRow>().ToList().ForEach(row => this.ShowForm(new FormMonitor(int.Parse(row["shiploader_id"].ToString())), DockStyle.Fill));
         }
 
         /// <summary>
@@ -289,12 +317,40 @@ namespace ARS408.Forms
             this.tcp_info_receive = info;
         }
 
-        private void Timer1_Tick_1(object sender, EventArgs e)
+        /// <summary>
+        /// 向客户端发送命令
+        /// </summary>
+        /// <param name="data"></param>
+        private void SendData(object data)
         {
+            List<ClientModel> list = this.tcpServer_Watchdog.ClientSocketList;
+            if (list == null || list.Count == 0)
+                return;
+
+            foreach (ClientModel clientModel in list)
+            {
+                if (clientModel == null)
+                    continue;
+                if (clientModel.ClientStyle == ClientStyle.WebSocket)
+                    this.tcpServer_Watchdog.SendToWebClient(clientModel, data.ToString());
+                else
+                    this.tcpServer_Watchdog.SendData(clientModel, data.ToString());
+            }
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            if (this.first_monitor != null)
+                this.SendData(this.first_monitor.GetBucketSideDistances());
             this.label_Error.Text = this.tcp_info_error;
             this.label_State.Text = this.tcp_info_state;
             this.label_Receive.Text = this.tcp_info_receive;
         }
         #endregion
+
+        private void toolStripMenu_AutoMonitor_CheckedChanged(object sender, EventArgs e)
+        {
+            BaseConst.IniHelper.WriteData("Main", "AutoMonitor", this.toolStripMenu_AutoMonitor.Checked ? "1" : "0");
+        }
     }
 }
