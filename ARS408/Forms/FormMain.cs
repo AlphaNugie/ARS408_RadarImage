@@ -216,11 +216,6 @@ namespace ARS408.Forms
         private void ToolStripMenu_Monitor_Click(object sender, EventArgs e)
         {
             this.StartMonitor();
-            //DataTable table = this.DataService_Shiploader.GetAllShiploadersOrderbyId();
-            //if (table == null || table.Rows.Count == 0)
-            //    return;
-
-            //table.Rows.Cast<DataRow>().ToList().ForEach(row => this.ShowForm(new FormMonitor(int.Parse(row["shiploader_id"].ToString())), DockStyle.Fill));
         }
 
         /// <summary>
@@ -252,28 +247,19 @@ namespace ARS408.Forms
         private void TcpServer_Watchdog_OnErrorMsg(string message)
         {
             try { this.OnTcpInfoCallBack(message, 1); }
-            catch (Exception ex)
-            {
-                FileClient.WriteExceptionInfo(ex, "处理TCP服务端错误信息时出现错误", true);
-            }
+            catch (Exception ex) { FileClient.WriteExceptionInfo(ex, "处理TCP服务端错误信息时出现错误", true); }
         }
 
         private void TcpServer_Watchdog_TcpServerRecevice(Socket socket, string message, byte[] data)
         {
             try { this.MessageReceived(socket, message, data); }
-            catch (Exception ex)
-            {
-                FileClient.WriteExceptionInfo(ex, "处理TCP服务端接收的信息时出现错误", true);
-            }
+            catch (Exception ex) { FileClient.WriteExceptionInfo(ex, "处理TCP服务端接收的信息时出现错误", true); }
         }
 
         private void TcpServer_Watchdog_OnStateInfo(string message, SocketHelper.SocketState state)
         {
             try { this.OnTcpInfoCallBack(message, 2); }
-            catch (Exception ex)
-            {
-                FileClient.WriteExceptionInfo(ex, "TCP服务端状态信息出错", true);
-            }
+            catch (Exception ex) { FileClient.WriteExceptionInfo(ex, "TCP服务端状态信息出错", true); }
         }
 
         public void OnTcpInfoCallBack(object obj, int index)
@@ -346,11 +332,11 @@ namespace ARS408.Forms
             this.label_State.Text = this.tcp_info_state;
             this.label_Receive.Text = this.tcp_info_receive;
         }
-        #endregion
 
         private void toolStripMenu_AutoMonitor_CheckedChanged(object sender, EventArgs e)
         {
             BaseConst.IniHelper.WriteData("Main", "AutoMonitor", this.toolStripMenu_AutoMonitor.Checked ? "1" : "0");
         }
+        #endregion
     }
 }

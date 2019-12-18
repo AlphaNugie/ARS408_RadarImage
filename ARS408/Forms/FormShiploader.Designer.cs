@@ -102,7 +102,7 @@
             // Column_Name
             // 
             this.Column_Name.DataPropertyName = "SHIPLOADER_NAME";
-            this.Column_Name.HeaderText = "装船机名称";
+            this.Column_Name.HeaderText = "大机名称";
             this.Column_Name.MinimumWidth = 125;
             this.Column_Name.Name = "Column_Name";
             this.Column_Name.Width = 125;
@@ -154,7 +154,7 @@
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormShiploader";
-            this.Text = "装船机字典";
+            this.Text = "大机字典";
             this.Load += new System.EventHandler(this.FormShiploader_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Main)).EndInit();
             this.ResumeLayout(false);

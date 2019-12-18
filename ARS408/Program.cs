@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,14 +17,21 @@ namespace ARS408
     static class Program
     {
         /// <summary>
-        /// 应用程序的主入口点。
+        /// 应用程序的主入口点
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
             BaseFunc.InitConfigs(); //配置初始化
-
             #region 测试
+            //List<FalseAlarmProbability> list = "".Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (FalseAlarmProbability)int.Parse(p)).ToList();
+
+            //string t = "";
+            //MatchCollection matches = BaseConst.RegWrapped.Matches(t);
+            //int i = 1;
+
+            //string testie = string.Format("{0}", (int)Directions.Down);
+            //testie = testie;
             //int t = '0' - '0';
 
             //double x = 1, y = 1, z = 1;
@@ -84,22 +92,22 @@ namespace ARS408
             //int temp = 1;
             #endregion
 
-            double x = 100, y = 200, h = 20, phi = 75; //本地XY坐标与海拔，大臂航向
-            double rc = 45, hc = 10, lamda = 47.9457; //定位天线距俯仰轴距离，俯仰轴海拔，坝基方向与真北夹角
-            double x_prime = x - Math.Sqrt(Math.Pow(rc, 2) - Math.Pow(hc - h, 2)) * Math.Cos(phi - lamda);
-            double y_prime = y - Math.Sqrt(Math.Pow(rc, 2) - Math.Pow(hc - h, 2)) * Math.Sin(phi - lamda);
+            //double x = 100, y = 200, h = 20, phi = 75; //本地XY坐标与海拔，大臂航向
+            //double rc = 45, hc = 10, lamda = 47.9457; //定位天线距俯仰轴距离，俯仰轴海拔，坝基方向与真北夹角
+            //double x_prime = x - Math.Sqrt(Math.Pow(rc, 2) - Math.Pow(hc - h, 2)) * Math.Cos(phi - lamda);
+            //double y_prime = y - Math.Sqrt(Math.Pow(rc, 2) - Math.Pow(hc - h, 2)) * Math.Sin(phi - lamda);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form form;
-
-            form = new FormMain();
             string argstring = args == null ? string.Empty : ";" + string.Join(";", args).ToUpper() + ";";
-            //if (args != null && args.Contains(single"))
-            if (argstring.Contains(";SINGLE;"))
-                form = new FormDisplay();
+            int temp = 1;
+            if (temp == 2)
+                argstring = ";SINGLE;";
+            //Form form = new FormMain();
+            //if (argstring.Contains(";SINGLE;"))
+            //    form = new FormDisplay();
+            Form form = argstring.Contains(";SINGLE;") ? (Form)new FormDisplay() : new FormMain();
 
-            //Application.Run(new FormMain());
             Application.Run(form);
         }
     }

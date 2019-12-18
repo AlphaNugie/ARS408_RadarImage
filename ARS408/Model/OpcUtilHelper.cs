@@ -15,8 +15,6 @@ namespace ARS408.Model
 {
     public class OpcUtilHelper
     {
-        //private IniFileHelper iniHelper = new IniFileHelper(BaseConst.IniFilePath);
-
         /// <summary>
         /// OPC重连线程
         /// </summary>
@@ -92,10 +90,10 @@ namespace ARS408.Model
         /// </summary>
         public int ReadInterval { get; set; }
 
-        /// <summary>
-        /// 是否写入报警标签
-        /// </summary>
-        public bool WriteItemValue { get; set; }
+        ///// <summary>
+        ///// 是否写入报警标签
+        ///// </summary>
+        //public bool WriteItemValue { get; set; }
 
         /// <summary>
         /// 装船机信息
@@ -113,11 +111,9 @@ namespace ARS408.Model
         /// <param name="opcServer">OPC服务端</param>
         public OpcUtilHelper(Shiploader shiploader)
         {
-            this.OpcServer = new OPCServer();
             this.Shiploader = shiploader;
             this.UnitRatio = int.Parse(BaseConst.IniHelper.ReadData("OPC", "PositionUnitRatio"));
             this.ReadInterval = int.Parse(BaseConst.IniHelper.ReadData("OPC", "ReadInterval"));
-            this.WriteItemValue = BaseConst.IniHelper.ReadData("OPC", "WriteItemValue").Equals("1");
         }
 
         /// <summary>
@@ -126,7 +122,6 @@ namespace ARS408.Model
         /// <returns></returns>
         public void Init()
         {
-            //bool result = false;
             if (this.Shiploader == null)
                 this.LastErrorMessage = "装船机信息为空，OPC服务无法初始化";
             else if (string.IsNullOrWhiteSpace(this.Shiploader.OpcServerName))
@@ -196,7 +191,6 @@ namespace ARS408.Model
             {
                 this.OpcServer.OPCGroups.RemoveAll();
                 this.OpcGroup = this.OpcServer.OPCGroups.Add("Group_Shiploader_" + this.Shiploader.Id);
-                //this.OpcItems = this.OpcGroup.OPCItems;
 
                 List<string> list = new List<string>
                 {
@@ -346,8 +340,6 @@ namespace ARS408.Model
                 string info = string.Format("获取OPC项的值时出现问题. {0}. shiploader_id: {1}, ip_address: {2}", ex.Message, this.Shiploader.Id, this.Shiploader.OpcServerIp);
                 this.LastErrorMessage = info;
                 FileClient.WriteExceptionInfo(ex, info, false);
-                //this.ArmPosition = 0xFFFFFFFF;
-                //throw;
             }
         }
     }

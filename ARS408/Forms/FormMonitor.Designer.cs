@@ -93,7 +93,7 @@
             this.button_Info.TabIndex = 2;
             this.button_Info.Text = "信息";
             this.button_Info.UseVisualStyleBackColor = true;
-            this.button_Info.Click += new System.EventHandler(this.button_Info_Click);
+            this.button_Info.Click += new System.EventHandler(this.Button_Info_Click);
             // 
             // flowLayoutPanel1
             // 

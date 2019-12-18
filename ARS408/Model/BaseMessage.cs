@@ -63,7 +63,6 @@ namespace ARS408.Model
         public BaseMessage(string input)
         {
             byte[] array = null;
-            //try { array = HexHelper.HexString2Bytes(input); }
             try { array = HexHelper.HexString2Bytes_Alternate(input); }
             catch (Exception) { return; }
             if (array == null || array.Length < 13)
@@ -75,7 +74,6 @@ namespace ARS408.Model
             this.MessageId = (SensorMessageId_0)messageid_0; //得到MESSAGE_ID_0（数据类型）
             this.MessageName = this.MessageId.GetDescription();
             this.DataArray = array.Skip(5).Take(this.DataLength).ToArray(); //提取有效字节
-            //this.DataString_Hex = HexHelper.ByteArray2HexString(this.DataArray);
             this.DataString_Binary = string.Join("", this.DataArray.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
         }
     }

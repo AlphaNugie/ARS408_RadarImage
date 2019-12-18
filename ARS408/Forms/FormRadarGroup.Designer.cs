@@ -108,7 +108,7 @@
             // Column_OwnerShiploaderId
             // 
             this.Column_OwnerShiploaderId.DataPropertyName = "OWNER_SHIPLOADER_ID";
-            this.Column_OwnerShiploaderId.HeaderText = "所属装船机";
+            this.Column_OwnerShiploaderId.HeaderText = "所属大机";
             this.Column_OwnerShiploaderId.MinimumWidth = 135;
             this.Column_OwnerShiploaderId.Name = "Column_OwnerShiploaderId";
             this.Column_OwnerShiploaderId.Width = 135;

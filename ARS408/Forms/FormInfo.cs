@@ -31,18 +31,33 @@ namespace ARS408.Forms
         /// </summary>
         public FormInfo() : this(null) { }
 
-        private void Button_Start_Click(object sender, EventArgs e)
+        private void FormInfo_Load(object sender, EventArgs e)
+        {
+            this.Start();
+        }
+
+        public void Start()
         {
             this.timer1.Start();
             this.button_Start.Enabled = false;
             this.button_Stop.Enabled = true;
         }
 
-        private void Button_Stop_Click(object sender, EventArgs e)
+        public void Stop()
         {
             this.timer1.Stop();
             this.button_Start.Enabled = true;
             this.button_Stop.Enabled = false;
+        }
+
+        private void Button_Start_Click(object sender, EventArgs e)
+        {
+            this.Start();
+        }
+
+        private void Button_Stop_Click(object sender, EventArgs e)
+        {
+            this.Stop();
         }
 
         private void Timer1_Tick(object sender, EventArgs e)

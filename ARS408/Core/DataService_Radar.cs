@@ -51,8 +51,6 @@ namespace ARS408.Core
         public DataTable GetAllRadars(string orderby)
         {
             return this.GetRadars(0, orderby);
-            //string sql = "select t.*, 0 changed from t_base_radar_info t " + (string.IsNullOrWhiteSpace(orderby) ? string.Empty : "order by t." + orderby);
-            //return this.provider.Query(sql);
         }
 
         /// <summary>
@@ -68,7 +66,6 @@ select t.*, g.group_type, 0 changed from t_base_radar_info t
   left join t_base_radargroup_info g on t.owner_group_id = g.group_id
   left join t_base_shiploader_info s on g.owner_shiploader_id = s.shiploader_id
   where {0} = 0 or s.shiploader_id = {0} {1}", shiploader_id, string.IsNullOrWhiteSpace(orderby) ? string.Empty : "order by t." + orderby);
-            //string sql = "select t.*, 0 changed from t_base_radar_info t " + (string.IsNullOrWhiteSpace(orderby) ? string.Empty : "order by t." + orderby);
             return this.provider.Query(sql);
         }
 
@@ -112,7 +109,7 @@ select t.*, g.group_type, 0 changed from t_base_radar_info t
         {
             string sql = string.Empty;
             if (radar != null)
-                sql = string.Format(radar.Id <= 0 ? "insert into t_base_radar_info (radar_name, ip_address, port, owner_group_id, conn_mode_id, using_local, ip_address_local, port_local, degree_xoy, degree_yoz, degree_xoz, degree_general, direction_id, defense_mode_id, remark) values ('{0}', '{1}', {2}, {3}, {4}, {5}, '{6}', {7}, {8}, {9}, {10}, {11}, {12}, {13}, '{14}')" : "update t_base_radar_info set radar_name = '{0}', ip_address = '{1}', port = {2}, owner_group_id = {3}, conn_mode_id = {4}, using_local = {5}, ip_address_local = '{6}', port_local = {7}, degree_xoy = {8}, degree_yoz = {9}, degree_xoz = {10}, degree_general = {11}, direction_id = {12}, defense_mode_id = {13}, remark = '{14}' where radar_id = {15}", radar.Name, radar.IpAddress, radar.Port, radar.OwnerGroupId, radar.ConnectionMode, radar.UsingLocal ? 1 : 0, radar.IpAddressLocal, radar.PortLocal, radar.DegreeXoy, radar.DegreeYoz, radar.DegreeXoz, radar.DegreeGeneral, radar.Direction, radar.DefenseMode, radar.Remark, radar.Id);
+                sql = string.Format(radar.Id <= 0 ? "insert into t_base_radar_info (radar_name, ip_address, port, owner_group_id, conn_mode_id, using_local, ip_address_local, port_local, degree_xoy, degree_yoz, degree_xoz, degree_general, direction_id, defense_mode_id, offset, remark) values ('{0}', '{1}', {2}, {3}, {4}, {5}, '{6}', {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, '{15}')" : "update t_base_radar_info set radar_name = '{0}', ip_address = '{1}', port = {2}, owner_group_id = {3}, conn_mode_id = {4}, using_local = {5}, ip_address_local = '{6}', port_local = {7}, degree_xoy = {8}, degree_yoz = {9}, degree_xoz = {10}, degree_general = {11}, direction_id = {12}, defense_mode_id = {13}, offset = {14}, remark = '{15}' where radar_id = {16}", radar.Name, radar.IpAddress, radar.Port, radar.OwnerGroupId, radar.ConnectionMode, radar.UsingLocal ? 1 : 0, radar.IpAddressLocal, radar.PortLocal, radar.DegreeXoy, radar.DegreeYoz, radar.DegreeXoz, radar.DegreeGeneral, (int)radar.Direction, radar.DefenseMode, radar.Offset, radar.Remark, radar.Id);
             return sql;
         }
 

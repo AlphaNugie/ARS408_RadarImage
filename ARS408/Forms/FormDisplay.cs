@@ -5,6 +5,7 @@ using CommonLib.Events;
 using CommonLib.Function;
 using CommonLib.UIControlUtil;
 using OPCAutomation;
+using SocketHelper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -20,41 +22,41 @@ namespace ARS408.Forms
     public partial class FormDisplay : Form
     {
         #region 私有变量
+        private readonly Regex pattern = new Regex(BaseConst.Pattern_WrappedStatus, RegexOptions.Compiled);
         private readonly DataService_Sqlite dataService = new DataService_Sqlite();
-        private DataFrameMessages infos = null;
         private List<ClusterGeneral> list_cluster = null;
         private List<ObjectGeneral> list_object = null;
+        //private readonly ushort refresh_interval = 200;
         private Bitmap bitmap = null;
         private Graphics graphic = null;
-        private string received = string.Empty;
+        private string received = string.Empty, wrapped = string.Empty;
         private Thread thread = null, thread_writeitems = null;
         private float scale = 1;
         private readonly float scale_original = 1;
         private float column_width = 0;
         private int time = 0; //重连次数
         #endregion
-
         #region 属性
         /// <summary>
         /// 标题栏原始标题
         /// </summary>
         public string Title { get { return this.Radar == null ? "ARS408-21" : this.Radar.Name; } }
-        //public string Title { get { return this.Radar == null ? "ARS408-21" : string.Format("{0}:{1}", this.Radar.IpAddress, this.Radar.Port); } }
 
         /// <summary>
         /// 帧消息处理类
         /// </summary>
-        public DataFrameMessages Infos { get { return this.infos; } }
+        public DataFrameMessages Infos { get; private set; }
 
         /// <summary>
         /// 雷达信息对象，假如为null，则代表为单雷达显示模式
         /// </summary>
         public Radar Radar { get; set; }
 
-        /// <summary>
-        /// TCP客户端
-        /// </summary>
-        public DerivedTcpClient TcpClient { get; set; }
+        #region 连接
+        ///// <summary>
+        ///// TCP客户端
+        ///// </summary>
+        //public DerivedTcpClient TcpClient { get; set; }
 
         /// <summary>
         /// UDP客户端
@@ -90,16 +92,7 @@ namespace ARS408.Forms
         /// 本地端口
         /// </summary>
         public int Port_Local { get; set; }
-
-        /// <summary>
-        /// 操作的串口对象
-        /// </summary>
-        public SerialPort SerialPort1 { get; private set; }
-
-        /// <summary>
-        /// 串口重连线程
-        /// </summary>
-        public Thread Thread_Reconn { get; private set; }
+        #endregion
 
         /// <summary>
         /// 当前的画面比例
@@ -118,16 +111,6 @@ namespace ARS408.Forms
         /// 是否在拖拽图片
         /// </summary>
         public bool PictureMoving { get; set; }
-
-        /// <summary>
-        /// 以字符串发送
-        /// </summary>
-        public bool Send_AsString { get; set; }
-
-        /// <summary>
-        /// 以字符串接收
-        /// </summary>
-        public bool Receive_AsString { get; set; }
 
         /// <summary>
         /// 是否在显示
@@ -205,10 +188,7 @@ namespace ARS408.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FormDisplay_Load(object sender, EventArgs e)
-        {
-            //this.InitControls();
-        }
+        private void FormDisplay_Load(object sender, EventArgs e) { }
 
         /// <summary>
         /// 窗体关闭事件
@@ -227,7 +207,6 @@ namespace ARS408.Forms
             this.Port = radar == null ? BaseConst.Port : radar.Port;
             this.ConnectionMode = radar == null ? BaseConst.ConnectionMode : radar.ConnectionMode;
             this.UsingLocal = radar == null ? BaseConst.UsingLocal : radar.UsingLocal;
-            //this.IpAddress_Local = radar == null ? BaseConst.IpAddress_Local : radar.IpAddressLocal;
             this.IpAddress_Local = BaseConst.IpAddress_Local;
             this.Port_Local = radar == null ? BaseConst.Port_Local : radar.PortLocal;
             //TODO RCS值由何决定
@@ -237,25 +216,16 @@ namespace ARS408.Forms
             //this.RcsMaximum = BaseConst.RcsMaximum;
             this.ProbOfExistMinimum = radar == null ? BaseConst.ProbOfExistMinimum : radar.ProbOfExistMinimum;
 
-            //this.TcpClient = new DerivedTcpClient() { HoldLocalPort = true };
-            this.TcpClient = new DerivedTcpClient();
-            this.TcpClient.DataReceived += new DataReceivedHandler(TcpClient_DataReceived);
-            this.TcpClient.ReconnTimerChanged += new ReconnTimerChangedHandler(this.ReconnTimerChanged);
             this.thread_writeitems = new Thread(new ThreadStart(this.WriteItemValuesLoop)) { IsBackground = true };
             this.AddGroupItemsAsync();
 
             this.column_width = this.tableLayoutPanel_Main.ColumnStyles[0].Width;
-            //this.infos = new DataFrameMessages(this);
-            this.infos = new DataFrameMessages(this, this.Radar);
+            this.Infos = new DataFrameMessages(this, this.Radar);
             this.list_cluster = this.Infos.ListTrigger_Cluster;
             this.list_object = this.Infos.ListTrigger_Object;
-            this.Send_AsString = BaseConst.IniHelper.ReadData("SerialPort", "SendAsString").Equals("1");
-            this.Receive_AsString = BaseConst.IniHelper.ReadData("SerialPort", "ReceiveAsString").Equals("1");
             this.Name = this.Title;
             this.Text = this.Title;
             this.S = this.scale_original;
-            //this.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMinimum"));
-            //this.RcsMaximum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMaximum"));
 
             this.InitControls();
         }
@@ -273,8 +243,8 @@ namespace ARS408.Forms
                     this.label_opc.SafeInvoke(() => { this.label_opc.Text = this.OpcHelper.LastErrorMessage; });
                 if (this.Radar != null && this.OpcHelper != null)
                     this.thread_writeitems.Start();
-                //this.timer_WriteItems.Start();
-            })) { IsBackground = true }.Start();
+            }))
+            { IsBackground = true }.Start();
         }
 
         /// <summary>
@@ -290,7 +260,9 @@ namespace ARS408.Forms
             try
             {
                 this.OpcGroup = this.OpcHelper.OpcServer.OPCGroups.Add("Group_Radar_" + this.Radar.Id);
-                this.OpcItemNames = new string[] { this.Radar.ItemNameRadarState, this.Radar.ItemNameCollisionState, this.Radar.ItemNameCollisionState2 };
+                //TODO 添加雷达数据监测标签
+                this.OpcItemNames = new string[] { this.Radar.ItemNameRadarState, this.Radar.ItemNameCollisionState, this.Radar.ItemNameCollisionState2, string.Format("[SL7_COLL]ANTICOLL_SYS.Spare_Real[{0}]", 10 + this.Radar.Id) };
+                //this.OpcItemNames = new string[] { this.Radar.ItemNameRadarState, this.Radar.ItemNameCollisionState, this.Radar.ItemNameCollisionState2 };
 
                 int count = this.OpcItemNames.Length;
                 string[] itemIds = new string[count + 1];
@@ -324,8 +296,10 @@ namespace ARS408.Forms
             while (true)
             {
                 Thread.Sleep(500);
+                if (!BaseConst.WriteItemValue)
+                    continue;
                 try { this.WriteItemValues(); }
-                catch (Exception e) { }
+                catch (Exception) { }
             }
         }
 
@@ -334,7 +308,7 @@ namespace ARS408.Forms
         /// </summary>
         public void WriteItemValues()
         {
-            if (this.Radar == null || this.OpcHelper == null || !this.OpcHelper.WriteItemValue || this.OpcGroup == null)
+            if (this.Radar == null || this.OpcHelper == null || this.OpcGroup == null)
                 return;
 
             try
@@ -343,7 +317,9 @@ namespace ARS408.Forms
                 if (this.OpcGroup.OPCItems.Count == 0)
                     return;
 
-                Array itemValues = (new object[] { 0, this.Infos.RadarState.Working, this.Infos.CurrentThreatLevels[1] - '0', this.Infos.CurrentThreatLevels[0] - '0' }).ToArray();
+                //TODO 写入雷达监测标签
+                Array itemValues = (new object[] { 0, this.Infos.RadarState.Working, this.Infos.CurrentThreatLevels[1] - '0', this.Infos.CurrentThreatLevels[0] - '0', this.Infos.ObstacleDistance }).ToArray();
+                //Array itemValues = (new object[] { 0, this.Infos.RadarState.Working, this.Infos.CurrentThreatLevels[1] - '0', this.Infos.CurrentThreatLevels[0] - '0' }).ToArray();
                 Array errors;
                 this.OpcGroup.SyncWrite(this.OpcItemNames.Length, ref this.ServerHandlers, ref itemValues, out errors);
             }
@@ -392,11 +368,10 @@ namespace ARS408.Forms
         {
             if (this.finalized)
                 return;
-            this.TcpClient.Close();
+            this.SocketTcpClient.StopConnection();
             this.ThreadControl(false);
             this.Infos.ThreadCheck.Abort();
             this.thread_writeitems.Abort();
-            //this.timer_WriteItems.Stop();
             this.finalized = true;
             BaseConst.IniHelper.WriteData("Detection", "RcsMinimum", this.RcsMinimum.ToString());
             BaseConst.IniHelper.WriteData("Detection", "RcsMaximum", this.RcsMaximum.ToString());
@@ -409,8 +384,6 @@ namespace ARS408.Forms
             BaseConst.IniHelper.WriteData("Connection", "UsingLocal", this.checkBox_UsingLocal.Checked ? "1" : "0");
             BaseConst.IniHelper.WriteData("Connection", "IpAddressLocal", this.textBox_IpAddress_Local.Text);
             BaseConst.IniHelper.WriteData("Connection", "PortLocal", this.numeric_Port_Local.Value.ToString());
-            //BaseConst.IniHelper.WriteData("Detection", "RcsMinimum", this.RcsMinimum.ToString());
-            //BaseConst.IniHelper.WriteData("Detection", "RcsMaximum", this.RcsMaximum.ToString());
             BaseConst.IniHelper.WriteData("Detection", "ProbOfExistMinimum", this.ProbOfExistMinimum.ToString());
         }
 
@@ -424,19 +397,13 @@ namespace ARS408.Forms
             {
                 if (this.thread == null)
                     this.thread = new Thread(new ThreadStart(this.ProcessReceivedData)) { IsBackground = true };
-                //if (this.thread_writeitems == null)
-                //    this.thread_writeitems = new Thread(new ThreadStart(this.WriteItemValuesLoop)) { IsBackground = true };
                 this.thread.Start();
-                //this.thread_writeitems.Start();
             }
             else
             {
                 if (this.thread != null)
                     this.thread.Abort();
-                //if (this.thread_writeitems != null)
-                //    this.thread_writeitems.Abort();
                 this.thread = null;
-                //this.thread_writeitems = null;
             }
         }
 
@@ -458,18 +425,15 @@ namespace ARS408.Forms
         /// </summary>
         private int Connect()
         {
-            //bool usingTcp = int.Parse(this.comboBox_TcpOrUdp.SelectedValue.ToString()) == 1;
             bool usingTcp = this.ConnectionMode == 1;
             try
             {
                 if (usingTcp)
                 {
-                    this.TcpClient.ReceiveRestTime = this.Radar == null ? this.TcpClient.ReceiveRestTime : BaseConst.ReceiveRestTime; //假如为多雷达，则1秒刷新，否则维持不变
-                    this.TcpClient.ReceiveBufferSize = 4096;
-                    if (this.checkBox_UsingLocal.Checked)
-                        this.TcpClient.Connect(this.IpAddress, this.Port, this.IpAddress_Local, this.Port_Local);
-                    else
-                        this.TcpClient.Connect(this.IpAddress, this.Port);
+                    //this.SocketTcpClient.Tcpclient.ReceiveBufferSize = 4096;
+                    this.SocketTcpClient.ServerIp = this.IpAddress;
+                    this.SocketTcpClient.ServerPort = this.Port;
+                    this.SocketTcpClient.StartConnection();
                 }
                 else
                 {
@@ -480,7 +444,7 @@ namespace ARS408.Forms
                         this.UdpClient.Connect(this.IpAddress, this.Port);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 this.Text = this.Title + " - 连接失败";
                 return 0;
@@ -502,12 +466,11 @@ namespace ARS408.Forms
         /// </summary>
         private int Disconnect()
         {
-            //bool usingTcp = int.Parse(this.comboBox_TcpOrUdp.SelectedValue.ToString()) == 1;
             bool usingTcp = this.ConnectionMode == 1;
             try
             {
                 if (usingTcp)
-                    this.TcpClient.Close();
+                    this.SocketTcpClient.StopConnection();
                 else
                     this.UdpClient.Close();
             }
@@ -537,15 +500,15 @@ namespace ARS408.Forms
             if (init)
             {
                 try { this.UdpClient = this.checkBox_UsingLocal.Checked ? new DerivedUdpClient(this.IpAddress_Local, this.Port_Local) : new DerivedUdpClient(); }
-                catch (Exception ex) { return; }
-                this.UdpClient.ReceiveRestTime = BaseConst.ReceiveRestTime;
-                this.UdpClient.DataReceived += new DataReceivedHandler(this.TcpClient_DataReceived);
-                this.UdpClient.ReconnTimerChanged += new ReconnTimerChangedHandler(this.ReconnTimerChanged);
+                catch (Exception) { return; }
+                //this.UdpClient.ReceiveRestTime = BaseConst.ReceiveRestTime;
+                this.UdpClient.DataReceived += new DataReceivedEventHandler(this.Client_DataReceived);
+                this.UdpClient.ReconnTimerChanged += new ReconnTimerChangedEventHandler(this.ReconnTimerChanged);
             }
             else
             {
-                this.UdpClient.DataReceived -= new DataReceivedHandler(this.TcpClient_DataReceived);
-                this.UdpClient.ReconnTimerChanged -= new ReconnTimerChangedHandler(this.ReconnTimerChanged);
+                this.UdpClient.DataReceived -= new DataReceivedEventHandler(this.Client_DataReceived);
+                this.UdpClient.ReconnTimerChanged -= new ReconnTimerChangedEventHandler(this.ReconnTimerChanged);
                 this.UdpClient.Close();
                 this.UdpClient = null;
             }
@@ -565,11 +528,16 @@ namespace ARS408.Forms
         {
             string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
             Infos.Filter(input);
-            this.textBox_Info.SafeInvoke(() =>
+            if (this.IsShown)
             {
-                this.textBox_Info.Text = string.Format(@"{0} 至 {1:yyyy-MM-dd HH:mm:ss.fff} ==>
-数据列表长度：{2}", time, DateTime.Now, this.Infos.ListTrigger_Cluster.Count);
-            });
+                this.textBox_Input.SafeInvoke(() => this.textBox_Input.Text = input);
+                this.textBox_Info.SafeInvoke(() =>
+                {
+                    this.textBox_Info.Text = string.Format(@"{0} 至 {1:yyyy-MM-dd HH:mm:ss.fff} ==>
+数据列表长度：{2}
+集群或目标数量：{3}", time, DateTime.Now, this.Infos.ListTriggerCount, this.Infos.BufferSize);
+                });
+            }
         }
 
         /// <summary>
@@ -577,30 +545,26 @@ namespace ARS408.Forms
         /// </summary>
         private void ProcessReceivedData()
         {
-            ushort interval = 500;
             while (true)
             {
                 try
                 {
                     bool usingTcp = this.ConnectionMode == 1;
-                    bool is_connected_socket = usingTcp ? this.TcpClient.IsConnected_Socket : this.UdpClient.IsConnected_Socket;
-                    string name = usingTcp ? this.TcpClient.Name : this.UdpClient.Name;
+                    bool is_connected_socket = usingTcp ? this.SocketTcpClient.IsStart : this.UdpClient.IsConnected_Socket;
+                    string name = usingTcp ? this.SocketTcpClient.Name : this.UdpClient.Name;
                     this.SafeInvoke(() => { this.Text = this.Title + " - " + (is_connected_socket ? name : "连接断开"); });
-                    //this.TcpClient.ReceiveRestTime = BaseConst.ReceiveRestTime;
 
-                    #region 主动读
-                    //string asc, input;
-                    //this.TcpClient.Read(out asc, out input);
-                    //this.textBox_Input.SafeInvoke(() => { this.textBox_Input.Text = input; });
-                    #endregion
                     #region 被动接收
-                    string input = this.received;
-                    this.received = string.Empty;
-                    this.ProcessUnit(input);
-                }
-                catch (Exception e) { }
-                Thread.Sleep(interval);
+                    this.wrapped = this.received;
+                    if (BaseFunc.GetWrappedMessage(ref this.wrapped))
+                    {
+                        this.received = string.Empty;
+                        this.ProcessUnit(this.wrapped);
+                    }
                     #endregion
+                }
+                catch (Exception) { }
+                Thread.Sleep(BaseConst.RefreshInterval);
             }
         }
         #endregion
@@ -627,8 +591,6 @@ namespace ARS408.Forms
                     list_new = this.list_object.ToList();
                     binding = new BindingList<ObjectGeneral>(list_new);
                 }
-                //List<ClusterGeneral> list_new = this.list_cluster.ToList();
-                //BindingList<ClusterGeneral> binding = new BindingList<ClusterGeneral>(list_new);
                 this.dataGridView_Output.DataSource = null;
                 this.dataGridView_Output.DataSource = binding;
             }
@@ -776,16 +738,16 @@ namespace ARS408.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void TcpClient_DataReceived(object sender, DataReceivedEventArgs eventArgs)
+        private void Client_DataReceived(object sender, DataReceivedEventArgs eventArgs)
         {
-            this.received += eventArgs.ReceivedInfo_HexString;
+            this.received += " " + eventArgs.ReceivedInfo_HexString;
             this.Infos.Timer = 0;
-            if (this.IsShown)
-                this.textBox_Input.SafeInvoke(() =>
-                {
-                    try { this.textBox_Input.Text = this.received.Length > 501 ? this.received.Substring(0, 500) : this.received; }
-                    catch (Exception e) { }
-                });
+        }
+
+        private void SocketTcpClient_OnRecevice(object sender, ReceivedEventArgs e)
+        {
+            this.received += " " + e.ReceivedHexString;
+            this.Infos.Timer = 0;
         }
 
         /// <summary>
@@ -906,8 +868,8 @@ namespace ARS408.Forms
 
         private void Button_Send_Click(object sender, EventArgs e)
         {
-            if (this.ConnectionMode == 1 && this.TcpClient.IsConnected_Socket)
-                this.TcpClient.SendString(this.textBox_SendContent.Text);
+            if (this.ConnectionMode == 1 && this.SocketTcpClient.IsConnected_Socket)
+                this.SocketTcpClient.SendCommand(this.textBox_SendContent.Text);
             else if (this.ConnectionMode == 2 && this.UdpClient.IsConnected)
                 this.UdpClient.SendString(this.textBox_SendContent.Text);
             //if (int.Parse(this.comboBox_TcpOrUdp.SelectedValue.ToString()) == 1 && this.TcpClient.IsConnected_Socket)

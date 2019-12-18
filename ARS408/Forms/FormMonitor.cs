@@ -76,10 +76,7 @@ namespace ARS408.Forms
 
         public FormMonitor() : this(0) { }
 
-        private void FormMonitor_Load(object sender, EventArgs e)
-        {
-            //this.DataSourceRefresh();
-        }
+        private void FormMonitor_Load(object sender, EventArgs e) { }
 
         #region 功能
         /// <summary>
@@ -176,8 +173,9 @@ namespace ARS408.Forms
                 DegreeXoy = double.Parse(row["degree_xoy"].ToString()),
                 DegreeXoz = double.Parse(row["degree_xoz"].ToString()),
                 DegreeGeneral = double.Parse(row["degree_general"].ToString()),
-                Direction = int.Parse(row["direction_id"].ToString()),
+                Direction = (Directions)int.Parse(row["direction_id"].ToString()),
                 DefenseMode = int.Parse(row["defense_mode_id"].ToString()),
+                Offset = double.Parse(row["offset"].ToString()),
                 Remark = row["remark"].ToString(),
                 ItemNameRadarState = row["item_name_radar_state"].ToString(),
                 ItemNameCollisionState = row["item_name_collision_state"].ToString(),
@@ -203,12 +201,8 @@ namespace ARS408.Forms
                 if (this.DictForms.ContainsKey(radar))
                     continue;
 
-                //new Thread(new ThreadStart(() =>
-                //{
                 FormDisplay form = new FormDisplay(radar);
                 this.DictForms.Add(radar, form);
-                //}))
-                //{ IsBackground = true }.Start(); //启动初始化窗体对象的线程
             }
             this.Loading = false;
         }
@@ -253,12 +247,10 @@ namespace ARS408.Forms
                 return;
             }
 
-            //string name = radar != null ? radar.Name : form.Text;
             string name = radar != null ? radar.Name : form.Name;
             //假如Tab页已存在，选中该页面
             foreach (TabPage tabPage in this.tabControl_Main.TabPages)
             {
-                //if (tabPage.Name.Equals(string.Format("{0}:{1}", radar.IpAddress, radar.Port)))
                 if (tabPage.Name.Equals(name))
                 {
                     this.tabControl_Main.SelectedTab = tabPage;
@@ -275,7 +267,6 @@ namespace ARS408.Forms
             display.FormBorderStyle = FormBorderStyle.None; //页面无边框
             page.Controls.Add(display);
             page.Text = display.Text;
-            //page.Name = display.Text;
             page.Name = name;
             page.AutoScroll = true;
 
@@ -312,15 +303,6 @@ namespace ARS408.Forms
             foreach (TabPage page in this.tabControl_Main.TabPages) this.DisposeTabPage(page);
         }
 
-        //private Radar GetRadarByIpPort(string ip_port)
-        //{
-        //    if (string.IsNullOrWhiteSpace(ip_port) || !ip_port.Contains(':'))
-        //        return null;
-
-        //    Radar radar = this.DataSourceList.Find(r => string.Format("{0}:{1}", r.IpAddress, r.Port).Equals(ip_port));
-        //    return radar;
-        //}
-
         private Radar GetRadarByName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -339,9 +321,8 @@ namespace ARS408.Forms
   ""bucketyaw"": {3},
   ""bucketpitch"": {4},
   ""beltspeed"": {5},
-  ""stream"": {6},{7}
-]
-", this.OpcHelper.WalkingPosition, this.OpcHelper.PitchAngle, this.OpcHelper.StretchLength, this.OpcHelper.BucketYaw, this.OpcHelper.BucketPitch, this.OpcHelper.BeltSpeed, this.OpcHelper.Stream, this.GetRadarStrings()).Replace('[', '{').Replace(']', '}');
+  ""stream"": {6}
+]", this.OpcHelper.WalkingPosition, this.OpcHelper.PitchAngle, this.OpcHelper.StretchLength, this.OpcHelper.BucketYaw, this.OpcHelper.BucketPitch, this.OpcHelper.BeltSpeed, this.OpcHelper.Stream).Replace('[', '{').Replace(']', '}');
             return main;
         }
 
@@ -353,19 +334,13 @@ namespace ARS408.Forms
         {
             IEnumerable<Radar> radars = this.DictForms.Keys;
             string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3};shore_north:{4};shore_south:{5}",
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 3).Select(r => this.GetRadarMinDistance(r))),
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 1).Select(r => this.GetRadarMinDistance(r))),
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 2).Select(r => this.GetRadarMinDistance(r))),
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 4).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Land).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Sea).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.North).Select(r => this.GetRadarMinDistance(r))),
+                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.South).Select(r => this.GetRadarMinDistance(r))),
                 BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("北")).Select(r => this.GetRadarMinDistance(r))),
                 BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("南")).Select(r => this.GetRadarMinDistance(r)))
                 );
-            //string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3}",
-            //BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 3).Select(r => this.GetRadarMinDistance(r))),
-            //BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 1).Select(r => this.GetRadarMinDistance(r))),
-            //BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 2).Select(r => this.GetRadarMinDistance(r))),
-            //BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == 4).Select(r => this.GetRadarMinDistance(r)))
-            //);
             return result;
         }
 
@@ -376,11 +351,10 @@ namespace ARS408.Forms
         /// <returns></returns>
         public double GetRadarMinDistance(Radar radar)
         {
-            DataFrameMessages infos;
-            ObjectGeneral obj = null;
-            if (radar != null && this.DictForms[radar] != null && (infos = this.DictForms[radar].Infos) != null)
-                obj = infos.ObjectMostThreat;
-            return obj == null ? 0 : obj.DistanceToBorder;
+            double dist = 0;
+            if (radar != null && this.DictForms[radar] != null && this.DictForms[radar].Infos != null)
+                dist = this.DictForms[radar].Infos.ObstacleDistance;
+            return dist;
         }
 
         /// <summary>
@@ -403,29 +377,8 @@ namespace ARS408.Forms
   ""distance"": {2},
   ""below"": {3}
   ],", radar.PortLocal + "_" + radar.Name, infos.RadarState.Working, obj_dist, obj_height);
-
-  //              ObjectGeneral obj = infos.ObjectMostThreat, obj_other = infos.ObjectHighest;
-  //              result = string.Format(@"
-  //""radar_{0}"": [
-  //""effective"": {1},
-  //""distance"": {2},
-  //""below"": {3}
-  //],", radar.PortLocal + "_" + radar.Name, infos.RadarState.Working, obj == null ? 0 : obj.DistanceToBorder, obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z);
-
-  //              result = string.Format(@"
-  //""radar_{0}"": [
-  //""effective"": {1},
-  //""distance"": {2},
-  //""threat"": {3}
-  //],", radar.PortLocal + "_" + radar.Name/*radar.Id*/, infos.RadarState.Working, obj == null ? 0 : obj.DistanceToBorder, obj == null ? 0 : obj.ThreatLevel);
             }
 
-            return result;
-        }
-
-        public string GetRadarStrings()
-        {
-            string result = string.Join(string.Empty, this.DictForms.Keys.Select(r => this.GetRadarString(r))).TrimEnd(',');
             return result;
         }
         #endregion
@@ -481,7 +434,7 @@ namespace ARS408.Forms
             this.button_StartOrEnd.Text = flag ? "结束" : "开始";
         }
 
-        private void button_Info_Click(object sender, EventArgs e)
+        private void Button_Info_Click(object sender, EventArgs e)
         {
             FormInfo form = new FormInfo(this);
             this.ShowForm(form);

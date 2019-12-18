@@ -47,6 +47,7 @@
             this.Column_DegreeGeneral = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Direction = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Column_DefenseMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column_Offset = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Remark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Changed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Main)).BeginInit();
@@ -102,6 +103,7 @@
             this.Column_DegreeGeneral,
             this.Column_Direction,
             this.Column_DefenseMode,
+            this.Column_Offset,
             this.Column_Remark,
             this.Column_Changed});
             this.dataGridView_Main.Location = new System.Drawing.Point(12, 48);
@@ -132,7 +134,7 @@
             // Column_IpAddress
             // 
             this.Column_IpAddress.DataPropertyName = "IP_ADDRESS";
-            this.Column_IpAddress.HeaderText = "模块IP地址";
+            this.Column_IpAddress.HeaderText = "模块IP";
             this.Column_IpAddress.MinimumWidth = 125;
             this.Column_IpAddress.Name = "Column_IpAddress";
             this.Column_IpAddress.Width = 125;
@@ -140,10 +142,10 @@
             // Column_Port
             // 
             this.Column_Port.DataPropertyName = "PORT";
-            this.Column_Port.HeaderText = "端口号";
-            this.Column_Port.MinimumWidth = 85;
+            this.Column_Port.HeaderText = "端口";
+            this.Column_Port.MinimumWidth = 70;
             this.Column_Port.Name = "Column_Port";
-            this.Column_Port.Width = 85;
+            this.Column_Port.Width = 70;
             // 
             // Column_OwnerGroupId
             // 
@@ -158,21 +160,21 @@
             // 
             this.Column_ConnectionMode.DataPropertyName = "CONN_MODE_ID";
             this.Column_ConnectionMode.HeaderText = "模式";
-            this.Column_ConnectionMode.MinimumWidth = 85;
+            this.Column_ConnectionMode.MinimumWidth = 70;
             this.Column_ConnectionMode.Name = "Column_ConnectionMode";
             this.Column_ConnectionMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column_ConnectionMode.Width = 85;
+            this.Column_ConnectionMode.Width = 70;
             // 
             // Column_UsingLocal
             // 
             this.Column_UsingLocal.DataPropertyName = "USING_LOCAL";
             this.Column_UsingLocal.FalseValue = "0";
-            this.Column_UsingLocal.HeaderText = "指定本地";
-            this.Column_UsingLocal.MinimumWidth = 100;
+            this.Column_UsingLocal.HeaderText = "本地";
+            this.Column_UsingLocal.MinimumWidth = 70;
             this.Column_UsingLocal.Name = "Column_UsingLocal";
             this.Column_UsingLocal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.Column_UsingLocal.TrueValue = "1";
-            this.Column_UsingLocal.Width = 125;
+            this.Column_UsingLocal.Width = 70;
             // 
             // Column_IpAddressLocal
             // 
@@ -189,57 +191,64 @@
             this.Column_PortLocal.HeaderText = "本地端口";
             this.Column_PortLocal.MinimumWidth = 100;
             this.Column_PortLocal.Name = "Column_PortLocal";
-            this.Column_PortLocal.Width = 125;
             // 
             // Column_DegreeYoz
             // 
             this.Column_DegreeYoz.DataPropertyName = "DEGREE_YOZ";
             this.Column_DegreeYoz.HeaderText = "YOZ";
-            this.Column_DegreeYoz.MinimumWidth = 90;
+            this.Column_DegreeYoz.MinimumWidth = 55;
             this.Column_DegreeYoz.Name = "Column_DegreeYoz";
-            this.Column_DegreeYoz.Width = 90;
+            this.Column_DegreeYoz.Width = 55;
             // 
             // Column_DegreeXoy
             // 
             this.Column_DegreeXoy.DataPropertyName = "DEGREE_XOY";
             this.Column_DegreeXoy.HeaderText = "XOY";
-            this.Column_DegreeXoy.MinimumWidth = 90;
+            this.Column_DegreeXoy.MinimumWidth = 55;
             this.Column_DegreeXoy.Name = "Column_DegreeXoy";
-            this.Column_DegreeXoy.Width = 90;
+            this.Column_DegreeXoy.Width = 55;
             // 
             // Column_DegreeXoz
             // 
             this.Column_DegreeXoz.DataPropertyName = "DEGREE_XOZ";
             this.Column_DegreeXoz.HeaderText = "XOZ";
-            this.Column_DegreeXoz.MinimumWidth = 90;
+            this.Column_DegreeXoz.MinimumWidth = 55;
             this.Column_DegreeXoz.Name = "Column_DegreeXoz";
-            this.Column_DegreeXoz.Width = 90;
+            this.Column_DegreeXoz.Width = 55;
             // 
             // Column_DegreeGeneral
             // 
             this.Column_DegreeGeneral.DataPropertyName = "DEGREE_GENERAL";
-            this.Column_DegreeGeneral.HeaderText = "整体偏转";
-            this.Column_DegreeGeneral.MinimumWidth = 100;
+            this.Column_DegreeGeneral.HeaderText = "偏转";
+            this.Column_DegreeGeneral.MinimumWidth = 70;
             this.Column_DegreeGeneral.Name = "Column_DegreeGeneral";
-            this.Column_DegreeGeneral.Width = 125;
+            this.Column_DegreeGeneral.Width = 70;
             // 
             // Column_Direction
             // 
             this.Column_Direction.DataPropertyName = "DIRECTION_ID";
             this.Column_Direction.HeaderText = "朝向";
-            this.Column_Direction.MinimumWidth = 85;
+            this.Column_Direction.MinimumWidth = 70;
             this.Column_Direction.Name = "Column_Direction";
             this.Column_Direction.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column_Direction.Width = 85;
+            this.Column_Direction.Width = 70;
             // 
             // Column_DefenseMode
             // 
             this.Column_DefenseMode.DataPropertyName = "DEFENSE_MODE_ID";
-            this.Column_DefenseMode.HeaderText = "防御模式";
-            this.Column_DefenseMode.MinimumWidth = 105;
+            this.Column_DefenseMode.HeaderText = "防御";
+            this.Column_DefenseMode.MinimumWidth = 70;
             this.Column_DefenseMode.Name = "Column_DefenseMode";
             this.Column_DefenseMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column_DefenseMode.Width = 105;
+            this.Column_DefenseMode.Width = 70;
+            // 
+            // Column_Offset
+            // 
+            this.Column_Offset.DataPropertyName = "OFFSET";
+            this.Column_Offset.HeaderText = "校正";
+            this.Column_Offset.MinimumWidth = 70;
+            this.Column_Offset.Name = "Column_Offset";
+            this.Column_Offset.Width = 70;
             // 
             // Column_Remark
             // 
@@ -260,7 +269,7 @@
             // 
             // FormRadar
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1163, 674);
             this.Controls.Add(this.dataGridView_Main);
@@ -298,6 +307,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_DegreeGeneral;
         private System.Windows.Forms.DataGridViewComboBoxColumn Column_Direction;
         private System.Windows.Forms.DataGridViewComboBoxColumn Column_DefenseMode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_Offset;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Remark;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Changed;
     }

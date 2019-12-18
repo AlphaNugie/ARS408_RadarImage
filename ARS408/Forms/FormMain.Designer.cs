@@ -119,7 +119,7 @@
             // 
             this.toolStripMenu_Shiploaders.Name = "toolStripMenu_Shiploaders";
             this.toolStripMenu_Shiploaders.Size = new System.Drawing.Size(152, 26);
-            this.toolStripMenu_Shiploaders.Text = "装船机";
+            this.toolStripMenu_Shiploaders.Text = "大机";
             this.toolStripMenu_Shiploaders.Click += new System.EventHandler(this.ToolStripMenu_Shiploaders_Click);
             // 
             // toolStripMenu_RadarGroup

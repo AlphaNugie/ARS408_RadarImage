@@ -34,6 +34,42 @@ namespace ARS408.Core
     }
 
     /// <summary>
+    /// 方向
+    /// </summary>
+    public enum Directions
+    {
+        /// <summary>
+        /// 海
+        /// </summary>
+        Sea = 1,
+
+        /// <summary>
+        /// 北
+        /// </summary>
+        North = 2,
+
+        /// <summary>
+        /// 陆
+        /// </summary>
+        Land = 3,
+
+        /// <summary>
+        /// 南
+        /// </summary>
+        South = 4,
+
+        /// <summary>
+        /// 上
+        /// </summary>
+        Up = 5,
+
+        /// <summary>
+        /// 下
+        /// </summary>
+        Down = 6
+    }
+
+    /// <summary>
     /// 传感器模式
     /// </summary>
     public enum SensorMode
@@ -180,5 +216,59 @@ namespace ARS408.Core
         /// </summary>
         [EnumDescription("继电器控制信息")]
         CollDetRelayCtrl_Out = 0x8
+    }
+
+    /// <summary>
+    /// 集群的动态属性
+    /// </summary>
+    public enum DynProp
+    {
+        /// <summary>
+        /// 移动中
+        /// </summary>
+        [EnumDescription("移动中")]
+        Moving = 0x0,
+
+        /// <summary>
+        /// 静止
+        /// </summary>
+        [EnumDescription("静止")]
+        Stationary = 0x1,
+
+        /// <summary>
+        /// 迎面而来
+        /// </summary>
+        [EnumDescription("迎面而来")]
+        Oncoming = 0x2,
+
+        /// <summary>
+        /// 备选的静止点（疑似静止？）
+        /// </summary>
+        [EnumDescription("备选静止")]
+        StationaryCandidate = 0x3,
+
+        /// <summary>
+        /// 未知
+        /// </summary>
+        [EnumDescription("未知")]
+        Unknown = 0x4,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [EnumDescription("Crossing Stationary")]
+        CrossingStationary = 0x5,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [EnumDescription("Crossing Moving")]
+        CrossingMoving = 0x6,
+
+        /// <summary>
+        /// 停止（移动转静止？）
+        /// </summary>
+        [EnumDescription("停止")]
+        Stopped = 0x7
     }
 }

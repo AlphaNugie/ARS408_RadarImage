@@ -12,6 +12,23 @@ namespace ARS408.Model
     /// </summary>
     public class ClusterQuality : SensorMessage
     {
+        #region 静态属性，过滤器
+        /// <summary>
+        /// 错误警报概率过滤器
+        /// </summary>
+        public static List<FalseAlarmProbability> FalseAlarmFilter { get; set; }
+
+        /// <summary>
+        /// 径向速度不确定性过滤器
+        /// </summary>
+        public static List<AmbigState> AmbigStateFilter { get; set; }
+
+        /// <summary>
+        /// 有效性(有效/高概率多目标)
+        /// </summary>
+        public static List<InvalidState> InvalidStateFilter { get; set; }
+        #endregion
+
         #region 属性
         /// <summary>
         /// 集群ID（编号）
@@ -311,7 +328,7 @@ namespace ARS408.Model
         /// <summary>
         /// 无效数值
         /// </summary>
-        [EnumDescription("无效数值")]
+        [EnumDescription("无错报")]
         Invalid = 0x0,
 
         /// <summary>

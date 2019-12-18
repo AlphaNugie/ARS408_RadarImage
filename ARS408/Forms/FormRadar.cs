@@ -104,7 +104,7 @@ namespace ARS408.Forms
         /// <param name="e"></param>
         private void Button_Add_Click(object sender, EventArgs e)
         {
-            object[] values = new object[] { 0, string.Empty, string.Empty, 20001, this.first_group_id, this.first_mode_id, "0", BaseConst.IpAddress_Local, 20005, 0, 0, 0, 0, this.first_direction_id, this.first_defense_mode_id, string.Empty };
+            object[] values = new object[] { 0, string.Empty, string.Empty, 20001, this.first_group_id, this.first_mode_id, "0", BaseConst.IpAddress_Local, 20005, 0, 0, 0, 0, this.first_direction_id, this.first_defense_mode_id, 0, string.Empty };
             ((DataTable)this.dataGridView_Main.DataSource).Rows.Add(values);
             if (this.dataGridView_Main.Rows.Count == 0)
                 return;
@@ -126,7 +126,8 @@ namespace ARS408.Forms
                 //找到新增或修改行
                 if (row.Cells["Column_Id"].Value.ToString().Equals("0") || row.Cells["Column_Changed"].Value.ToString().Equals("1"))
                 {
-                    Radar radar = DataGridViewUtil.ConvertDataGridViewRow2Obect<Radar>(row);
+                    Radar radar = DataGridViewUtil.ConvertDataGridViewRow2Obect<Radar>(row, false); //不抛出异常
+                    radar.Direction = (Directions)int.Parse(row.Cells["Column_Direction"].Value.ToString()); //单独处理雷达朝向字段
                     if (radar.OwnerGroupId > 0) list.Add(radar);
                     else
                     {

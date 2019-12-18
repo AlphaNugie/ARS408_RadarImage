@@ -152,14 +152,19 @@ namespace ARS408.Model
         public CoordinateRatios ZmodifiedRatios { get; set; }
 
         /// <summary>
-        /// 方向：1234，海北陆南
+        /// 方向：123456，海北陆南上下
         /// </summary>
-        public int Direction { get; set; }
+        public Directions Direction { get; set; }
         
         /// <summary>
         /// 防御模式：1 点，2 线，3 面
         /// </summary>
         public int DefenseMode { get; set; }
+
+        /// <summary>
+        /// 距离校正值，以此值校正距防御边界的距离
+        /// </summary>
+        public double Offset { get; set; }
 
         /// <summary>
         /// 备注

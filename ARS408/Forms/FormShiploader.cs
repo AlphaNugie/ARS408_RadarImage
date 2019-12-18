@@ -97,7 +97,8 @@ namespace ARS408.Forms
                 return;
             }
 
-            if (result)
+            //假如返回true或没有修改行
+            if (result || list.Count == 0)
             {
                 MessageBox.Show("保存成功", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DataSourceRefresh();
