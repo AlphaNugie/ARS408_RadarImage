@@ -32,6 +32,8 @@
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Delete = new System.Windows.Forms.Button();
             this.dataGridView_Main = new System.Windows.Forms.DataGridView();
+            this.tableLayoutPanel_Main = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel_Buttons = new System.Windows.Forms.FlowLayoutPanel();
             this.Column_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_IpAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,14 +50,18 @@
             this.Column_Direction = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Column_DefenseMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Column_Offset = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_RcsMinimum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_RcsMaximum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Remark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Changed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Main)).BeginInit();
+            this.tableLayoutPanel_Main.SuspendLayout();
+            this.flowLayoutPanel_Buttons.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_Add
             // 
-            this.button_Add.Location = new System.Drawing.Point(12, 12);
+            this.button_Add.Location = new System.Drawing.Point(3, 3);
             this.button_Add.Name = "button_Add";
             this.button_Add.Size = new System.Drawing.Size(74, 30);
             this.button_Add.TabIndex = 14;
@@ -65,7 +71,7 @@
             // 
             // button_Save
             // 
-            this.button_Save.Location = new System.Drawing.Point(92, 12);
+            this.button_Save.Location = new System.Drawing.Point(83, 3);
             this.button_Save.Name = "button_Save";
             this.button_Save.Size = new System.Drawing.Size(74, 30);
             this.button_Save.TabIndex = 15;
@@ -75,7 +81,7 @@
             // 
             // button_Delete
             // 
-            this.button_Delete.Location = new System.Drawing.Point(172, 12);
+            this.button_Delete.Location = new System.Drawing.Point(163, 3);
             this.button_Delete.Name = "button_Delete";
             this.button_Delete.Size = new System.Drawing.Size(74, 30);
             this.button_Delete.TabIndex = 16;
@@ -104,15 +110,45 @@
             this.Column_Direction,
             this.Column_DefenseMode,
             this.Column_Offset,
+            this.Column_RcsMinimum,
+            this.Column_RcsMaximum,
             this.Column_Remark,
             this.Column_Changed});
-            this.dataGridView_Main.Location = new System.Drawing.Point(12, 48);
+            this.dataGridView_Main.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView_Main.Location = new System.Drawing.Point(3, 44);
             this.dataGridView_Main.Name = "dataGridView_Main";
             this.dataGridView_Main.RowHeadersWidth = 51;
             this.dataGridView_Main.RowTemplate.Height = 27;
-            this.dataGridView_Main.Size = new System.Drawing.Size(1139, 614);
+            this.dataGridView_Main.Size = new System.Drawing.Size(1157, 627);
             this.dataGridView_Main.TabIndex = 17;
             this.dataGridView_Main.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_Main_CellValueChanged);
+            // 
+            // tableLayoutPanel_Main
+            // 
+            this.tableLayoutPanel_Main.ColumnCount = 1;
+            this.tableLayoutPanel_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel_Main.Controls.Add(this.dataGridView_Main, 0, 1);
+            this.tableLayoutPanel_Main.Controls.Add(this.flowLayoutPanel_Buttons, 0, 0);
+            this.tableLayoutPanel_Main.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel_Main.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel_Main.Name = "tableLayoutPanel_Main";
+            this.tableLayoutPanel_Main.RowCount = 2;
+            this.tableLayoutPanel_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 41F));
+            this.tableLayoutPanel_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel_Main.Size = new System.Drawing.Size(1163, 674);
+            this.tableLayoutPanel_Main.TabIndex = 18;
+            // 
+            // flowLayoutPanel_Buttons
+            // 
+            this.flowLayoutPanel_Buttons.Controls.Add(this.button_Add);
+            this.flowLayoutPanel_Buttons.Controls.Add(this.button_Save);
+            this.flowLayoutPanel_Buttons.Controls.Add(this.button_Delete);
+            this.flowLayoutPanel_Buttons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel_Buttons.Location = new System.Drawing.Point(2, 2);
+            this.flowLayoutPanel_Buttons.Margin = new System.Windows.Forms.Padding(2);
+            this.flowLayoutPanel_Buttons.Name = "flowLayoutPanel_Buttons";
+            this.flowLayoutPanel_Buttons.Size = new System.Drawing.Size(1159, 37);
+            this.flowLayoutPanel_Buttons.TabIndex = 18;
             // 
             // Column_Id
             // 
@@ -160,10 +196,10 @@
             // 
             this.Column_ConnectionMode.DataPropertyName = "CONN_MODE_ID";
             this.Column_ConnectionMode.HeaderText = "模式";
-            this.Column_ConnectionMode.MinimumWidth = 70;
+            this.Column_ConnectionMode.MinimumWidth = 75;
             this.Column_ConnectionMode.Name = "Column_ConnectionMode";
             this.Column_ConnectionMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column_ConnectionMode.Width = 70;
+            this.Column_ConnectionMode.Width = 75;
             // 
             // Column_UsingLocal
             // 
@@ -191,6 +227,7 @@
             this.Column_PortLocal.HeaderText = "本地端口";
             this.Column_PortLocal.MinimumWidth = 100;
             this.Column_PortLocal.Name = "Column_PortLocal";
+            this.Column_PortLocal.Width = 125;
             // 
             // Column_DegreeYoz
             // 
@@ -250,6 +287,22 @@
             this.Column_Offset.Name = "Column_Offset";
             this.Column_Offset.Width = 70;
             // 
+            // Column_RcsMinimum
+            // 
+            this.Column_RcsMinimum.DataPropertyName = "RCS_MIN";
+            this.Column_RcsMinimum.HeaderText = "RCS小";
+            this.Column_RcsMinimum.MinimumWidth = 80;
+            this.Column_RcsMinimum.Name = "Column_RcsMinimum";
+            this.Column_RcsMinimum.Width = 80;
+            // 
+            // Column_RcsMaximum
+            // 
+            this.Column_RcsMaximum.DataPropertyName = "RCS_MAX";
+            this.Column_RcsMaximum.HeaderText = "RCS大";
+            this.Column_RcsMaximum.MinimumWidth = 80;
+            this.Column_RcsMaximum.Name = "Column_RcsMaximum";
+            this.Column_RcsMaximum.Width = 80;
+            // 
             // Column_Remark
             // 
             this.Column_Remark.DataPropertyName = "REMARK";
@@ -272,16 +325,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1163, 674);
-            this.Controls.Add(this.dataGridView_Main);
-            this.Controls.Add(this.button_Add);
-            this.Controls.Add(this.button_Save);
-            this.Controls.Add(this.button_Delete);
+            this.Controls.Add(this.tableLayoutPanel_Main);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormRadar";
             this.Text = "雷达字典";
             this.Load += new System.EventHandler(this.FormRadar_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Main)).EndInit();
+            this.tableLayoutPanel_Main.ResumeLayout(false);
+            this.flowLayoutPanel_Buttons.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -292,6 +344,8 @@
         private System.Windows.Forms.Button button_Save;
         private System.Windows.Forms.Button button_Delete;
         private System.Windows.Forms.DataGridView dataGridView_Main;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel_Main;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel_Buttons;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Id;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_IpAddress;
@@ -308,6 +362,8 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn Column_Direction;
         private System.Windows.Forms.DataGridViewComboBoxColumn Column_DefenseMode;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Offset;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_RcsMinimum;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_RcsMaximum;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Remark;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Changed;
     }

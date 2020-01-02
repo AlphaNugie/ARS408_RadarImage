@@ -44,7 +44,7 @@
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_OpcConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl_Main = new System.Windows.Forms.TabControl();
-            this.tcpServer_Watchdog = new SocketHelper.AxTcpServer(this.components);
+            this.tcpServer_Watchdog = new SocketHelper.SocketTcpServer(this.components);
             this.label_Receive = new System.Windows.Forms.Label();
             this.label_State = new System.Windows.Forms.Label();
             this.label_Error = new System.Windows.Forms.Label();
@@ -174,13 +174,13 @@
             // tcpServer_Watchdog
             // 
             this.tcpServer_Watchdog.CheckTime = 1000;
-            this.tcpServer_Watchdog.HeartbeatPacket = "X";
-            this.tcpServer_Watchdog.IsheartCheck = true;
+            this.tcpServer_Watchdog.HeartBeatPacket = "X";
+            this.tcpServer_Watchdog.IsHeartCheck = true;
             this.tcpServer_Watchdog.ServerIp = "127.0.0.1";
             this.tcpServer_Watchdog.ServerPort = 5001;
-            this.tcpServer_Watchdog.TcpServerRecevice += new SocketHelper.AxTcpServer.ReceviceEventHandler(this.TcpServer_Watchdog_TcpServerRecevice);
-            this.tcpServer_Watchdog.OnErrorMsg += new SocketHelper.AxTcpServer.ErrorMsgEventHandler(this.TcpServer_Watchdog_OnErrorMsg);
-            this.tcpServer_Watchdog.OnStateInfo += new SocketHelper.AxTcpServer.StateInfoEventHandler(this.TcpServer_Watchdog_OnStateInfo);
+            this.tcpServer_Watchdog.TcpServerRecevice += new SocketHelper.SocketTcpServer.ReceviceEventHandler(this.TcpServer_Watchdog_TcpServerRecevice);
+            this.tcpServer_Watchdog.OnErrorMsg += new SocketHelper.SocketTcpServer.ErrorMsgEventHandler(this.TcpServer_Watchdog_OnErrorMsg);
+            this.tcpServer_Watchdog.OnStateInfo += new SocketHelper.SocketTcpServer.StateInfoEventHandler(this.TcpServer_Watchdog_OnStateInfo);
             // 
             // label_Receive
             // 
@@ -262,7 +262,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenu_Radar;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_ThreatLevels;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_OpcConfig;
-        private SocketHelper.AxTcpServer tcpServer_Watchdog;
+        private SocketHelper.SocketTcpServer tcpServer_Watchdog;
         private System.Windows.Forms.Label label_Receive;
         private System.Windows.Forms.Label label_State;
         private System.Windows.Forms.Label label_Error;

@@ -109,9 +109,9 @@ property float rcs";
         public static ushort Port = 0;
 
         /// <summary>
-        /// 连接模式，1 TCP，2 UDP
+        /// 连接模式
         /// </summary>
-        public static int ConnectionMode = 1;
+        public static ConnectionMode ConnectionMode = ConnectionMode.TCP_CLIENT;
 
         /// <summary>
         /// 是否制定本地IP与端口
@@ -188,6 +188,11 @@ property float rcs";
         public static double BucketHeight { get; set; }
 
         /// <summary>
+        /// 溜桶雷达Z轴方向检测高度上限（带符号）
+        /// </summary>
+        public static double BucketUpLimit { get; set; }
+
+        /// <summary>
         /// 下方障碍物距离的阈值
         /// </summary>
         public static double ObsBelowThres { get; set; }
@@ -206,6 +211,21 @@ property float rcs";
         /// 过滤器是否启用
         /// </summary>
         public static bool FilterEnabled { get; set; }
+
+        /// <summary>
+        /// 距离迭代是否启用，启用则在收到新值时先进行检定再决定是否替代当前值，未启用则直接取代
+        /// </summary>
+        public static bool IterationEnabled { get; set; }
+
+        /// <summary>
+        /// 距离差限定值（不超过此值则以新值替代当前值）
+        /// </summary>
+        public static double IteDistLimit { get; set; }
+
+        /// <summary>
+        /// 新值检定次数限定值（超过此值则以假定值替代当前值）
+        /// </summary>
+        public static int IteCountLimit { get; set; }
         #endregion
     }
 
@@ -225,7 +245,7 @@ property float rcs";
             {
                 BaseConst.IpAddress = BaseConst.IniHelper.ReadData("Connection", "IpAddress");
                 BaseConst.Port = ushort.Parse(BaseConst.IniHelper.ReadData("Connection", "Port"));
-                BaseConst.ConnectionMode = int.Parse(BaseConst.IniHelper.ReadData("Connection", "ConnectionMode"));
+                BaseConst.ConnectionMode = (ConnectionMode)int.Parse(BaseConst.IniHelper.ReadData("Connection", "ConnectionMode"));
                 BaseConst.UsingLocal = BaseConst.IniHelper.ReadData("Connection", "UsingLocal").Equals("1");
                 //BaseConst.IpAddress_Local = Functions.GetLocalIp();
                 BaseConst.IpAddress_Local = Functions.GetIPAddressV4();
@@ -236,7 +256,7 @@ property float rcs";
                 if (table != null && table.Rows.Count > 0)
                     BaseConst.ThreatLevelValues = table.Rows.Cast<DataRow>().Select(row => double.Parse(row["LEVEL_VALUE"].ToString())).ToArray();
             }
-            catch (Exception) { }
+            catch (Exception e) { }
         }
 
         /// <summary>
@@ -257,6 +277,7 @@ property float rcs";
                     BaseConst.BorderDistThres = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BorderDistThres"));
                     BaseConst.ProbOfExistMinimum = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ProbOfExistMinimum"));
                     BaseConst.BucketHeight = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BucketHeight"));
+                    BaseConst.BucketUpLimit = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BucketUpLimit"));
                     BaseConst.ObsBelowThres = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ObsBelowThres"));
                     BaseConst.ObsBelowFrontier = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ObsBelowFrontier"));
                     //BaseConst.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMinimum"));
@@ -269,6 +290,10 @@ property float rcs";
                     ClusterQuality.FalseAlarmFilter = BaseConst.IniHelper.ReadData("Detection", "FalseAlarmFilter").Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (FalseAlarmProbability)int.Parse(p)).ToList();
                     ClusterQuality.AmbigStateFilter = BaseConst.IniHelper.ReadData("Detection", "AmbigStateFilter").Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (AmbigState)int.Parse(p)).ToList();
                     ClusterQuality.InvalidStateFilter = BaseConst.IniHelper.ReadData("Detection", "InvalidStateFilter").Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (InvalidState)int.Parse(p)).ToList();
+                    //初始化迭代参数
+                    BaseConst.IterationEnabled = BaseConst.IniHelper.ReadData("Detection", "IterationEnabled").Equals("1");
+                    BaseConst.IteDistLimit = double.Parse(BaseConst.IniHelper.ReadData("Detection", "IteDistLimit"));
+                    BaseConst.IteCountLimit = int.Parse(BaseConst.IniHelper.ReadData("Detection", "IteCountLimit"));
                 }
                 catch (Exception) { }
 

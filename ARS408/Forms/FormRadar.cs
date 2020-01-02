@@ -127,6 +127,7 @@ namespace ARS408.Forms
                 if (row.Cells["Column_Id"].Value.ToString().Equals("0") || row.Cells["Column_Changed"].Value.ToString().Equals("1"))
                 {
                     Radar radar = DataGridViewUtil.ConvertDataGridViewRow2Obect<Radar>(row, false); //不抛出异常
+                    radar.ConnectionMode = (ConnectionMode)int.Parse(row.Cells["Column_ConnectionMode"].Value.ToString()); //连接模式
                     radar.Direction = (Directions)int.Parse(row.Cells["Column_Direction"].Value.ToString()); //单独处理雷达朝向字段
                     if (radar.OwnerGroupId > 0) list.Add(radar);
                     else

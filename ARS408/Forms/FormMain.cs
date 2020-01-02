@@ -2,6 +2,7 @@
 using CarServer;
 using CommonLib.Clients;
 using CommonLib.Function;
+using SocketHelper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -69,8 +70,8 @@ namespace ARS408.Forms
         {
             this.tcpServer_Watchdog.ServerIp = BaseConst.IniHelper.ReadData("Watchdog", "MainServerIp");
             this.tcpServer_Watchdog.ServerPort = int.Parse(BaseConst.IniHelper.ReadData("Watchdog", "MainServerPort"));
-            this.tcpServer_Watchdog.IsheartCheck = BaseConst.IniHelper.ReadData("Watchdog", "SendHeartBeat").Equals("1");
-            this.tcpServer_Watchdog.HeartbeatPacket = BaseConst.IniHelper.ReadData("Watchdog", "HeartBeatString");
+            this.tcpServer_Watchdog.IsHeartCheck = BaseConst.IniHelper.ReadData("Watchdog", "SendHeartBeat").Equals("1");
+            this.tcpServer_Watchdog.HeartBeatPacket = BaseConst.IniHelper.ReadData("Watchdog", "HeartBeatString");
             this.tcpServer_Watchdog.CheckTime = int.Parse(BaseConst.IniHelper.ReadData("Watchdog", "HeartBeatInterval"));
             this.tcpServer_Watchdog.Start();
         }
@@ -250,9 +251,9 @@ namespace ARS408.Forms
             catch (Exception ex) { FileClient.WriteExceptionInfo(ex, "处理TCP服务端错误信息时出现错误", true); }
         }
 
-        private void TcpServer_Watchdog_TcpServerRecevice(Socket socket, string message, byte[] data)
+        private void TcpServer_Watchdog_TcpServerRecevice(Socket socket, ReceivedEventArgs e)
         {
-            try { this.MessageReceived(socket, message, data); }
+            try { this.MessageReceived(socket, e); }
             catch (Exception ex) { FileClient.WriteExceptionInfo(ex, "处理TCP服务端接收的信息时出现错误", true); }
         }
 
@@ -283,23 +284,23 @@ namespace ARS408.Forms
         /// <param name="socket"></param>
         /// <param name="message"></param>
         /// <param name="data"></param>
-        public void MessageReceived(Socket socket, string message, byte[] data)
+        public void MessageReceived(Socket socket, ReceivedEventArgs e)
         {
             string info, ip = ((IPEndPoint)socket.RemoteEndPoint).Address.ToString();
             int port = ((IPEndPoint)socket.RemoteEndPoint).Port;
             ClientModel clientModel = this.tcpServer_Watchdog.ResolveSocket(ip, port);
             if (clientModel == null)
             {
-                info = Functions.AddTimeToMessage("客户端为空，怎么就收到消息了呢？不管咋说，消息是这个：" + message);
+                info = Functions.AddTimeToMessage("客户端为空，怎么就收到消息了呢？不管咋说，消息是这个：" + e.ReceivedString);
                 this.tcp_info_receive = info;
                 return;
             }
             if (clientModel.ClientType == ClientType.None)
             {
-                ClientType clientType = ClientModel.AnalyzeClientType(message);
+                ClientType clientType = ClientModel.AnalyzeClientType(e.ReceivedString);
                 clientModel.ClientType = clientType;
             }
-            info = Functions.AddTimeToMessage(string.Format("{0}:{1} -> 从类型为{2}的客户端 {3}:{4} 接收到数据：{5}", this.tcpServer_Watchdog.ServerIp, this.tcpServer_Watchdog.ServerPort, clientModel.ClientType.ToString(), ip, port, message));
+            info = Functions.AddTimeToMessage(string.Format("{0}:{1} -> 从类型为{2}的客户端 {3}:{4} 接收到数据：{5}", this.tcpServer_Watchdog.ServerIp, this.tcpServer_Watchdog.ServerPort, clientModel.ClientType.ToString(), ip, port, e.ReceivedString));
             this.tcp_info_receive = info;
         }
 
@@ -318,7 +319,7 @@ namespace ARS408.Forms
                 if (clientModel == null)
                     continue;
                 if (clientModel.ClientStyle == ClientStyle.WebSocket)
-                    this.tcpServer_Watchdog.SendToWebClient(clientModel, data.ToString());
+                    SocketTcpServer.SendToWebClient(clientModel, data.ToString());
                 else
                     this.tcpServer_Watchdog.SendData(clientModel, data.ToString());
             }

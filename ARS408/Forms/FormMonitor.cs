@@ -163,7 +163,7 @@ namespace ARS408.Forms
                 Name = row["radar_name"].ToString(),
                 IpAddress = row["ip_address"].ToString(),
                 Port = ushort.Parse(row["port"].ToString()),
-                ConnectionMode = int.Parse(row["conn_mode_id"].ToString()),
+                ConnectionMode = (ConnectionMode)int.Parse(row["conn_mode_id"].ToString()),
                 UsingLocal = row["using_local"].ToString().Equals("1"),
                 IpAddressLocal = row["ip_address_local"].ToString(),
                 PortLocal = int.Parse(row["port_local"].ToString()),
@@ -179,7 +179,9 @@ namespace ARS408.Forms
                 Remark = row["remark"].ToString(),
                 ItemNameRadarState = row["item_name_radar_state"].ToString(),
                 ItemNameCollisionState = row["item_name_collision_state"].ToString(),
-                ItemNameCollisionState2 = row["item_name_collision_state_2"].ToString()
+                ItemNameCollisionState2 = row["item_name_collision_state_2"].ToString(),
+                RcsMinimum = double.Parse(row["rcs_min"].ToString()),
+                RcsMaximum = double.Parse(row["rcs_max"].ToString())
             };
             return radar;
         }
@@ -353,7 +355,7 @@ namespace ARS408.Forms
         {
             double dist = 0;
             if (radar != null && this.DictForms[radar] != null && this.DictForms[radar].Infos != null)
-                dist = this.DictForms[radar].Infos.ObstacleDistance;
+                dist = this.DictForms[radar].Infos.CurrentDistance;
             return dist;
         }
 
@@ -369,14 +371,15 @@ namespace ARS408.Forms
             DataFrameMessages infos;
             if (radar != null && (display = this.DictForms[radar]) != null && (infos = display.Infos) != null)
             {
-                dynamic obj = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectMostThreat : (dynamic)infos.ClusterMostThreat, obj_other = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectHighest : (dynamic)infos.ClusterHighest;
-                double obj_dist = obj == null ? 0 : obj.DistanceToBorder, obj_height = obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z;
-                result = string.Format(@"
-  ""radar_{0}"": [
+                //dynamic obj = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectMostThreat : (dynamic)infos.ClusterMostThreat, obj_other = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectHighest : (dynamic)infos.ClusterHighest;
+                //double obj_dist = obj == null ? 0 : obj.DistanceToBorder, obj_height = obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z;
+                dynamic obj_other = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectHighest : (dynamic)infos.ClusterHighest;
+                double obj_height = obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z;
+                result = string.Format(@"  ""radar_{0}"": [
   ""effective"": {1},
   ""distance"": {2},
   ""below"": {3}
-  ],", radar.PortLocal + "_" + radar.Name, infos.RadarState.Working, obj_dist, obj_height);
+  ],", radar.PortLocal + "_" + radar.Name, infos.RadarState.Working, Math.Round(infos.CurrentDistance, 4), obj_height);
             }
 
             return result;

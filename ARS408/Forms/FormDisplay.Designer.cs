@@ -32,6 +32,19 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDisplay));
             this.textBox_Input = new System.Windows.Forms.TextBox();
             this.dataGridView_Output = new System.Windows.Forms.DataGridView();
+            this.Column_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_DistLong = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_DistLat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_VrelLong = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_VrelLat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_DynProp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_Rcs = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_RCSM2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_Pdh0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_AmbigState = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_InvalidState = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_MeasState = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_ProbOfExist = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.textBox_Info = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -55,7 +68,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.button_Connect = new System.Windows.Forms.Button();
             this.button_Disconnect = new System.Windows.Forms.Button();
-            this.comboBox_TcpOrUdp = new System.Windows.Forms.ComboBox();
+            this.comboBox_ConnMode = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label_RcsMax = new System.Windows.Forms.Label();
             this.label_RcsMin = new System.Windows.Forms.Label();
@@ -65,7 +78,7 @@
             this.checkBox_UsingLocal = new System.Windows.Forms.CheckBox();
             this.textBox_SendContent = new System.Windows.Forms.TextBox();
             this.button_Send = new System.Windows.Forms.Button();
-            this.button_UdpInit = new System.Windows.Forms.Button();
+            this.button_ServerInit = new System.Windows.Forms.Button();
             this.trackBar_RcsMin = new System.Windows.Forms.TrackBar();
             this.trackBar_RcsMax = new System.Windows.Forms.TrackBar();
             this.label4 = new System.Windows.Forms.Label();
@@ -78,19 +91,7 @@
             this.timer_WriteItems = new System.Windows.Forms.Timer(this.components);
             this.timer_UIUpdate = new System.Windows.Forms.Timer(this.components);
             this.SocketTcpClient = new SocketHelper.SocketTcpClient(this.components);
-            this.Column_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_DistLong = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_DistLat = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_VrelLong = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_VrelLat = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_DynProp = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_Rcs = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_RCSM2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_Pdh0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_AmbigState = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_InvalidState = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_MeasState = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column_ProbOfExist = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SocketTcpServer = new SocketHelper.SocketTcpServer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Output)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl_Main.SuspendLayout();
@@ -114,12 +115,12 @@
             // 
             this.textBox_Input.AllowDrop = true;
             this.textBox_Input.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox_Input.Location = new System.Drawing.Point(3, 351);
+            this.textBox_Input.Location = new System.Drawing.Point(3, 371);
             this.textBox_Input.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_Input.Multiline = true;
             this.textBox_Input.Name = "textBox_Input";
             this.textBox_Input.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_Input.Size = new System.Drawing.Size(379, 382);
+            this.textBox_Input.Size = new System.Drawing.Size(379, 362);
             this.textBox_Input.TabIndex = 1;
             // 
             // dataGridView_Output
@@ -149,13 +150,146 @@
             this.dataGridView_Output.Size = new System.Drawing.Size(1052, 702);
             this.dataGridView_Output.TabIndex = 2;
             // 
+            // Column_Id
+            // 
+            this.Column_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_Id.DataPropertyName = "Id";
+            this.Column_Id.HeaderText = "ID";
+            this.Column_Id.MinimumWidth = 80;
+            this.Column_Id.Name = "Column_Id";
+            this.Column_Id.ReadOnly = true;
+            this.Column_Id.Width = 80;
+            // 
+            // Column_DistLong
+            // 
+            this.Column_DistLong.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_DistLong.DataPropertyName = "DistLong";
+            this.Column_DistLong.HeaderText = "纵向";
+            this.Column_DistLong.MinimumWidth = 65;
+            this.Column_DistLong.Name = "Column_DistLong";
+            this.Column_DistLong.ReadOnly = true;
+            this.Column_DistLong.ToolTipText = "纵向(x,m)";
+            this.Column_DistLong.Width = 68;
+            // 
+            // Column_DistLat
+            // 
+            this.Column_DistLat.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_DistLat.DataPropertyName = "DistLat";
+            this.Column_DistLat.HeaderText = "横向";
+            this.Column_DistLat.MinimumWidth = 65;
+            this.Column_DistLat.Name = "Column_DistLat";
+            this.Column_DistLat.ReadOnly = true;
+            this.Column_DistLat.ToolTipText = "横向(y,m)";
+            this.Column_DistLat.Width = 68;
+            // 
+            // Column_VrelLong
+            // 
+            this.Column_VrelLong.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_VrelLong.DataPropertyName = "VrelLong";
+            this.Column_VrelLong.HeaderText = "纵向速度";
+            this.Column_VrelLong.MinimumWidth = 90;
+            this.Column_VrelLong.Name = "Column_VrelLong";
+            this.Column_VrelLong.ReadOnly = true;
+            this.Column_VrelLong.ToolTipText = "纵向速度(x,m/s)";
+            this.Column_VrelLong.Width = 98;
+            // 
+            // Column_VrelLat
+            // 
+            this.Column_VrelLat.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_VrelLat.DataPropertyName = "VrelLat";
+            this.Column_VrelLat.HeaderText = "横向速度";
+            this.Column_VrelLat.MinimumWidth = 90;
+            this.Column_VrelLat.Name = "Column_VrelLat";
+            this.Column_VrelLat.ReadOnly = true;
+            this.Column_VrelLat.ToolTipText = "横向速度(y,m/s)";
+            this.Column_VrelLat.Width = 98;
+            // 
+            // Column_DynProp
+            // 
+            this.Column_DynProp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_DynProp.DataPropertyName = "DynPropString";
+            this.Column_DynProp.HeaderText = "动态属性";
+            this.Column_DynProp.MinimumWidth = 90;
+            this.Column_DynProp.Name = "Column_DynProp";
+            this.Column_DynProp.ReadOnly = true;
+            this.Column_DynProp.Width = 98;
+            // 
+            // Column_Rcs
+            // 
+            this.Column_Rcs.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_Rcs.DataPropertyName = "RCS";
+            this.Column_Rcs.HeaderText = "RCS";
+            this.Column_Rcs.MinimumWidth = 60;
+            this.Column_Rcs.Name = "Column_Rcs";
+            this.Column_Rcs.ReadOnly = true;
+            this.Column_Rcs.ToolTipText = "雷达散射截面(dbm2)";
+            this.Column_Rcs.Width = 67;
+            // 
+            // Column_RCSM2
+            // 
+            this.Column_RCSM2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_RCSM2.DataPropertyName = "RCS_M2";
+            this.Column_RCSM2.HeaderText = "RCS";
+            this.Column_RCSM2.MinimumWidth = 100;
+            this.Column_RCSM2.Name = "Column_RCSM2";
+            this.Column_RCSM2.ReadOnly = true;
+            this.Column_RCSM2.ToolTipText = "雷达散射截面(m2)";
+            this.Column_RCSM2.Visible = false;
+            this.Column_RCSM2.Width = 125;
+            // 
+            // Column_Pdh0
+            // 
+            this.Column_Pdh0.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_Pdh0.DataPropertyName = "PdhString";
+            this.Column_Pdh0.HeaderText = "错报";
+            this.Column_Pdh0.MinimumWidth = 80;
+            this.Column_Pdh0.Name = "Column_Pdh0";
+            this.Column_Pdh0.ReadOnly = true;
+            this.Column_Pdh0.Width = 80;
+            // 
+            // Column_AmbigState
+            // 
+            this.Column_AmbigState.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_AmbigState.DataPropertyName = "AmbigStateString";
+            this.Column_AmbigState.HeaderText = "不确定性";
+            this.Column_AmbigState.MinimumWidth = 80;
+            this.Column_AmbigState.Name = "Column_AmbigState";
+            this.Column_AmbigState.ReadOnly = true;
+            this.Column_AmbigState.Width = 98;
+            // 
+            // Column_InvalidState
+            // 
+            this.Column_InvalidState.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_InvalidState.DataPropertyName = "InvalidStateString";
+            this.Column_InvalidState.HeaderText = "不可用";
+            this.Column_InvalidState.MinimumWidth = 80;
+            this.Column_InvalidState.Name = "Column_InvalidState";
+            this.Column_InvalidState.ReadOnly = true;
+            this.Column_InvalidState.Width = 83;
+            // 
+            // Column_MeasState
+            // 
+            this.Column_MeasState.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_MeasState.DataPropertyName = "MeasStateString";
+            this.Column_MeasState.HeaderText = "测量状态";
+            this.Column_MeasState.MinimumWidth = 100;
+            this.Column_MeasState.Name = "Column_MeasState";
+            // 
+            // Column_ProbOfExist
+            // 
+            this.Column_ProbOfExist.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column_ProbOfExist.DataPropertyName = "ProbOfExistString";
+            this.Column_ProbOfExist.HeaderText = "存在概率";
+            this.Column_ProbOfExist.MinimumWidth = 100;
+            this.Column_ProbOfExist.Name = "Column_ProbOfExist";
+            // 
             // textBox_Info
             // 
             this.textBox_Info.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox_Info.Location = new System.Drawing.Point(3, 264);
             this.textBox_Info.Multiline = true;
             this.textBox_Info.Name = "textBox_Info";
-            this.textBox_Info.Size = new System.Drawing.Size(379, 80);
+            this.textBox_Info.Size = new System.Drawing.Size(379, 100);
             this.textBox_Info.TabIndex = 3;
             // 
             // tableLayoutPanel1
@@ -346,8 +480,8 @@
             this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
             this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 162F));
-            this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 18.07692F));
-            this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 81.92308F));
+            this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22.27F));
+            this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 77.73F));
             this.tableLayoutPanel_Sub.Size = new System.Drawing.Size(385, 737);
             this.tableLayoutPanel_Sub.TabIndex = 0;
             // 
@@ -365,7 +499,7 @@
             this.tableLayoutPanel3.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.button_Connect, 3, 0);
             this.tableLayoutPanel3.Controls.Add(this.button_Disconnect, 3, 1);
-            this.tableLayoutPanel3.Controls.Add(this.comboBox_TcpOrUdp, 2, 1);
+            this.tableLayoutPanel3.Controls.Add(this.comboBox_ConnMode, 2, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -449,19 +583,19 @@
             this.button_Disconnect.UseVisualStyleBackColor = false;
             this.button_Disconnect.Click += new System.EventHandler(this.Button_Disconnect_Click);
             // 
-            // comboBox_TcpOrUdp
+            // comboBox_ConnMode
             // 
-            this.comboBox_TcpOrUdp.DisplayMember = "MODE_NAME";
-            this.comboBox_TcpOrUdp.FormattingEnabled = true;
-            this.comboBox_TcpOrUdp.Items.AddRange(new object[] {
+            this.comboBox_ConnMode.DisplayMember = "MODE_NAME";
+            this.comboBox_ConnMode.FormattingEnabled = true;
+            this.comboBox_ConnMode.Items.AddRange(new object[] {
             "TCP",
             "UDP"});
-            this.comboBox_TcpOrUdp.Location = new System.Drawing.Point(183, 37);
-            this.comboBox_TcpOrUdp.Name = "comboBox_TcpOrUdp";
-            this.comboBox_TcpOrUdp.Size = new System.Drawing.Size(72, 28);
-            this.comboBox_TcpOrUdp.TabIndex = 11;
-            this.comboBox_TcpOrUdp.Text = "TCP";
-            this.comboBox_TcpOrUdp.ValueMember = "MODE_ID";
+            this.comboBox_ConnMode.Location = new System.Drawing.Point(183, 37);
+            this.comboBox_ConnMode.Name = "comboBox_ConnMode";
+            this.comboBox_ConnMode.Size = new System.Drawing.Size(72, 28);
+            this.comboBox_ConnMode.TabIndex = 11;
+            this.comboBox_ConnMode.Text = "TCP";
+            this.comboBox_ConnMode.ValueMember = "MODE_ID";
             // 
             // tableLayoutPanel4
             // 
@@ -479,7 +613,7 @@
             this.tableLayoutPanel4.Controls.Add(this.checkBox_UsingLocal, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.textBox_SendContent, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.button_Send, 4, 1);
-            this.tableLayoutPanel4.Controls.Add(this.button_UdpInit, 4, 0);
+            this.tableLayoutPanel4.Controls.Add(this.button_ServerInit, 4, 0);
             this.tableLayoutPanel4.Controls.Add(this.trackBar_RcsMin, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.trackBar_RcsMax, 0, 3);
             this.tableLayoutPanel4.Controls.Add(this.label4, 1, 2);
@@ -594,16 +728,16 @@
             this.button_Send.UseVisualStyleBackColor = true;
             this.button_Send.Click += new System.EventHandler(this.Button_Send_Click);
             // 
-            // button_UdpInit
+            // button_ServerInit
             // 
-            this.button_UdpInit.Enabled = false;
-            this.button_UdpInit.Location = new System.Drawing.Point(312, 3);
-            this.button_UdpInit.Name = "button_UdpInit";
-            this.button_UdpInit.Size = new System.Drawing.Size(67, 27);
-            this.button_UdpInit.TabIndex = 13;
-            this.button_UdpInit.Text = "初始化";
-            this.button_UdpInit.UseVisualStyleBackColor = true;
-            this.button_UdpInit.Click += new System.EventHandler(this.Button_UdpInit_Click);
+            this.button_ServerInit.Enabled = false;
+            this.button_ServerInit.Location = new System.Drawing.Point(312, 3);
+            this.button_ServerInit.Name = "button_ServerInit";
+            this.button_ServerInit.Size = new System.Drawing.Size(67, 27);
+            this.button_ServerInit.TabIndex = 13;
+            this.button_ServerInit.Text = "初始化";
+            this.button_ServerInit.UseVisualStyleBackColor = true;
+            this.button_ServerInit.Click += new System.EventHandler(this.Button_ServerInit_Click);
             // 
             // trackBar_RcsMin
             // 
@@ -712,10 +846,13 @@
             // 
             // SocketTcpClient
             // 
+            this.SocketTcpClient.AssignLocalAddress = false;
             this.SocketTcpClient.IsReconnection = true;
             this.SocketTcpClient.IsStart = false;
             this.SocketTcpClient.IsStartTcpThreading = false;
             this.SocketTcpClient.LocalEndPoint = null;
+            this.SocketTcpClient.LocalIp = null;
+            this.SocketTcpClient.LocalPort = 0;
             this.SocketTcpClient.ReceiveBufferSize = 2048;
             this.SocketTcpClient.ReConnectedCount = 0;
             this.SocketTcpClient.ReConnectionTime = 3000;
@@ -725,137 +862,18 @@
             this.SocketTcpClient.TcpThread = null;
             this.SocketTcpClient.OnRecevice += new SocketHelper.SocketTcpClient.ReceviceEventHandler(this.SocketTcpClient_OnRecevice);
             // 
-            // Column_Id
+            // SocketTcpServer
             // 
-            this.Column_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_Id.DataPropertyName = "Id";
-            this.Column_Id.HeaderText = "ID";
-            this.Column_Id.MinimumWidth = 80;
-            this.Column_Id.Name = "Column_Id";
-            this.Column_Id.ReadOnly = true;
-            this.Column_Id.Width = 80;
-            // 
-            // Column_DistLong
-            // 
-            this.Column_DistLong.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_DistLong.DataPropertyName = "DistLong";
-            this.Column_DistLong.HeaderText = "纵向";
-            this.Column_DistLong.MinimumWidth = 65;
-            this.Column_DistLong.Name = "Column_DistLong";
-            this.Column_DistLong.ReadOnly = true;
-            this.Column_DistLong.ToolTipText = "纵向(x,m)";
-            this.Column_DistLong.Width = 68;
-            // 
-            // Column_DistLat
-            // 
-            this.Column_DistLat.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_DistLat.DataPropertyName = "DistLat";
-            this.Column_DistLat.HeaderText = "横向";
-            this.Column_DistLat.MinimumWidth = 65;
-            this.Column_DistLat.Name = "Column_DistLat";
-            this.Column_DistLat.ReadOnly = true;
-            this.Column_DistLat.ToolTipText = "横向(y,m)";
-            this.Column_DistLat.Width = 68;
-            // 
-            // Column_VrelLong
-            // 
-            this.Column_VrelLong.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_VrelLong.DataPropertyName = "VrelLong";
-            this.Column_VrelLong.HeaderText = "纵向速度";
-            this.Column_VrelLong.MinimumWidth = 90;
-            this.Column_VrelLong.Name = "Column_VrelLong";
-            this.Column_VrelLong.ReadOnly = true;
-            this.Column_VrelLong.ToolTipText = "纵向速度(x,m/s)";
-            this.Column_VrelLong.Width = 98;
-            // 
-            // Column_VrelLat
-            // 
-            this.Column_VrelLat.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_VrelLat.DataPropertyName = "VrelLat";
-            this.Column_VrelLat.HeaderText = "横向速度";
-            this.Column_VrelLat.MinimumWidth = 90;
-            this.Column_VrelLat.Name = "Column_VrelLat";
-            this.Column_VrelLat.ReadOnly = true;
-            this.Column_VrelLat.ToolTipText = "横向速度(y,m/s)";
-            this.Column_VrelLat.Width = 98;
-            // 
-            // Column_DynProp
-            // 
-            this.Column_DynProp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_DynProp.DataPropertyName = "DynPropString";
-            this.Column_DynProp.HeaderText = "动态属性";
-            this.Column_DynProp.MinimumWidth = 90;
-            this.Column_DynProp.Name = "Column_DynProp";
-            this.Column_DynProp.ReadOnly = true;
-            this.Column_DynProp.Width = 98;
-            // 
-            // Column_Rcs
-            // 
-            this.Column_Rcs.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_Rcs.DataPropertyName = "RCS";
-            this.Column_Rcs.HeaderText = "RCS";
-            this.Column_Rcs.MinimumWidth = 60;
-            this.Column_Rcs.Name = "Column_Rcs";
-            this.Column_Rcs.ReadOnly = true;
-            this.Column_Rcs.ToolTipText = "雷达散射截面(dbm2)";
-            this.Column_Rcs.Width = 67;
-            // 
-            // Column_RCSM2
-            // 
-            this.Column_RCSM2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_RCSM2.DataPropertyName = "RCS_M2";
-            this.Column_RCSM2.HeaderText = "RCS";
-            this.Column_RCSM2.MinimumWidth = 100;
-            this.Column_RCSM2.Name = "Column_RCSM2";
-            this.Column_RCSM2.ReadOnly = true;
-            this.Column_RCSM2.ToolTipText = "雷达散射截面(m2)";
-            this.Column_RCSM2.Visible = false;
-            // 
-            // Column_Pdh0
-            // 
-            this.Column_Pdh0.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_Pdh0.DataPropertyName = "PdhString";
-            this.Column_Pdh0.HeaderText = "错报";
-            this.Column_Pdh0.MinimumWidth = 80;
-            this.Column_Pdh0.Name = "Column_Pdh0";
-            this.Column_Pdh0.ReadOnly = true;
-            this.Column_Pdh0.Width = 80;
-            // 
-            // Column_AmbigState
-            // 
-            this.Column_AmbigState.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_AmbigState.DataPropertyName = "AmbigStateString";
-            this.Column_AmbigState.HeaderText = "不确定性";
-            this.Column_AmbigState.MinimumWidth = 80;
-            this.Column_AmbigState.Name = "Column_AmbigState";
-            this.Column_AmbigState.ReadOnly = true;
-            this.Column_AmbigState.Width = 98;
-            // 
-            // Column_InvalidState
-            // 
-            this.Column_InvalidState.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_InvalidState.DataPropertyName = "InvalidStateString";
-            this.Column_InvalidState.HeaderText = "不可用";
-            this.Column_InvalidState.MinimumWidth = 80;
-            this.Column_InvalidState.Name = "Column_InvalidState";
-            this.Column_InvalidState.ReadOnly = true;
-            this.Column_InvalidState.Width = 83;
-            // 
-            // Column_MeasState
-            // 
-            this.Column_MeasState.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_MeasState.DataPropertyName = "MeasStateString";
-            this.Column_MeasState.HeaderText = "测量状态";
-            this.Column_MeasState.MinimumWidth = 100;
-            this.Column_MeasState.Name = "Column_MeasState";
-            // 
-            // Column_ProbOfExist
-            // 
-            this.Column_ProbOfExist.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column_ProbOfExist.DataPropertyName = "ProbOfExistString";
-            this.Column_ProbOfExist.HeaderText = "存在概率";
-            this.Column_ProbOfExist.MinimumWidth = 100;
-            this.Column_ProbOfExist.Name = "Column_ProbOfExist";
+            this.SocketTcpServer.CheckTime = 3000;
+            this.SocketTcpServer.HeartBeatCheck = null;
+            this.SocketTcpServer.HeartBeatPacket = "X";
+            this.SocketTcpServer.IsHeartCheck = false;
+            this.SocketTcpServer.IsStartListening = false;
+            this.SocketTcpServer.ServerIp = "127.0.0.1";
+            this.SocketTcpServer.ServerPort = 5000;
+            this.SocketTcpServer.ServerSocket = null;
+            this.SocketTcpServer.StartSockst = null;
+            this.SocketTcpServer.TcpServerRecevice += new SocketHelper.SocketTcpServer.ReceviceEventHandler(this.SocketTcpServer_TcpServerRecevice);
             // 
             // FormDisplay
             // 
@@ -929,13 +947,13 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.Timer timer_GridRefresh;
-        private System.Windows.Forms.ComboBox comboBox_TcpOrUdp;
+        private System.Windows.Forms.ComboBox comboBox_ConnMode;
         private System.Windows.Forms.NumericUpDown numeric_Port_Local;
         private System.Windows.Forms.TextBox textBox_IpAddress_Local;
         private System.Windows.Forms.CheckBox checkBox_UsingLocal;
         private System.Windows.Forms.TextBox textBox_SendContent;
         private System.Windows.Forms.Button button_Send;
-        private System.Windows.Forms.Button button_UdpInit;
+        private System.Windows.Forms.Button button_ServerInit;
         private System.Windows.Forms.Label label_opc;
         private System.Windows.Forms.Timer timer_WriteItems;
         private System.Windows.Forms.TrackBar trackBar_RcsMin;
@@ -961,6 +979,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_InvalidState;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_MeasState;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_ProbOfExist;
+        private SocketHelper.SocketTcpServer SocketTcpServer;
     }
 }
 

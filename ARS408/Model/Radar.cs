@@ -47,9 +47,9 @@ namespace ARS408.Model
         public string Address { get; set; }
 
         /// <summary>
-        /// 连接模式，1 TCP，2 UDP
+        /// 连接模式
         /// </summary>
-        public int ConnectionMode { get; set; }
+        public ConnectionMode ConnectionMode { get; set; }
 
         /// <summary>
         /// 是否使用本地IP与端口
@@ -189,12 +189,12 @@ namespace ARS408.Model
         /// <summary>
         /// RCS最小值
         /// </summary>
-        public int RcsMinimum { get; set; }
+        public double RcsMinimum { get; set; }
 
         /// <summary>
         /// RCS最大值
         /// </summary>
-        public int RcsMaximum { get; set; }
+        public double RcsMaximum { get; set; }
 
         /// <summary>
         /// 存在概率最低值

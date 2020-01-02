@@ -18,7 +18,14 @@ namespace ARS408.Model
     /// </summary>
     public class DataFrameMessages
     {
+        #region 私有成员
         private readonly Regex pattern = new Regex(BaseConst.Pattern_SensorMessage, RegexOptions.Compiled);
+        private ClusterGeneral cluster_most_threat;
+        private ObjectGeneral object_most_threat;
+        //private double obs_dist, obs_dist_former;
+        private int _count = 0/*, _real_size = 0*/;
+        private double _current, _new, _assumed, _diff, _diff1;
+        #endregion
 
         #region 属性
         /// <summary>
@@ -26,10 +33,10 @@ namespace ARS408.Model
         /// </summary>
         public FormDisplay ParentForm { get; set; }
 
-        /// <summary>
-        /// 处理后的信息
-        /// </summary>
-        public string[] Messages { get; set; }
+        ///// <summary>
+        ///// 处理后的信息
+        ///// </summary>
+        //public string[] Messages { get; set; }
 
         /// <summary>
         /// 雷达状态信息
@@ -45,6 +52,11 @@ namespace ARS408.Model
         /// 接收缓冲区大小（达到此大小则放入正式数据）
         /// </summary>
         public int BufferSize { get; set; }
+
+        /// <summary>
+        /// 接收目标实际数量
+        /// </summary>
+        public int ActualSize { get; set; }
 
         /// <summary>
         /// 集群接收缓冲区（存放临时数据，直到接收完一组数据再放入正式数据）
@@ -81,28 +93,71 @@ namespace ARS408.Model
         /// </summary>
         public Radar Radar { get; set; }
 
-        public List<ClusterGeneral> ClustersAtThreat { get; set; }
-        public ClusterGeneral ClusterMostThreat { get; set; }
+        //public List<ClusterGeneral> ClustersAtThreat { get; set; }
+        //public List<ObjectGeneral> ObjectsAtThreat { get; set; }
+
+        /// <summary>
+        /// 最具有威胁的集群点
+        /// </summary>
+        public ClusterGeneral ClusterMostThreat
+        {
+            get { return this.cluster_most_threat; }
+            set
+            {
+                this.cluster_most_threat = value;
+                this.CurrentDistance = this.cluster_most_threat != null ? this.cluster_most_threat.DistanceToBorder : 0;
+            }
+        }
+
+        /// <summary>
+        /// 下方离溜桶最近的集群点
+        /// </summary>
         public ClusterGeneral ClusterHighest { get; set; }
 
-        public List<ObjectGeneral> ObjectsAtThreat { get; set; }
-        public ObjectGeneral ObjectMostThreat { get; set; }
-        public ObjectGeneral ObjectHighest { get; set; }
-        public double ObstacleDistance
+        /// <summary>
+        /// 最具有威胁的目标点
+        /// </summary>
+        public ObjectGeneral ObjectMostThreat
         {
-            get { return this.CurrentSensorMode == SensorMode.Object ? (this.ObjectMostThreat != null ? this.ObjectMostThreat.DistanceToBorder : 0) : (this.ClusterMostThreat != null ? this.ClusterMostThreat.DistanceToBorder : 0); }
-        }
-        public char[] CurrentThreatLevels
-        {
-            get
+            get { return this.object_most_threat; }
+            set
             {
-                char[] array = new char[] { '0', '0' };
-                if (this.CurrentSensorMode == SensorMode.Cluster && this.ClusterMostThreat != null)
-                    array = this.ClusterMostThreat.ThreatLevelBinary.ToCharArray();
-                else if (this.CurrentSensorMode == SensorMode.Object && this.ObjectMostThreat != null)
-                    array = this.ObjectMostThreat.ThreatLevelBinary.ToCharArray();
-                return array;
+                this.object_most_threat = value;
+                this.CurrentDistance = this.object_most_threat != null ? this.object_most_threat.DistanceToBorder : 0;
             }
+        }
+
+        /// <summary>
+        /// 下方离溜桶最近的目标点
+        /// </summary>
+        public ObjectGeneral ObjectHighest { get; set; }
+
+        /// <summary>
+        /// 当前障碍物距离
+        /// </summary>
+        public double CurrentDistance
+        {
+            get { return this._current; }
+            set { this.IterateDistance(value); }
+        }
+
+        ///// <summary>
+        ///// 假定的障碍物距离
+        ///// </summary>
+        //public double AssumedDistance
+        //{
+        //    get { return this._assume; }
+        //    set { this._assume = value; }
+        //}
+
+        public char[] GetCurrentThreatLevels()
+        {
+            char[] array = new char[] { '0', '0' };
+            if (this.CurrentSensorMode == SensorMode.Cluster && this.ClusterMostThreat != null)
+                array = this.ClusterMostThreat.ThreatLevelBinary.ToCharArray();
+            else if (this.CurrentSensorMode == SensorMode.Object && this.ObjectMostThreat != null)
+                array = this.ObjectMostThreat.ThreatLevelBinary.ToCharArray();
+            return array;
         }
         //return this.ObjectMostThreat == null ? new char[] { '0', '0' } : this.ObjectMostThreat.ThreatLevelBinary.ToCharArray(); } }
         #endregion
@@ -192,6 +247,7 @@ namespace ARS408.Model
                     case SensorMessageId_0.Cluster_1_General_Out:
                         obj = new ClusterGeneral(message, this.Radar);
                         this.DataPush<ClusterGeneral>(obj);
+                        this.ActualSize++;
                         break;
                     case SensorMessageId_0.Cluster_2_Quality_Out:
                         obj = new ClusterQuality(message);
@@ -206,6 +262,7 @@ namespace ARS408.Model
                     case SensorMessageId_0.Obj_1_General_Out:
                         obj = new ObjectGeneral(message, this.Radar);
                         this.DataPush<ObjectGeneral>(obj);
+                        this.ActualSize++;
                         break;
                     case SensorMessageId_0.Obj_2_Quality_Out:
                         obj = new ObjectQuality(message);
@@ -245,11 +302,13 @@ namespace ARS408.Model
             flags[2] = this.ParentForm != null && !rcs.Between(this.ParentForm.RcsMinimum, this.ParentForm.RcsMaximum); //RCS值是否不在范围内
             if (this.Radar != null)
             {
-                is_shore = this.Radar != null && this.Radar.GroupType == RadarGroupType.Shore;
+                is_shore = this.Radar.GroupType == RadarGroupType.Shore;
                 //flags[0] = this.ListBufferCount >= this.BufferSize; //缓冲区是否已满
-                flags[1] = BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres; //距边界距离是否超出阈值
-                flags[3] = this.Radar != null && this.Radar.GroupType == RadarGroupType.Bucket && z < (0 - BaseConst.BucketHeight); //溜桶雷达Z方向坐标是否低于大铲最低点
-                flags[4] = this.Radar != null && this.Radar.GroupType == RadarGroupType.Arm && this.Radar.Name.Contains("陆"); //是否为大臂陆侧雷达
+                flags[1] = (this.Radar.GroupType == RadarGroupType.Bucket && g.DistanceToBorder < 0) || (BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres); //距边界距离是否小于0（溜桶雷达）或超出阈值
+                //flags[3] = this.Radar.GroupType == RadarGroupType.Bucket && z < (0 - BaseConst.BucketHeight); //溜桶雷达Z方向坐标是否低于大铲最低点
+                 //TODO 溜桶雷达Z方向坐标是否低于大铲最低点
+                flags[3] = this.Radar.GroupType == RadarGroupType.Bucket && !z.Between(0 - BaseConst.BucketHeight, BaseConst.BucketUpLimit);
+                flags[4] = this.Radar.GroupType == RadarGroupType.Arm && this.Radar.Name.Contains("陆"); //是否为大臂陆侧雷达
                 flags[5] = below.Between(0, BaseConst.ObsBelowThres) && g.DistanceToBorder < BaseConst.ObsBelowFrontier; //障碍物在溜桶下方的距离在阈值(ObsBelowThres)内，且距边界距离不超过1米(ObsBelowFrontier)
             }
             dynamic list;
@@ -323,6 +382,9 @@ namespace ARS408.Model
         /// </summary>
         public void DataPushFinalize()
         {
+            //假如应获取的集群/目标数量不为0但实际未收到，则退出（收到了空的帧）
+            if (this.BufferSize != 0 && this.ActualSize == 0)
+                return;
             bool is_cluster_mode = this.CurrentSensorMode == SensorMode.Cluster;
             if (is_cluster_mode)
             {
@@ -331,7 +393,7 @@ namespace ARS408.Model
                 {
                     this.ListBuffer_Cluster.Sort((a, b) => a.DistanceToBorder.CompareTo(b.DistanceToBorder)); //根据距检测区的最短距离排序
                     this.ListBuffer_Cluster_Other.Sort((a, b) => a.ModiCoors.Z.CompareTo(b.ModiCoors.Z)); //根据Z轴坐标排序
-                    this.ClustersAtThreat = this.ListBuffer_Cluster.Where(c => c.ThreatLevel > 0).ToList(); //找出威胁级数大于0的点，按距检测区的最短距离排序
+                    //this.ClustersAtThreat = this.ListBuffer_Cluster.Where(c => c.ThreatLevel > 0).ToList(); //找出威胁级数大于0的点，按距检测区的最短距离排序
                     this.ClusterMostThreat = this.ListBuffer_Cluster.Count() > 0 ? this.ListBuffer_Cluster.First() : null; //找出距离最小的点
                     this.ClusterHighest = this.ListBuffer_Cluster_Other.Count() > 0 ? this.ListBuffer_Cluster_Other.Last() : null; //找出Z轴坐标最大的点（最高的点）
                 }
@@ -348,7 +410,7 @@ namespace ARS408.Model
                 {
                     this.ListBuffer_Object.Sort((a, b) => a.DistanceToBorder.CompareTo(b.DistanceToBorder)); //根据距检测区的最短距离排序
                     this.ListBuffer_Object_Other.Sort((a, b) => a.ModiCoors.Z.CompareTo(b.ModiCoors.Z)); //根据Z轴坐标排序
-                    this.ObjectsAtThreat = this.ListBuffer_Object.Where(o => o.ThreatLevel > 0).ToList();
+                    //this.ObjectsAtThreat = this.ListBuffer_Object.Where(o => o.ThreatLevel > 0).ToList();
                     this.ObjectMostThreat = this.ListBuffer_Object.Count() > 0 ? this.ListBuffer_Object.First() : null;
                     this.ObjectHighest = this.ListBuffer_Object_Other.Count() > 0 ? this.ListBuffer_Object_Other.Last() : null; //找出Z轴坐标最大的点（最高的点）
                 }
@@ -358,7 +420,39 @@ namespace ARS408.Model
                 this.ListBuffer_Object.Clear();
                 this.ListBuffer_Object_Other.Clear();
             }
-            this.BufferSize = 0;
+            this.ActualSize = 0;
+        }
+
+        /// <summary>
+        /// 用新值来迭代距障碍物的距离
+        /// </summary>
+        /// <param name="value">新的距离值</param>
+        public void IterateDistance(double value)
+        {
+            _new = value; //新值
+            _diff = Math.Abs(_new - _current); //新值与当前值的差
+            _diff1 = Math.Abs(_new - _assumed); //新值与假定值的差
+            //假如未启用迭代 / 当前值为0 / 新值与当前值的差不超过距离限定值：计数置0，用新值取代现有值
+            if (!BaseConst.IterationEnabled || /*this._current == 0 || */_diff <= BaseConst.IteDistLimit)
+            {
+                _count = 0;
+                _current = _new;
+            }
+            //假如新值与当前值的差超过距离限定值，计数刷新，用新值取代假定值
+            else
+            {
+                //假如新值与假定值的差未超过距离限定值，计数+1（否则置0）
+                _count = _diff1 <= BaseConst.IteDistLimit ? _count + 1 : 0;
+                //if (_diff1 <= BaseConst.IteDistLimit)
+                //    _count++;
+                _assumed = _new;
+                //假如计数超过计数限定值，则用新值取代现有值
+                if (_count > BaseConst.IteCountLimit)
+                {
+                    _current = _new;
+                    _count = 0;
+                }
+            }
         }
     }
 }

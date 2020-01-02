@@ -24,6 +24,16 @@ namespace ARS408
         {
             BaseFunc.InitConfigs(); //配置初始化
             #region 测试
+            //string temp1 = false.ToString();
+            //bool flag1 = bool.Parse(temp1);
+            //temp1 = true.ToString();
+            //DataFrameMessages info = new DataFrameMessages();
+            //List<double> numbers = new List<double>() { 0, 0, 7.2, 7.4, 7.5, 7.6, 7.3, 7.1, 10, 10.2, 4, 3.8, 7.2, 10, 10.1, 10.2, 10.3, 10.2, 7, 10.2, 0, 0, 0, 0, 0 };
+            //foreach (var number in numbers)
+            //{
+            //    info.IterateDistance(number);
+            //}
+
             //List<FalseAlarmProbability> list = "".Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (FalseAlarmProbability)int.Parse(p)).ToList();
 
             //string t = "";
@@ -103,9 +113,6 @@ namespace ARS408
             int temp = 1;
             if (temp == 2)
                 argstring = ";SINGLE;";
-            //Form form = new FormMain();
-            //if (argstring.Contains(";SINGLE;"))
-            //    form = new FormDisplay();
             Form form = argstring.Contains(";SINGLE;") ? (Form)new FormDisplay() : new FormMain();
 
             Application.Run(form);

@@ -8,6 +8,27 @@ using System.Threading.Tasks;
 namespace ARS408.Core
 {
     /// <summary>
+    /// 连接模式
+    /// </summary>
+    public enum ConnectionMode
+    {
+        /// <summary>
+        /// TCP客户端
+        /// </summary>
+        TCP_CLIENT = 1,
+
+        /// <summary>
+        /// UDP
+        /// </summary>
+        UDP = 2,
+
+        /// <summary>
+        /// TCP监听
+        /// </summary>
+        TCP_SERVER = 3
+    }
+
+    /// <summary>
     /// 雷达组类型
     /// </summary>
     public enum RadarGroupType
