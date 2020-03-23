@@ -184,7 +184,8 @@ namespace ARS408.Model
             set
             {
                 this.distance_border = value;
-                this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this.distance_border);
+                //this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this.distance_border);
+                //this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this.distance_border, this.Radar != null ? this.Radar.GroupType : RadarGroupType.Bucket);
             }
         }
 

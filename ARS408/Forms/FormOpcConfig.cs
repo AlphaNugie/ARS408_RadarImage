@@ -70,7 +70,7 @@ namespace ARS408.Forms
             try { table = this.dataService.GetRadarItemNamesOrderbyId(); }
             catch (Exception e)
             {
-                string errorMessage = "查询报警级数时报错：" + e.Message;
+                string errorMessage = "查询时出错：" + e.Message;
                 MessageBox.Show(errorMessage, "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -182,6 +182,11 @@ namespace ARS408.Forms
             MessageBox.Show(result > 0 ? "保存成功" : "保存失败", "提示");
         }
 
+        /// <summary>
+        /// 保存雷达按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_SaveRadar_Click(object sender, EventArgs e)
         {
             if (this.dataGridView.Rows.Count == 0)

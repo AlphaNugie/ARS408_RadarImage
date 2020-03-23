@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,6 +25,15 @@ namespace ARS408
         {
             BaseFunc.InitConfigs(); //配置初始化
             #region 测试
+            //int level = BaseFunc.GetThreatLevelByValue(-999, RadarGroupType.Bucket);
+            //int a = 1, b = 2;
+            //    goto markb;
+            //marka:
+            //    a = 3;
+            //markb:
+            //    b = 4;
+            //    int c = 5;
+            //IPEndPoint point = (IPEndPoint)null;
             //string temp1 = false.ToString();
             //bool flag1 = bool.Parse(temp1);
             //temp1 = true.ToString();

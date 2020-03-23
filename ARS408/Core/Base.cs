@@ -127,7 +127,7 @@ property float rcs";
         /// 本地端口
         /// </summary>
         public static int Port_Local = 0;
-        
+
         /// <summary>
         /// 以太网接收间歇时间（上次接收后的这些时间内不再接收，单位：毫秒）
         /// </summary>
@@ -178,6 +178,11 @@ property float rcs";
         public static int RcsMaximum { get; set; }
 
         /// <summary>
+        /// 是否使用公共RCS范围
+        /// </summary>
+        public static bool UsePublicRcsRange { get; set; }
+
+        /// <summary>
         /// 允许的存在概率最低值
         /// </summary>
         public static double ProbOfExistMinimum { get; set; }
@@ -201,6 +206,11 @@ property float rcs";
         /// 溜桶下方障碍物四周边界距离最大值（可为负值）
         /// </summary>
         public static double ObsBelowFrontier { get; set; }
+
+        /// <summary>
+        /// 门腿雷达过滤距地面不超过此高度的点（单位米）
+        /// </summary>
+        public static double FeetFilterHeight { get; set; }
 
         /// <summary>
         /// 报警级数数值
@@ -280,6 +290,8 @@ property float rcs";
                     BaseConst.BucketUpLimit = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BucketUpLimit"));
                     BaseConst.ObsBelowThres = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ObsBelowThres"));
                     BaseConst.ObsBelowFrontier = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ObsBelowFrontier"));
+                    BaseConst.FeetFilterHeight = double.Parse(BaseConst.IniHelper.ReadData("Detection", "FeetFilterHeight"));
+                    BaseConst.UsePublicRcsRange = BaseConst.IniHelper.ReadData("Detection", "UsePublicRcsRange").Equals("1");
                     //BaseConst.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMinimum"));
                     //BaseConst.RcsMaximum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMaximum"));
                     BaseConst.ReceiveRestTime = int.Parse(BaseConst.IniHelper.ReadData("Connection", "ReceiveRestTime"));
@@ -326,8 +338,25 @@ property float rcs";
                 return 0;
             set = set.Where(d => d != 0);
             double min = 0;
-            try { min = set.Count() == 0 ? 0 : set.Min(); } catch (Exception) { }
+            try { min = set.Count() == 0 ? 0 : set.Min(); }
+            catch (Exception) { }
             return min;
+        }
+
+        /// <summary>
+        /// 获取数据集中所有不为0的数中最大的数
+        /// </summary>
+        /// <param name="set"></param>
+        /// <returns></returns>
+        public static double GetMaxValueExceptZero(IEnumerable<double> set)
+        {
+            if (set == null)
+                return 0;
+            set = set.Where(d => d != 0);
+            double max = 0;
+            try { max = set.Count() == 0 ? 0 : set.Max(); }
+            catch (Exception) { }
+            return max;
         }
 
         /// <summary>
@@ -418,12 +447,35 @@ property float rcs";
         /// <returns></returns>
         public static int GetThreatLevelByValue(double value)
         {
-            int level = 0;
+            return GetThreatLevelByValue(value, RadarGroupType.Bucket);
+            //int level = 0;
+            //if (BaseConst.ThreatLevelValues != null && BaseConst.ThreatLevelValues.Length > 0)
+            //    for (int i = BaseConst.ThreatLevelValues.Length - 1; i >= 0; i--)
+            //    {
+            //        level = BaseConst.ThreatLevelValues.Length - i - 1;
+            //        if (value >= BaseConst.ThreatLevelValues[i])
+            //            break;
+            //        level++;
+            //    }
+
+            //return level;
+        }
+
+        /// <summary>
+        /// 根据给定值获取报警级数
+        /// </summary>
+        /// <param name="value">给定值</param>
+        /// <returns></returns>
+        public static int GetThreatLevelByValue(double value, RadarGroupType type)
+        {
+            int level = 0, r = type == RadarGroupType.Feet ? 5 : 1;
             if (BaseConst.ThreatLevelValues != null && BaseConst.ThreatLevelValues.Length > 0)
                 for (int i = BaseConst.ThreatLevelValues.Length - 1; i >= 0; i--)
                 {
                     level = BaseConst.ThreatLevelValues.Length - i - 1;
-                    if (value >= BaseConst.ThreatLevelValues[i])
+                    //if (value >= r * BaseConst.ThreatLevelValues[i])
+                    //假如测距为0或测距不大于-100，或测距大于该级别报警距离
+                    if (value == 0 || value <= -100 || value >= r * BaseConst.ThreatLevelValues[i])
                         break;
                     level++;
                 }

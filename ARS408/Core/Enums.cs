@@ -247,7 +247,7 @@ namespace ARS408.Core
         /// <summary>
         /// 移动中
         /// </summary>
-        [EnumDescription("移动中")]
+        [EnumDescription("移动")]
         Moving = 0x0,
 
         /// <summary>
@@ -259,13 +259,13 @@ namespace ARS408.Core
         /// <summary>
         /// 迎面而来
         /// </summary>
-        [EnumDescription("迎面而来")]
+        [EnumDescription("来向")]
         Oncoming = 0x2,
 
         /// <summary>
-        /// 备选的静止点（疑似静止？）
+        /// 疑似的静止点
         /// </summary>
-        [EnumDescription("备选静止")]
+        [EnumDescription("可能静止")]
         StationaryCandidate = 0x3,
 
         /// <summary>
@@ -275,15 +275,15 @@ namespace ARS408.Core
         Unknown = 0x4,
 
         /// <summary>
-        /// 
+        /// 横穿静止
         /// </summary>
-        [EnumDescription("Crossing Stationary")]
+        [EnumDescription("横穿静止")]
         CrossingStationary = 0x5,
 
         /// <summary>
-        /// 
+        /// 横穿移动
         /// </summary>
-        [EnumDescription("Crossing Moving")]
+        [EnumDescription("横穿移动")]
         CrossingMoving = 0x6,
 
         /// <summary>

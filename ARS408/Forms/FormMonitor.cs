@@ -18,7 +18,6 @@ namespace ARS408.Forms
     public partial class FormMonitor : Form
     {
         public delegate void ShowFormHandler(Radar radar, Form form);
-        private readonly int shiploader_id = 0;
 
         #region 私有成员
         private readonly DataService_Sqlite dataService = new DataService_Sqlite();
@@ -26,9 +25,15 @@ namespace ARS408.Forms
         private readonly string key_field = "id"; //本级关联字段
         private readonly string display_field = "name"; //显示字段
         private readonly float column_width = 0;
+        private readonly int shiploader_id = 0;
         #endregion
 
         #region 属性
+        /// <summary>
+        /// 各方向距离的键值对集合
+        /// </summary>
+        public Dictionary<string, double> DictDistances { get; private set; }
+
         /// <summary>
         /// 对应装船机对象
         /// </summary>
@@ -68,6 +73,7 @@ namespace ARS408.Forms
             this.Loading = true;
             this.DataSource = null;
             this.DictForms = new Dictionary<Radar, FormDisplay>();
+            this.DictDistances = new Dictionary<string, double>() { { "DistLand", 0 }, { "DistSea", 0 }, { "DistNorth", 0 }, { "DistSouth", 0 }, { "DistLandMax", 0 }, { "DistSeaMax", 0 }, { "DistNorthMax", 0 }, { "DistSouthMax", 0 }, { "ShoreNorth", 0 }, { "ShoreSouth", 0 } };
             this.UpdateShiploader();
             this.InitOpcHelper();
 
@@ -180,8 +186,9 @@ namespace ARS408.Forms
                 ItemNameRadarState = row["item_name_radar_state"].ToString(),
                 ItemNameCollisionState = row["item_name_collision_state"].ToString(),
                 ItemNameCollisionState2 = row["item_name_collision_state_2"].ToString(),
-                RcsMinimum = double.Parse(row["rcs_min"].ToString()),
-                RcsMaximum = double.Parse(row["rcs_max"].ToString())
+                RcsMinimum = int.Parse(row["rcs_min"].ToString()),
+                RcsMaximum = int.Parse(row["rcs_max"].ToString()),
+                RadarHeight = double.Parse(row["radar_height"].ToString())
             };
             return radar;
         }
@@ -316,6 +323,15 @@ namespace ARS408.Forms
 
         public string GetInfoString()
         {
+            //            string main = string.Format(@"[
+            //  ""walkpos"": {0},
+            //  ""armpitch"": {1},
+            //  ""armstretch"": {2},
+            //  ""bucketyaw"": {3},
+            //  ""bucketpitch"": {4},
+            //  ""beltspeed"": {5},
+            //  ""stream"": {6}
+            //]", this.OpcHelper.WalkingPosition, this.OpcHelper.PitchAngle, this.OpcHelper.StretchLength, this.OpcHelper.BucketYaw, this.OpcHelper.BucketPitch, this.OpcHelper.BeltSpeed, this.OpcHelper.Stream).Replace('[', '{').Replace(']', '}');
             string main = string.Format(@"[
   ""walkpos"": {0},
   ""armpitch"": {1},
@@ -323,8 +339,12 @@ namespace ARS408.Forms
   ""bucketyaw"": {3},
   ""bucketpitch"": {4},
   ""beltspeed"": {5},
-  ""stream"": {6}
-]", this.OpcHelper.WalkingPosition, this.OpcHelper.PitchAngle, this.OpcHelper.StretchLength, this.OpcHelper.BucketYaw, this.OpcHelper.BucketPitch, this.OpcHelper.BeltSpeed, this.OpcHelper.Stream).Replace('[', '{').Replace(']', '}');
+  ""stream"": {6},
+  海陆长度:
+  陆({7})+海({8})+2.623={9}
+  南北长度:
+  北({10})+南({11})+4.831={12}
+]", this.OpcHelper.WalkingPosition, this.OpcHelper.PitchAngle, this.OpcHelper.StretchLength, this.OpcHelper.BucketYaw, this.OpcHelper.BucketPitch, this.OpcHelper.BeltSpeed, this.OpcHelper.Stream, this.DictDistances["DistLand"], this.DictDistances["DistSea"], this.DictDistances["DistLand"] + this.DictDistances["DistSea"] + 2.623, this.DictDistances["DistNorth"], this.DictDistances["DistSouth"], this.DictDistances["DistNorth"] + this.DictDistances["DistSouth"] + 4.831).Replace('[', '{').Replace(']', '}');
             return main;
         }
 
@@ -334,16 +354,36 @@ namespace ARS408.Forms
         /// <returns></returns>
         public string GetBucketSideDistances()
         {
-            IEnumerable<Radar> radars = this.DictForms.Keys;
-            string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3};shore_north:{4};shore_south:{5}",
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Land).Select(r => this.GetRadarMinDistance(r))),
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Sea).Select(r => this.GetRadarMinDistance(r))),
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.North).Select(r => this.GetRadarMinDistance(r))),
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.South).Select(r => this.GetRadarMinDistance(r))),
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("北")).Select(r => this.GetRadarMinDistance(r))),
-                BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("南")).Select(r => this.GetRadarMinDistance(r)))
-                );
+            this.UpdateDictDistances();
+            string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3};shore_north:{4};shore_south:{5}", this.DictDistances["DistLand"], this.DictDistances["DistSea"], this.DictDistances["DistNorth"], this.DictDistances["DistSouth"], this.DictDistances["ShoreNorth"], this.DictDistances["ShoreSouth"]);
+            //IEnumerable<Radar> radars = this.DictForms.Keys;
+            //string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3};shore_north:{4};shore_south:{5}",
+            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Land).Select(r => this.GetRadarMinDistance(r))),
+            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Sea).Select(r => this.GetRadarMinDistance(r))),
+            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.North).Select(r => this.GetRadarMinDistance(r))),
+            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.South).Select(r => this.GetRadarMinDistance(r))),
+            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("北")).Select(r => this.GetRadarMinDistance(r))),
+            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("南")).Select(r => this.GetRadarMinDistance(r)))
+            //    );
             return result;
+        }
+
+        /// <summary>
+        /// 更新各方向距离
+        /// </summary>
+        private void UpdateDictDistances()
+        {
+            IEnumerable<Radar> radars = this.DictForms.Keys;
+            this.DictDistances["DistLand"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Land).Select(r => this.GetRadarMinDistance(r))); //陆侧最近距离
+            this.DictDistances["DistSea"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Sea).Select(r => this.GetRadarMinDistance(r))); //海侧最近距离
+            this.DictDistances["DistNorth"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.North).Select(r => this.GetRadarMinDistance(r))); //北侧最近距离
+            this.DictDistances["DistSouth"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.South).Select(r => this.GetRadarMinDistance(r))); //南侧最近距离
+            //this.DictDistances["DistLandMax"] = BaseFunc.GetMaxValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Land).Select(r => this.GetRadarMinDistance(r))); //陆侧最远距离
+            //this.DictDistances["DistSeaMax"] = BaseFunc.GetMaxValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Sea).Select(r => this.GetRadarMinDistance(r))); //海侧最远距离
+            //this.DictDistances["DistNorthMax"] = BaseFunc.GetMaxValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.North).Select(r => this.GetRadarMinDistance(r))); //北侧最远距离
+            //this.DictDistances["DistSouthMax"] = BaseFunc.GetMaxValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.South).Select(r => this.GetRadarMinDistance(r))); //南侧最远距离
+            this.DictDistances["ShoreNorth"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("北")).Select(r => this.GetRadarMinDistance(r))); //岸基北距离
+            this.DictDistances["ShoreSouth"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("南")).Select(r => this.GetRadarMinDistance(r))); //岸基南距离
         }
 
         /// <summary>
@@ -379,7 +419,7 @@ namespace ARS408.Forms
   ""effective"": {1},
   ""distance"": {2},
   ""below"": {3}
-  ],", radar.PortLocal + "_" + radar.Name, infos.RadarState.Working, Math.Round(infos.CurrentDistance, 4), obj_height);
+  ],", radar.PortLocal + "_" + radar.Name, infos.RadarState.Working, infos.CurrentDistance, obj_height);
             }
 
             return result;

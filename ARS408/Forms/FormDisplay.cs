@@ -25,6 +25,7 @@ namespace ARS408.Forms
         private bool finalized = false;
         private readonly Regex pattern = new Regex(BaseConst.Pattern_WrappedStatus, RegexOptions.Compiled);
         private readonly DataService_Sqlite dataService = new DataService_Sqlite();
+        private readonly DataService_Radar dataService_Radar = new DataService_Radar();
         private List<ClusterGeneral> list_cluster = null;
         private List<ObjectGeneral> list_object = null;
         //private readonly ushort refresh_interval = 200;
@@ -112,27 +113,49 @@ namespace ARS408.Forms
         /// </summary>
         public bool IsShown { get; set; }
 
-        //TODO RCS反映全局变量还是每个页面单独一个变量
+        private int rcsMinimum = -64;
+        private int rcsMaximum = 64;
 
         /// <summary>
         /// RCS最小值
         /// </summary>
-        public int RcsMinimum { get { return BaseConst.RcsMinimum; } }
+        public int RcsMinimum
+        {
+            //是否使用公共RCS值范围
+            get { return BaseConst.UsePublicRcsRange ? BaseConst.RcsMinimum : this.rcsMinimum; }
+            set
+            {
+                if (BaseConst.UsePublicRcsRange)
+                    BaseConst.RcsMinimum = value;
+                else
+                {
+                    this.rcsMinimum = value;
+                    //向数据库保存RCS值最小值
+                    if (this.Radar != null)
+                        this.dataService_Radar.UpdateRadarRcsMinById(this.rcsMinimum, this.Radar.Id);
+                }
+            }
+        }
 
         /// <summary>
         /// RCS最大值
         /// </summary>
-        public int RcsMaximum { get { return BaseConst.RcsMaximum; } }
-
-        ///// <summary>
-        ///// RCS最小值
-        ///// </summary>
-        //public int RcsMinimum { get; set; }
-
-        ///// <summary>
-        ///// RCS最大值
-        ///// </summary>
-        //public int RcsMaximum { get; set; }
+        public int RcsMaximum
+        {
+            get { return BaseConst.UsePublicRcsRange ? BaseConst.RcsMaximum : this.rcsMaximum; }
+            set
+            {
+                if (BaseConst.UsePublicRcsRange)
+                    BaseConst.RcsMaximum = value;
+                else
+                {
+                    this.rcsMaximum = value;
+                    //向数据库保存RCS值最小值
+                    if (this.Radar != null)
+                        this.dataService_Radar.UpdateRadarRcsMaxById(this.rcsMaximum, this.Radar.Id);
+                }
+            }
+        }
 
         /// <summary>
         /// 允许的存在概率最低值
@@ -204,12 +227,9 @@ namespace ARS408.Forms
             this.UsingLocal = radar == null ? BaseConst.UsingLocal : radar.UsingLocal;
             this.IpAddress_Local = BaseConst.IpAddress_Local;
             this.Port_Local = radar == null ? BaseConst.Port_Local : radar.PortLocal;
-            //TODO RCS值由何决定
-            //this.RcsMinimum = radar == null ? BaseConst.RcsMinimum : radar.RcsMinimum;
-            //this.RcsMaximum = radar == null ? BaseConst.RcsMaximum : radar.RcsMaximum;
-            //this.RcsMinimum = BaseConst.RcsMinimum;
-            //this.RcsMaximum = BaseConst.RcsMaximum;
             this.ProbOfExistMinimum = radar == null ? BaseConst.ProbOfExistMinimum : radar.ProbOfExistMinimum;
+            this.rcsMinimum = radar == null ? BaseConst.RcsMinimum : radar.RcsMinimum;
+            this.rcsMaximum = radar == null ? BaseConst.RcsMaximum : radar.RcsMaximum;
 
             this.thread_writeitems = new Thread(new ThreadStart(this.WriteItemValuesLoop)) { IsBackground = true };
             this.AddGroupItemsAsync();
@@ -350,9 +370,9 @@ namespace ARS408.Forms
             this.checkBox_UsingLocal.Checked = this.UsingLocal;
             this.textBox_IpAddress_Local.Text = this.IpAddress_Local;
             this.numeric_Port_Local.Value = this.Port_Local;
-            int min = this.RcsMinimum, max = this.RcsMaximum;
-            this.trackBar_RcsMin.Value = min;
-            this.trackBar_RcsMax.Value = max;
+            //int min = this.RcsMinimum, max = this.RcsMaximum;
+            this.trackBar_RcsMin.Value = this.RcsMinimum;
+            this.trackBar_RcsMax.Value = this.RcsMaximum;
             this.timer_UIUpdate.Start();
 
             this.pictureBox_Dots.MouseWheel += new MouseEventHandler(PictureBox_Dots_MouseWheel);
@@ -456,21 +476,6 @@ namespace ARS408.Forms
                     case ConnectionMode.TCP_SERVER:
                         break;
                 }
-                //if (usingTcp)
-                //{
-                //    //this.SocketTcpClient.Tcpclient.ReceiveBufferSize = 4096;
-                //    this.SocketTcpClient.ServerIp = this.IpAddress;
-                //    this.SocketTcpClient.ServerPort = this.Port;
-                //    this.SocketTcpClient.StartConnection();
-                //}
-                //else
-                //{
-                //    //this.UdpClient.ReceiveRestTime = BaseConst.ReceiveRestTime;
-                //    if (this.checkBox_UsingLocal.Checked)
-                //        this.UdpClient.Connect(this.IpAddress, this.Port, this.IpAddress_Local, this.Port_Local);
-                //    else
-                //        this.UdpClient.Connect(this.IpAddress, this.Port);
-                //}
             }
             catch (Exception)
             {
@@ -508,10 +513,6 @@ namespace ARS408.Forms
                     case ConnectionMode.TCP_SERVER:
                         break;
                 }
-                //if (usingTcp)
-                //    this.SocketTcpClient.StopConnection();
-                //else
-                //    this.UdpClient.Close();
             }
             catch (Exception)
             {
@@ -609,10 +610,24 @@ namespace ARS408.Forms
             {
                 try
                 {
-                    bool usingTcp = this.ConnectionMode == ConnectionMode.TCP_CLIENT;
-                    bool is_connected_socket = usingTcp ? this.SocketTcpClient.IsStart : this.UdpClient.IsConnected_Socket;
-                    string name = usingTcp ? this.SocketTcpClient.Name : this.UdpClient.Name;
-                    this.SafeInvoke(() => { this.Text = this.Title + " - " + (is_connected_socket ? name : "连接断开"); });
+                    bool connected = false;
+                    string name = string.Empty;
+                    switch (this.ConnectionMode)
+                    {
+                        case ConnectionMode.TCP_CLIENT:
+                            connected = this.SocketTcpClient.IsStart;
+                            name = this.SocketTcpClient.Name;
+                            break;
+                        case ConnectionMode.UDP:
+                            connected = this.UdpClient.IsConnected_Socket || this.UdpClient.IsStartListening;
+                            name = this.UdpClient.Name;
+                            break;
+                        case ConnectionMode.TCP_SERVER:
+                            connected = this.SocketTcpServer.IsStartListening;
+                            name = this.SocketTcpServer.Name;
+                            break;
+                    }
+                    this.SafeInvoke(() => { this.Text = this.Title + " - " + (connected ? name : "连接断开"); });
 
                     #region 被动接收
                     this.wrapped = this.received;
@@ -948,10 +963,6 @@ namespace ARS408.Forms
                 this.UdpClient.SendString(this.textBox_SendContent.Text);
             else if (this.ConnectionMode == ConnectionMode.TCP_SERVER)
                 this.SocketTcpServer.ClientSocketList.ForEach(client => this.SocketTcpServer.SendData(client, this.textBox_SendContent.Text));
-            //if (int.Parse(this.comboBox_TcpOrUdp.SelectedValue.ToString()) == 1 && this.TcpClient.IsConnected_Socket)
-            //    this.TcpClient.SendString(this.textBox_SendContent.Text);
-            //else if (int.Parse(this.comboBox_TcpOrUdp.SelectedValue.ToString()) == 2 && this.UdpClient.IsConnected)
-            //    this.UdpClient.SendString(this.textBox_SendContent.Text);
         }
 
         private void ComboBox_ConnMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -1011,19 +1022,16 @@ namespace ARS408.Forms
         {
             this.IsShown = true;
         }
-        #endregion
 
-        private void TrackBar_ValueChanged(object sender, EventArgs e)
+        private void TrackBar_RcsMin_ValueChanged(object sender, EventArgs e)
         {
-            //TODO RCS过滤进度条值变化后改变全局变量还是单独变量
-            //this.RcsMinimum = Math.Min(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
-            //this.RcsMaximum = Math.Max(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
-            //BaseConst.RcsMinimum = Math.Min(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
-            //BaseConst.RcsMaximum = Math.Max(this.trackBar_RcsMin.Value, this.trackBar_RcsMax.Value);
-            BaseConst.RcsMinimum = this.trackBar_RcsMin.Value;
-            BaseConst.RcsMaximum = this.trackBar_RcsMax.Value;
-            this.label_RcsMin.Text = this.RcsMinimum.ToString();
-            this.label_RcsMax.Text = this.RcsMaximum.ToString();
+            this.label_RcsMin.Text = (this.RcsMinimum = this.trackBar_RcsMin.Value).ToString();
         }
+
+        private void TrackBar_RcsMax_ValueChanged(object sender, EventArgs e)
+        {
+            this.label_RcsMax.Text = (this.RcsMaximum = this.trackBar_RcsMax.Value).ToString();
+        }
+        #endregion
     }
 }

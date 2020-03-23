@@ -84,7 +84,8 @@ namespace ARS408.Model
             {
                 this.prop = value;
                 this.DynPropString = this.prop.GetDescription();
-                this.Color = BaseFunc.GetColorByDynProp(this.prop, this.Color);
+                //this.Color = BaseFunc.GetColorByRcs(this.rcs, this.Color);
+                this.Color = BaseFunc.GetColorByDynProp(this.DynProp, this.Color);
             }
         }
 
@@ -199,7 +200,8 @@ namespace ARS408.Model
             set
             {
                 this.distance_border = value;
-                this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this.distance_border);
+                //this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this.distance_border);
+                //this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this.distance_border, this.Radar != null ? this.Radar.GroupType : RadarGroupType.Bucket);
             }
         }
 

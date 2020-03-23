@@ -31,6 +31,7 @@ namespace ARS408.Model
         /// </summary>
         public string Name { get; set; }
 
+        #region 通讯与地址
         /// <summary>
         /// IP地址
         /// </summary>
@@ -65,6 +66,7 @@ namespace ARS408.Model
         /// 本地端口
         /// </summary>
         public int PortLocal { get; set; }
+        #endregion
 
         /// <summary>
         /// 所属雷达组
@@ -76,6 +78,7 @@ namespace ARS408.Model
         /// </summary>
         public RadarGroupType GroupType { get; set; }
 
+        #region 角度与转换
         /// <summary>
         /// XOY平面内旋转角度
         /// </summary>
@@ -150,7 +153,9 @@ namespace ARS408.Model
         /// 修改后的Z坐标的原XY坐标参数
         /// </summary>
         public CoordinateRatios ZmodifiedRatios { get; set; }
+        #endregion
 
+        #region 测距与检测
         /// <summary>
         /// 方向：123456，海北陆南上下
         /// </summary>
@@ -165,6 +170,84 @@ namespace ARS408.Model
         /// 距离校正值，以此值校正距防御边界的距离
         /// </summary>
         public double Offset { get; set; }
+
+        /// <summary>
+        /// RCS最小值
+        /// </summary>
+        public int RcsMinimum { get; set; }
+
+        /// <summary>
+        /// RCS最大值
+        /// </summary>
+        public int RcsMaximum { get; set; }
+
+        /// <summary>
+        /// 雷达所在高度，一般只有门腿雷达此项有意义
+        /// </summary>
+        public double RadarHeight { get; set; }
+        #endregion
+
+        #region 坐标系坐标限制
+        /// <summary>
+        /// 是否限制雷达坐标系坐标
+        /// </summary>
+        public bool RadarCoorsLimited { get; set; }
+
+        /// <summary>
+        /// 雷达坐标系X轴最小值
+        /// </summary>
+        public double RadarxMin { get; set; }
+
+        /// <summary>
+        /// 雷达坐标系x轴最大值
+        /// </summary>
+        public double RadarxMax { get; set; }
+
+        /// <summary>
+        /// 雷达坐标系y轴最小值
+        /// </summary>
+        public double RadaryMin { get; set; }
+
+        /// <summary>
+        /// 雷达坐标系y轴最大值
+        /// </summary>
+        public double RadaryMax { get; set; }
+
+        /// <summary>
+        /// 是否限制单机坐标系坐标
+        /// </summary>
+        public bool ClaimerCoorsLimited { get; set; }
+
+        /// <summary>
+        /// 单机坐标系X轴最小值
+        /// </summary>
+        public double ClaimerxMin { get; set; }
+
+        /// <summary>
+        /// 单机坐标系X轴最大值
+        /// </summary>
+        public double ClaimerxMax { get; set; }
+
+        /// <summary>
+        /// 单机坐标系y轴最小值
+        /// </summary>
+        public double ClaimeryMin { get; set; }
+
+        /// <summary>
+        /// 单机坐标系y轴最大值
+        /// </summary>
+        public double ClaimeryMax { get; set; }
+
+        /// <summary>
+        /// 单机坐标系z轴最小值
+        /// </summary>
+        public double ClaimerzMin { get; set; }
+
+        /// <summary>
+        /// 单机坐标系z轴最小值
+        /// </summary>
+        public double ClaimerzMax { get; set; }
+        #endregion
 
         /// <summary>
         /// 备注
@@ -187,16 +270,6 @@ namespace ARS408.Model
         public string ItemNameCollisionState2 { get; set; }
 
         /// <summary>
-        /// RCS最小值
-        /// </summary>
-        public double RcsMinimum { get; set; }
-
-        /// <summary>
-        /// RCS最大值
-        /// </summary>
-        public double RcsMaximum { get; set; }
-
-        /// <summary>
         /// 存在概率最低值
         /// </summary>
         public double ProbOfExistMinimum { get; set; }
@@ -209,6 +282,7 @@ namespace ARS408.Model
         {
             this.RcsMinimum = -64;
             this.RcsMaximum = 64;
+            this.RadarHeight = 0;
             this.ProbOfExistMinimum = -1;
         }
 

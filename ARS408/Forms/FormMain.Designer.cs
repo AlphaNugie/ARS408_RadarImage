@@ -43,6 +43,7 @@
             this.toolStrip_ThreatLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_OpcConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip_CoorsLimitConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl_Main = new System.Windows.Forms.TabControl();
             this.tcpServer_Watchdog = new SocketHelper.SocketTcpServer(this.components);
             this.label_Receive = new System.Windows.Forms.Label();
@@ -146,7 +147,8 @@
             // 设置ToolStripMenuItem
             // 
             this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_OpcConfig});
+            this.toolStrip_OpcConfig,
+            this.toolStrip_CoorsLimitConfig});
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
             this.设置ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.设置ToolStripMenuItem.Text = "设置";
@@ -154,9 +156,16 @@
             // toolStrip_OpcConfig
             // 
             this.toolStrip_OpcConfig.Name = "toolStrip_OpcConfig";
-            this.toolStrip_OpcConfig.Size = new System.Drawing.Size(153, 26);
+            this.toolStrip_OpcConfig.Size = new System.Drawing.Size(224, 26);
             this.toolStrip_OpcConfig.Text = "OPC配置";
             this.toolStrip_OpcConfig.Click += new System.EventHandler(this.ToolStrip_OpcConfig_Click);
+            // 
+            // toolStrip_CoorsLimitConfig
+            // 
+            this.toolStrip_CoorsLimitConfig.Name = "toolStrip_CoorsLimitConfig";
+            this.toolStrip_CoorsLimitConfig.Size = new System.Drawing.Size(224, 26);
+            this.toolStrip_CoorsLimitConfig.Text = "坐标限制";
+            this.toolStrip_CoorsLimitConfig.Click += new System.EventHandler(this.ToolStrip_CoorsLimitConfig_Click);
             // 
             // tabControl_Main
             // 
@@ -174,10 +183,16 @@
             // tcpServer_Watchdog
             // 
             this.tcpServer_Watchdog.CheckTime = 1000;
+            this.tcpServer_Watchdog.HeartBeatCheck = null;
             this.tcpServer_Watchdog.HeartBeatPacket = "X";
             this.tcpServer_Watchdog.IsHeartCheck = true;
+            this.tcpServer_Watchdog.IsStartListening = false;
+            this.tcpServer_Watchdog.LocalEndPoint = null;
+            this.tcpServer_Watchdog.RemoteEndPoint = null;
             this.tcpServer_Watchdog.ServerIp = "127.0.0.1";
             this.tcpServer_Watchdog.ServerPort = 5001;
+            this.tcpServer_Watchdog.ServerSocket = null;
+            this.tcpServer_Watchdog.StartSockst = null;
             this.tcpServer_Watchdog.TcpServerRecevice += new SocketHelper.SocketTcpServer.ReceviceEventHandler(this.TcpServer_Watchdog_TcpServerRecevice);
             this.tcpServer_Watchdog.OnErrorMsg += new SocketHelper.SocketTcpServer.ErrorMsgEventHandler(this.TcpServer_Watchdog_OnErrorMsg);
             this.tcpServer_Watchdog.OnStateInfo += new SocketHelper.SocketTcpServer.StateInfoEventHandler(this.TcpServer_Watchdog_OnStateInfo);
@@ -192,6 +207,7 @@
             this.label_Receive.Size = new System.Drawing.Size(108, 20);
             this.label_Receive.TabIndex = 6;
             this.label_Receive.Text = "label_Receive";
+            this.label_Receive.Visible = false;
             // 
             // label_State
             // 
@@ -268,5 +284,6 @@
         private System.Windows.Forms.Label label_Error;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenu_AutoMonitor;
+        private System.Windows.Forms.ToolStripMenuItem toolStrip_CoorsLimitConfig;
     }
 }

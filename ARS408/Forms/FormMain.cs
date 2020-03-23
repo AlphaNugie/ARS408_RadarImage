@@ -242,6 +242,18 @@ namespace ARS408.Forms
         }
 
         /// <summary>
+        /// 坐标限制配置按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToolStrip_CoorsLimitConfig_Click(object sender, EventArgs e)
+        {
+            FormCoorsLimitationConfig form = new FormCoorsLimitationConfig();
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.ShowDialog();
+        }
+
+        /// <summary>
         /// TcpServer出现错误事件
         /// </summary>
         /// <param name="msg">错误信息</param>

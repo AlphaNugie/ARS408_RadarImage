@@ -104,7 +104,7 @@ namespace ARS408.Forms
         /// <param name="e"></param>
         private void Button_Add_Click(object sender, EventArgs e)
         {
-            object[] values = new object[] { 0, string.Empty, string.Empty, 20001, this.first_group_id, this.first_mode_id, "0", BaseConst.IpAddress_Local, 20005, 0, 0, 0, 0, this.first_direction_id, this.first_defense_mode_id, 0, string.Empty };
+            object[] values = new object[] { 0, string.Empty, string.Empty, 20001, this.first_group_id, this.first_mode_id, "0", BaseConst.IpAddress_Local, 20005, 0, 0, 0, 0, this.first_direction_id, this.first_defense_mode_id, 0, BaseConst.RcsMinimum, BaseConst.RcsMaximum, 0, string.Empty };
             ((DataTable)this.dataGridView_Main.DataSource).Rows.Add(values);
             if (this.dataGridView_Main.Rows.Count == 0)
                 return;

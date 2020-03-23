@@ -126,6 +126,7 @@
             // dataGridView_Output
             // 
             this.dataGridView_Output.AllowUserToAddRows = false;
+            this.dataGridView_Output.AllowUserToOrderColumns = true;
             this.dataGridView_Output.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView_Output.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column_Id,
@@ -167,7 +168,7 @@
             this.Column_DistLong.HeaderText = "纵向";
             this.Column_DistLong.MinimumWidth = 65;
             this.Column_DistLong.Name = "Column_DistLong";
-            this.Column_DistLong.ReadOnly = true;
+            this.Column_DistLong.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.Column_DistLong.ToolTipText = "纵向(x,m)";
             this.Column_DistLong.Width = 68;
             // 
@@ -750,7 +751,7 @@
             this.trackBar_RcsMin.Size = new System.Drawing.Size(222, 24);
             this.trackBar_RcsMin.TabIndex = 14;
             this.trackBar_RcsMin.TickFrequency = 10;
-            this.trackBar_RcsMin.ValueChanged += new System.EventHandler(this.TrackBar_ValueChanged);
+            this.trackBar_RcsMin.ValueChanged += new System.EventHandler(this.TrackBar_RcsMin_ValueChanged);
             // 
             // trackBar_RcsMax
             // 
@@ -763,7 +764,7 @@
             this.trackBar_RcsMax.Size = new System.Drawing.Size(222, 24);
             this.trackBar_RcsMax.TabIndex = 15;
             this.trackBar_RcsMax.TickFrequency = 10;
-            this.trackBar_RcsMax.ValueChanged += new System.EventHandler(this.TrackBar_ValueChanged);
+            this.trackBar_RcsMax.ValueChanged += new System.EventHandler(this.TrackBar_RcsMax_ValueChanged);
             // 
             // label4
             // 
@@ -847,6 +848,7 @@
             // SocketTcpClient
             // 
             this.SocketTcpClient.AssignLocalAddress = false;
+            this.SocketTcpClient.BaseClient = null;
             this.SocketTcpClient.IsReconnection = true;
             this.SocketTcpClient.IsStart = false;
             this.SocketTcpClient.IsStartTcpThreading = false;
@@ -856,9 +858,9 @@
             this.SocketTcpClient.ReceiveBufferSize = 2048;
             this.SocketTcpClient.ReConnectedCount = 0;
             this.SocketTcpClient.ReConnectionTime = 3000;
+            this.SocketTcpClient.RemoteEndPoint = null;
             this.SocketTcpClient.ServerIp = null;
             this.SocketTcpClient.ServerPort = 0;
-            this.SocketTcpClient.TcpClient = null;
             this.SocketTcpClient.TcpThread = null;
             this.SocketTcpClient.OnRecevice += new SocketHelper.SocketTcpClient.ReceviceEventHandler(this.SocketTcpClient_OnRecevice);
             // 
@@ -869,6 +871,8 @@
             this.SocketTcpServer.HeartBeatPacket = "X";
             this.SocketTcpServer.IsHeartCheck = false;
             this.SocketTcpServer.IsStartListening = false;
+            this.SocketTcpServer.LocalEndPoint = null;
+            this.SocketTcpServer.RemoteEndPoint = null;
             this.SocketTcpServer.ServerIp = "127.0.0.1";
             this.SocketTcpServer.ServerPort = 5000;
             this.SocketTcpServer.ServerSocket = null;
@@ -966,6 +970,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Timer timer_UIUpdate;
         private SocketHelper.SocketTcpClient SocketTcpClient;
+        private SocketHelper.SocketTcpServer SocketTcpServer;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Id;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_DistLong;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_DistLat;
@@ -979,7 +984,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_InvalidState;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_MeasState;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_ProbOfExist;
-        private SocketHelper.SocketTcpServer SocketTcpServer;
     }
 }
 

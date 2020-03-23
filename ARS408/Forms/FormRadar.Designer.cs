@@ -52,6 +52,7 @@
             this.Column_Offset = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_RcsMinimum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_RcsMaximum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column_RadarHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Remark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Changed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Main)).BeginInit();
@@ -112,6 +113,7 @@
             this.Column_Offset,
             this.Column_RcsMinimum,
             this.Column_RcsMaximum,
+            this.Column_RadarHeight,
             this.Column_Remark,
             this.Column_Changed});
             this.dataGridView_Main.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -303,6 +305,14 @@
             this.Column_RcsMaximum.Name = "Column_RcsMaximum";
             this.Column_RcsMaximum.Width = 80;
             // 
+            // Column_RadarHeight
+            // 
+            this.Column_RadarHeight.DataPropertyName = "RADAR_HEIGHT";
+            this.Column_RadarHeight.HeaderText = "高度";
+            this.Column_RadarHeight.MinimumWidth = 70;
+            this.Column_RadarHeight.Name = "Column_RadarHeight";
+            this.Column_RadarHeight.Width = 70;
+            // 
             // Column_Remark
             // 
             this.Column_Remark.DataPropertyName = "REMARK";
@@ -364,6 +374,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Offset;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_RcsMinimum;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_RcsMaximum;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_RadarHeight;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Remark;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Changed;
     }
