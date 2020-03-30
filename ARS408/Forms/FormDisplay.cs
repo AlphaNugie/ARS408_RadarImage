@@ -32,7 +32,7 @@ namespace ARS408.Forms
         private Bitmap bitmap = null;
         private Graphics graphic = null;
         private string received = string.Empty, wrapped = string.Empty;
-        private Thread thread = null, thread_writeitems = null;
+        private Thread thread = null/*, thread_writeitems = null*/;
         private float scale = 1, column_width = 0;
         private readonly float scale_original = 1;
         private int time = 0; //重连次数
@@ -231,8 +231,8 @@ namespace ARS408.Forms
             this.rcsMinimum = radar == null ? BaseConst.RcsMinimum : radar.RcsMinimum;
             this.rcsMaximum = radar == null ? BaseConst.RcsMaximum : radar.RcsMaximum;
 
-            this.thread_writeitems = new Thread(new ThreadStart(this.WriteItemValuesLoop)) { IsBackground = true };
-            this.AddGroupItemsAsync();
+            //this.thread_writeitems = new Thread(new ThreadStart(this.WriteItemValuesLoop)) { IsBackground = true };
+            //this.AddGroupItemsAsync();
 
             this.column_width = this.tableLayoutPanel_Main.ColumnStyles[0].Width;
             this.Infos = new DataFrameMessages(this, this.Radar);
@@ -244,108 +244,6 @@ namespace ARS408.Forms
 
             this.InitControls();
         }
-
-        #region OPC方法
-        /// <summary>
-        /// 异步添加OPC组与标签
-        /// </summary>
-        public void AddGroupItemsAsync()
-        {
-            new Thread(new ThreadStart(() =>
-            {
-                this.AddGroupItems();
-                if (this.OpcHelper != null && !string.IsNullOrWhiteSpace(this.OpcHelper.LastErrorMessage))
-                    this.label_opc.SafeInvoke(() => { this.label_opc.Text = this.OpcHelper.LastErrorMessage; });
-                if (this.Radar != null && this.OpcHelper != null)
-                    this.thread_writeitems.Start();
-            })) { IsBackground = true }.Start();
-        }
-
-        /// <summary>
-        /// 添加OPC组与标签
-        /// </summary>
-        /// <returns></returns>
-        public bool AddGroupItems()
-        {
-            bool result = false;
-            //if (this.OpcHelper == null)
-            if (this.Radar == null || this.OpcHelper == null)
-                return result;
-            try
-            {
-                this.OpcGroup = this.OpcHelper.OpcServer.OPCGroups.Add("Group_Radar_" + this.Radar.Id);
-                //TODO 添加雷达数据监测标签
-                this.OpcItemNames = new string[] { this.Radar.ItemNameRadarState, this.Radar.ItemNameCollisionState, this.Radar.ItemNameCollisionState2, string.Format("[SL7_COLL]ANTICOLL_SYS.Spare_Real[{0}]", 10 + this.Radar.Id) };
-                //this.OpcItemNames = new string[] { this.Radar.ItemNameRadarState, this.Radar.ItemNameCollisionState, this.Radar.ItemNameCollisionState2 };
-
-                int count = this.OpcItemNames.Length;
-                string[] itemIds = new string[count + 1];
-                int[] clientHandlers = new int[count + 1];
-
-                for (int i = 1; i <= count; i++)
-                {
-                    clientHandlers[i] = i;
-                    itemIds[i] = this.OpcItemNames[i - 1];
-                }
-
-                Array errors, strit = itemIds.ToArray(), lci = clientHandlers.ToArray();
-                this.OpcGroup.OPCItems.AddItems(count, ref strit, ref lci, out ServerHandlers, out errors);
-                this.OpcGroup.IsSubscribed = true;
-                this.OpcGroup.UpdateRate = 30;
-            }
-            catch (Exception e)
-            {
-                this.OpcHelper.LastErrorMessage = "添加OPC组与标签时出现问题. " + e.Message;
-                FileClient.WriteExceptionInfo(e, this.OpcHelper.LastErrorMessage, false);
-                return result;
-            }
-            return !result;
-        }
-
-        /// <summary>
-        /// 向OPC服务写入OPC项的值
-        /// </summary>
-        private void WriteItemValuesLoop()
-        {
-            while (true)
-            {
-                Thread.Sleep(500);
-                if (!BaseConst.WriteItemValue)
-                    continue;
-                try { this.WriteItemValues(); }
-                catch (Exception) { }
-            }
-        }
-
-        /// <summary>
-        /// 向PLC写入信息
-        /// </summary>
-        public void WriteItemValues()
-        {
-            if (this.Radar == null || this.OpcHelper == null || this.OpcGroup == null)
-                return;
-
-            try
-            {
-                //假如未添加任何OPC项
-                if (this.OpcGroup.OPCItems.Count == 0)
-                    return;
-
-                //TODO 写入雷达监测标签
-                char[] levels = this.Infos.GetCurrentThreatLevels();
-                Array itemValues = (new object[] { 0, this.Infos.RadarState.Working, levels[1] - '0', levels[0] - '0', this.Infos.CurrentDistance }).ToArray();
-                //Array itemValues = (new object[] { 0, this.Infos.RadarState.Working, this.Infos.CurrentThreatLevels[1] - '0', this.Infos.CurrentThreatLevels[0] - '0' }).ToArray();
-                Array errors;
-                this.OpcGroup.SyncWrite(this.OpcItemNames.Length, ref this.ServerHandlers, ref itemValues, out errors);
-            }
-            catch (Exception ex)
-            {
-                string info = string.Format("OPC写入时出现问题. {0}. radar_id: {1}, ip_address: {2}", ex.Message, this.Radar.Id, this.OpcHelper.Shiploader.OpcServerIp);
-                this.label_opc.SafeInvoke(() => { this.label_opc.Text = info; });
-                FileClient.WriteExceptionInfo(ex, info, false);
-            }
-        }
-        #endregion
 
         #region 功能
         /// <summary>
@@ -386,7 +284,7 @@ namespace ARS408.Forms
             this.SocketTcpServer.Stop();
             this.ThreadControl(false);
             this.Infos.ThreadCheck.Abort();
-            this.thread_writeitems.Abort();
+            //this.thread_writeitems.Abort();
             this.finalized = true;
             BaseConst.IniHelper.WriteData("Detection", "RcsMinimum", this.RcsMinimum.ToString());
             BaseConst.IniHelper.WriteData("Detection", "RcsMaximum", this.RcsMaximum.ToString());
@@ -979,7 +877,7 @@ namespace ARS408.Forms
 
         private void Timer_WriteItems_Tick(object sender, EventArgs e)
         {
-            this.WriteItemValues();
+            //this.WriteItemValues();
         }
 
         private void Timer_UIUpdate_Tick(object sender, EventArgs e)

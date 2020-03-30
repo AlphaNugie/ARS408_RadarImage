@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel_Main = new System.Windows.Forms.TableLayoutPanel();
-            this.treeView_Main = new System.Windows.Forms.TreeView();
-            this.tabControl_Main = new System.Windows.Forms.TabControl();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.button_StartOrEnd = new System.Windows.Forms.Button();
             this.button_Info = new System.Windows.Forms.Button();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.treeView_Main = new System.Windows.Forms.TreeView();
+            this.tabControl_Main = new System.Windows.Forms.TabControl();
+            this.label_opc = new System.Windows.Forms.Label();
             this.tableLayoutPanel_Main.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -47,6 +48,7 @@
             this.tableLayoutPanel_Main.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.tableLayoutPanel_Main.Controls.Add(this.treeView_Main, 0, 1);
             this.tableLayoutPanel_Main.Controls.Add(this.tabControl_Main, 1, 1);
+            this.tableLayoutPanel_Main.Controls.Add(this.label_opc, 1, 0);
             this.tableLayoutPanel_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel_Main.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel_Main.Name = "tableLayoutPanel_Main";
@@ -56,24 +58,17 @@
             this.tableLayoutPanel_Main.Size = new System.Drawing.Size(1099, 600);
             this.tableLayoutPanel_Main.TabIndex = 0;
             // 
-            // treeView_Main
+            // flowLayoutPanel1
             // 
-            this.treeView_Main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView_Main.Location = new System.Drawing.Point(3, 39);
-            this.treeView_Main.Name = "treeView_Main";
-            this.treeView_Main.Size = new System.Drawing.Size(194, 558);
-            this.treeView_Main.TabIndex = 4;
-            this.treeView_Main.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseDoubleClick);
-            // 
-            // tabControl_Main
-            // 
-            this.tabControl_Main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl_Main.Location = new System.Drawing.Point(203, 39);
-            this.tabControl_Main.Name = "tabControl_Main";
-            this.tabControl_Main.SelectedIndex = 0;
-            this.tabControl_Main.Size = new System.Drawing.Size(893, 558);
-            this.tabControl_Main.TabIndex = 5;
-            this.tabControl_Main.DoubleClick += new System.EventHandler(this.TabControl_DoubleClick);
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.Controls.Add(this.button_StartOrEnd);
+            this.flowLayoutPanel1.Controls.Add(this.button_Info);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(1, 1);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(1);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(198, 34);
+            this.flowLayoutPanel1.TabIndex = 5;
             // 
             // button_StartOrEnd
             // 
@@ -95,17 +90,34 @@
             this.button_Info.UseVisualStyleBackColor = true;
             this.button_Info.Click += new System.EventHandler(this.Button_Info_Click);
             // 
-            // flowLayoutPanel1
+            // treeView_Main
             // 
-            this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.Controls.Add(this.button_StartOrEnd);
-            this.flowLayoutPanel1.Controls.Add(this.button_Info);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(1, 1);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(1);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(198, 34);
-            this.flowLayoutPanel1.TabIndex = 5;
+            this.treeView_Main.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView_Main.Location = new System.Drawing.Point(3, 39);
+            this.treeView_Main.Name = "treeView_Main";
+            this.treeView_Main.Size = new System.Drawing.Size(194, 558);
+            this.treeView_Main.TabIndex = 4;
+            this.treeView_Main.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseDoubleClick);
+            // 
+            // tabControl_Main
+            // 
+            this.tabControl_Main.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl_Main.Location = new System.Drawing.Point(203, 39);
+            this.tabControl_Main.Name = "tabControl_Main";
+            this.tabControl_Main.SelectedIndex = 0;
+            this.tabControl_Main.Size = new System.Drawing.Size(893, 558);
+            this.tabControl_Main.TabIndex = 5;
+            this.tabControl_Main.DoubleClick += new System.EventHandler(this.TabControl_DoubleClick);
+            // 
+            // label_opc
+            // 
+            this.label_opc.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label_opc.AutoSize = true;
+            this.label_opc.Location = new System.Drawing.Point(203, 8);
+            this.label_opc.Name = "label_opc";
+            this.label_opc.Size = new System.Drawing.Size(72, 20);
+            this.label_opc.TabIndex = 6;
+            this.label_opc.Text = "opc_info";
             // 
             // FormMonitor
             // 
@@ -121,6 +133,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMonitor_FormClosing);
             this.Load += new System.EventHandler(this.FormMonitor_Load);
             this.tableLayoutPanel_Main.ResumeLayout(false);
+            this.tableLayoutPanel_Main.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -134,5 +147,6 @@
         private System.Windows.Forms.Button button_StartOrEnd;
         private System.Windows.Forms.Button button_Info;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label label_opc;
     }
 }

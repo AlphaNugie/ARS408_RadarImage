@@ -17,7 +17,6 @@ namespace ARS408.Model
         private BaseMessage _base = new BaseMessage();
         private DynProp prop = new DynProp();
         private double rcs = 0, dist_long = 0, dist_lat = 0, distance_border = 0;
-        private int threat_level = 0;
         private MeasState meas_state = MeasState.New;
         private ProbOfExist prob_exist = ProbOfExist.Invalid;
 
@@ -72,6 +71,16 @@ namespace ARS408.Model
         /// 修改后坐标
         /// </summary>
         public ModifiedCoordinates ModiCoors { get; set; }
+
+        /// <summary>
+        /// 是否处于雷达坐标限制范围内
+        /// </summary>
+        public bool WithinRadarLimits { get; set; }
+
+        /// <summary>
+        /// 是否处于单机坐标限制范围内
+        /// </summary>
+        public bool WithinClaimerLimits { get; set; }
 
         /// <summary>
         /// 目标的动态属性，指示是否在移动
@@ -181,28 +190,24 @@ namespace ARS408.Model
         public double DistanceToBorder
         {
             get { return this.distance_border; }
-            set
-            {
-                this.distance_border = value;
-                //this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this.distance_border);
-                //this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this.distance_border, this.Radar != null ? this.Radar.GroupType : RadarGroupType.Bucket);
-            }
+            set { this.distance_border = value; }
         }
 
-        /// <summary>
-        /// 报警级数
-        /// </summary>
-        public int ThreatLevel
-        {
-            get { return this.threat_level; }
-            set
-            {
-                this.threat_level = value;
-                this.ThreatLevelBinary = Convert.ToString(this.threat_level, 2).PadLeft(2, '0');
-            }
-        }
+        //private int threat_level = 0;
+        ///// <summary>
+        ///// 报警级数
+        ///// </summary>
+        //public int ThreatLevel
+        //{
+        //    get { return this.threat_level; }
+        //    set
+        //    {
+        //        this.threat_level = value;
+        //        this.ThreatLevelBinary = Convert.ToString(this.threat_level, 2).PadLeft(2, '0');
+        //    }
+        //}
 
-        public string ThreatLevelBinary { get; set; }
+        //public string ThreatLevelBinary { get; set; }
         #endregion
 
         /// <summary>

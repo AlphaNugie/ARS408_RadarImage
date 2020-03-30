@@ -130,7 +130,7 @@
             // 
             // textBox_Radar1
             // 
-            this.textBox_Radar1.Location = new System.Drawing.Point(750, 439);
+            this.textBox_Radar1.Location = new System.Drawing.Point(12, 43);
             this.textBox_Radar1.Multiline = true;
             this.textBox_Radar1.Name = "textBox_Radar1";
             this.textBox_Radar1.Size = new System.Drawing.Size(240, 93);
@@ -138,7 +138,7 @@
             // 
             // textBox_Radar2
             // 
-            this.textBox_Radar2.Location = new System.Drawing.Point(750, 538);
+            this.textBox_Radar2.Location = new System.Drawing.Point(258, 43);
             this.textBox_Radar2.Multiline = true;
             this.textBox_Radar2.Name = "textBox_Radar2";
             this.textBox_Radar2.Size = new System.Drawing.Size(240, 93);
@@ -146,7 +146,7 @@
             // 
             // textBox_Radar3
             // 
-            this.textBox_Radar3.Location = new System.Drawing.Point(12, 43);
+            this.textBox_Radar3.Location = new System.Drawing.Point(12, 340);
             this.textBox_Radar3.Multiline = true;
             this.textBox_Radar3.Name = "textBox_Radar3";
             this.textBox_Radar3.Size = new System.Drawing.Size(240, 93);
@@ -170,7 +170,7 @@
             // 
             // textBox_Radar6
             // 
-            this.textBox_Radar6.Location = new System.Drawing.Point(12, 340);
+            this.textBox_Radar6.Location = new System.Drawing.Point(12, 538);
             this.textBox_Radar6.Multiline = true;
             this.textBox_Radar6.Name = "textBox_Radar6";
             this.textBox_Radar6.Size = new System.Drawing.Size(240, 93);
@@ -178,7 +178,7 @@
             // 
             // textBox_Radar7
             // 
-            this.textBox_Radar7.Location = new System.Drawing.Point(12, 439);
+            this.textBox_Radar7.Location = new System.Drawing.Point(258, 142);
             this.textBox_Radar7.Multiline = true;
             this.textBox_Radar7.Name = "textBox_Radar7";
             this.textBox_Radar7.Size = new System.Drawing.Size(240, 93);
@@ -186,7 +186,7 @@
             // 
             // textBox_Radar8
             // 
-            this.textBox_Radar8.Location = new System.Drawing.Point(12, 538);
+            this.textBox_Radar8.Location = new System.Drawing.Point(12, 439);
             this.textBox_Radar8.Multiline = true;
             this.textBox_Radar8.Name = "textBox_Radar8";
             this.textBox_Radar8.Size = new System.Drawing.Size(240, 93);
@@ -194,7 +194,7 @@
             // 
             // textBox_Radar9
             // 
-            this.textBox_Radar9.Location = new System.Drawing.Point(258, 43);
+            this.textBox_Radar9.Location = new System.Drawing.Point(258, 340);
             this.textBox_Radar9.Multiline = true;
             this.textBox_Radar9.Name = "textBox_Radar9";
             this.textBox_Radar9.Size = new System.Drawing.Size(240, 93);
@@ -202,7 +202,7 @@
             // 
             // textBox_Radar10
             // 
-            this.textBox_Radar10.Location = new System.Drawing.Point(258, 142);
+            this.textBox_Radar10.Location = new System.Drawing.Point(258, 439);
             this.textBox_Radar10.Multiline = true;
             this.textBox_Radar10.Name = "textBox_Radar10";
             this.textBox_Radar10.Size = new System.Drawing.Size(240, 93);
@@ -210,7 +210,7 @@
             // 
             // textBox_Radar11
             // 
-            this.textBox_Radar11.Location = new System.Drawing.Point(258, 241);
+            this.textBox_Radar11.Location = new System.Drawing.Point(504, 142);
             this.textBox_Radar11.Multiline = true;
             this.textBox_Radar11.Name = "textBox_Radar11";
             this.textBox_Radar11.Size = new System.Drawing.Size(240, 93);
@@ -218,7 +218,7 @@
             // 
             // textBox_Radar12
             // 
-            this.textBox_Radar12.Location = new System.Drawing.Point(258, 340);
+            this.textBox_Radar12.Location = new System.Drawing.Point(258, 241);
             this.textBox_Radar12.Multiline = true;
             this.textBox_Radar12.Name = "textBox_Radar12";
             this.textBox_Radar12.Size = new System.Drawing.Size(240, 93);
@@ -226,7 +226,7 @@
             // 
             // textBox_Radar13
             // 
-            this.textBox_Radar13.Location = new System.Drawing.Point(258, 439);
+            this.textBox_Radar13.Location = new System.Drawing.Point(258, 538);
             this.textBox_Radar13.Multiline = true;
             this.textBox_Radar13.Name = "textBox_Radar13";
             this.textBox_Radar13.Size = new System.Drawing.Size(240, 93);
@@ -234,7 +234,7 @@
             // 
             // textBox_Radar14
             // 
-            this.textBox_Radar14.Location = new System.Drawing.Point(258, 538);
+            this.textBox_Radar14.Location = new System.Drawing.Point(504, 43);
             this.textBox_Radar14.Multiline = true;
             this.textBox_Radar14.Name = "textBox_Radar14";
             this.textBox_Radar14.Size = new System.Drawing.Size(240, 93);
@@ -242,7 +242,7 @@
             // 
             // textBox_Radar15
             // 
-            this.textBox_Radar15.Location = new System.Drawing.Point(504, 43);
+            this.textBox_Radar15.Location = new System.Drawing.Point(504, 538);
             this.textBox_Radar15.Multiline = true;
             this.textBox_Radar15.Name = "textBox_Radar15";
             this.textBox_Radar15.Size = new System.Drawing.Size(240, 93);
@@ -250,7 +250,7 @@
             // 
             // textBox_Radar16
             // 
-            this.textBox_Radar16.Location = new System.Drawing.Point(504, 142);
+            this.textBox_Radar16.Location = new System.Drawing.Point(504, 340);
             this.textBox_Radar16.Multiline = true;
             this.textBox_Radar16.Name = "textBox_Radar16";
             this.textBox_Radar16.Size = new System.Drawing.Size(240, 93);
@@ -258,7 +258,7 @@
             // 
             // textBox_Radar17
             // 
-            this.textBox_Radar17.Location = new System.Drawing.Point(504, 241);
+            this.textBox_Radar17.Location = new System.Drawing.Point(504, 439);
             this.textBox_Radar17.Multiline = true;
             this.textBox_Radar17.Name = "textBox_Radar17";
             this.textBox_Radar17.Size = new System.Drawing.Size(240, 93);
@@ -266,7 +266,7 @@
             // 
             // textBox_Radar18
             // 
-            this.textBox_Radar18.Location = new System.Drawing.Point(504, 340);
+            this.textBox_Radar18.Location = new System.Drawing.Point(504, 241);
             this.textBox_Radar18.Multiline = true;
             this.textBox_Radar18.Name = "textBox_Radar18";
             this.textBox_Radar18.Size = new System.Drawing.Size(240, 93);
@@ -274,7 +274,7 @@
             // 
             // textBox_Radar19
             // 
-            this.textBox_Radar19.Location = new System.Drawing.Point(504, 439);
+            this.textBox_Radar19.Location = new System.Drawing.Point(750, 439);
             this.textBox_Radar19.Multiline = true;
             this.textBox_Radar19.Name = "textBox_Radar19";
             this.textBox_Radar19.Size = new System.Drawing.Size(240, 93);
@@ -282,7 +282,7 @@
             // 
             // textBox_Radar20
             // 
-            this.textBox_Radar20.Location = new System.Drawing.Point(504, 538);
+            this.textBox_Radar20.Location = new System.Drawing.Point(750, 538);
             this.textBox_Radar20.Multiline = true;
             this.textBox_Radar20.Name = "textBox_Radar20";
             this.textBox_Radar20.Size = new System.Drawing.Size(240, 93);

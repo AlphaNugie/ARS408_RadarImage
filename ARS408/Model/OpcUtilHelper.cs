@@ -28,7 +28,7 @@ namespace ARS408.Model
         /// <summary>
         /// OPC标签的服务端句柄
         /// </summary>
-        public Array ServerHandlers;
+        public Array ServerHandles;
 
         /// <summary>
         /// OPC服务端
@@ -216,7 +216,7 @@ namespace ARS408.Model
                 }
 
                 Array errors, strit = itemIds.ToArray(), lci = clientHandlers.ToArray();
-                this.OpcGroup.OPCItems.AddItems(count, ref strit, ref lci, out ServerHandlers, out errors);
+                this.OpcGroup.OPCItems.AddItems(count, ref strit, ref lci, out ServerHandles, out errors);
                 this.OpcGroup.IsSubscribed = true;
                 this.OpcGroup.UpdateRate = 30;
             }
@@ -318,7 +318,7 @@ namespace ARS408.Model
 
                 Array itemValues = new string[this.OpcGroup.OPCItems.Count];
                 Array errors;
-                this.OpcGroup.SyncRead(2, this.OpcGroup.OPCItems.Count, ref this.ServerHandlers, out itemValues, out errors, out quality, out timestamp);
+                this.OpcGroup.SyncRead(2, this.OpcGroup.OPCItems.Count, ref this.ServerHandles, out itemValues, out errors, out quality, out timestamp);
 
                 if (itemValues.Length == 0)
                 {

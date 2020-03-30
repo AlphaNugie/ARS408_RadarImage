@@ -65,7 +65,7 @@ namespace ARS408.Forms
             if (this.monitor == null)
                 return;
 
-            this.label_RadarCount.Text = this.monitor.DictForms.Keys.Count.ToString();
+            this.label_RadarCount.Text = this.monitor.RadarList.Count.ToString();
             this.label_DistThres.Text = BaseConst.BorderDistThres.ToString();
             this.RefreshRadarInfos();
             this.textBox_Info.Text = this.monitor.GetInfoString();
@@ -75,7 +75,7 @@ namespace ARS408.Forms
         {
             int i = 1;
             TextBox textBox;
-            foreach (Radar radar in this.monitor.DictForms.Keys)
+            foreach (Radar radar in this.monitor.RadarList)
             {
                 try
                 {

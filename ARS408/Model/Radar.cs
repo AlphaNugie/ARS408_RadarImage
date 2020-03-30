@@ -31,6 +31,15 @@ namespace ARS408.Model
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// 雷达状态信息
+        /// </summary>
+        public RadarState RadarState { get; set; }
+
+        public double CurrentDistance { get; set; }
+
+        public string ThreatLevelBinary { get; set; }
+
         #region 通讯与地址
         /// <summary>
         /// IP地址
@@ -67,6 +76,16 @@ namespace ARS408.Model
         /// </summary>
         public int PortLocal { get; set; }
         #endregion
+
+        /// <summary>
+        /// 所属装船机ID
+        /// </summary>
+        public int OwnerShiploaderId { get; set; }
+
+        /// <summary>
+        /// Topic名称，从装船机获取
+        /// </summary>
+        public string TopicName { get; set; }
 
         /// <summary>
         /// 所属雷达组
@@ -160,7 +179,7 @@ namespace ARS408.Model
         /// 方向：123456，海北陆南上下
         /// </summary>
         public Directions Direction { get; set; }
-        
+
         /// <summary>
         /// 防御模式：1 点，2 线，3 面
         /// </summary>

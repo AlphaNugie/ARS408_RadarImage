@@ -1,7 +1,9 @@
 ﻿using ARS408.Core;
 using ARS408.Model;
+using CommonLib.Clients;
 using CommonLib.Function;
 using CommonLib.UIControlUtil;
+using OPCAutomation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,6 +28,8 @@ namespace ARS408.Forms
         private readonly string display_field = "name"; //显示字段
         private readonly float column_width = 0;
         private readonly int shiploader_id = 0;
+        private uint radarState, bucketAlarms, armAlarms, feetAlarms;
+        private Thread threadUpdateItems, threadWriteItems;
         #endregion
 
         #region 属性
@@ -47,7 +51,7 @@ namespace ARS408.Forms
         /// <summary>
         /// 数据列表
         /// </summary>
-        public List<Radar> DataSourceList { get; private set; }
+        public List<Radar> RadarList { get; private set; }
 
         /// <summary>
         /// 包含所有显示窗体的键值对
@@ -63,6 +67,21 @@ namespace ARS408.Forms
         /// OPC工具
         /// </summary>
         public OpcUtilHelper OpcHelper { get; private set; }
+
+        /// <summary>
+        /// OPC组
+        /// </summary>
+        public OPCGroup OpcGroup { get; set; }
+
+        /// <summary>
+        /// 所有待添加OPC标签名称
+        /// </summary>
+        public string[] OpcItemNames { get; set; }
+
+        /// <summary>
+        /// OPC标签的服务端句柄
+        /// </summary>
+        public Array ServerHandles;
         #endregion
 
         public FormMonitor(int shiploader_id)
@@ -78,6 +97,12 @@ namespace ARS408.Forms
             this.InitOpcHelper();
 
             this.DataSourceRefresh();
+
+            this.threadUpdateItems = new Thread(new ThreadStart(this.UpdateItemsLoop)) { IsBackground = true };
+            this.threadWriteItems = new Thread(new ThreadStart(this.WriteItemValuesLoop)) { IsBackground = true };
+            this.AddGroupItemsAsync();
+            this.threadUpdateItems.Start();
+            //this.threadWriteitems.Start();
         }
 
         public FormMonitor() : this(0) { }
@@ -134,7 +159,8 @@ namespace ARS408.Forms
                 this.OpcHelper.Init();
                 if (!string.IsNullOrWhiteSpace(this.OpcHelper.LastErrorMessage))
                     MessageBox.Show(this.OpcHelper.LastErrorMessage);
-            })) { IsBackground = true }.Start();
+            }))
+            { IsBackground = true }.Start();
         }
 
         private void DataSourceRefresh()
@@ -142,9 +168,9 @@ namespace ARS408.Forms
             try
             {
                 this.DataSource = this.dataService.GetAllLevels(this.shiploader_id);
-                //DataTable radars = (new DataService_Radar()).GetRadarsOrderbyId(this.shiploader_id);
-                DataTable radars = (new DataService_Radar()).GetRadars(this.shiploader_id, "radar_name");
-                this.DataSourceList = radars == null ? null : radars.Rows.Cast<DataRow>().Select(row => this.GetRadarFromDataRow(row)).ToList();
+                //DataTable radars = (new DataService_Radar()).GetRadars(this.shiploader_id, "radar_name");
+                DataTable radars = (new DataService_Radar()).GetRadars(this.shiploader_id, "radar_id");
+                this.RadarList = radars == null ? null : radars.Rows.Cast<DataRow>().Select(row => this.GetRadarFromDataRow(row)).ToList();
             }
             catch (Exception e)
             {
@@ -173,6 +199,8 @@ namespace ARS408.Forms
                 UsingLocal = row["using_local"].ToString().Equals("1"),
                 IpAddressLocal = row["ip_address_local"].ToString(),
                 PortLocal = int.Parse(row["port_local"].ToString()),
+                OwnerShiploaderId = int.Parse(row["shiploader_id"].ToString()),
+                TopicName = row["topic_name"].ToString(),
                 OwnerGroupId = int.Parse(row["owner_group_id"].ToString()),
                 GroupType = (RadarGroupType)int.Parse(row["group_type"].ToString()),
                 DegreeYoz = double.Parse(row["degree_yoz"].ToString()),
@@ -188,7 +216,19 @@ namespace ARS408.Forms
                 ItemNameCollisionState2 = row["item_name_collision_state_2"].ToString(),
                 RcsMinimum = int.Parse(row["rcs_min"].ToString()),
                 RcsMaximum = int.Parse(row["rcs_max"].ToString()),
-                RadarHeight = double.Parse(row["radar_height"].ToString())
+                RadarHeight = double.Parse(row["radar_height"].ToString()),
+                RadarCoorsLimited = row["radar_coors_limited"].ToString().Equals("1"),
+                RadarxMin = double.Parse(row["radar_x_min"].ToString()),
+                RadarxMax = double.Parse(row["radar_x_max"].ToString()),
+                RadaryMin = double.Parse(row["radar_y_min"].ToString()),
+                RadaryMax = double.Parse(row["radar_y_max"].ToString()),
+                ClaimerCoorsLimited = row["claimer_coors_limited"].ToString().Equals("1"),
+                ClaimerxMin = double.Parse(row["claimer_x_min"].ToString()),
+                ClaimerxMax = double.Parse(row["claimer_x_max"].ToString()),
+                ClaimeryMin = double.Parse(row["claimer_y_min"].ToString()),
+                ClaimeryMax = double.Parse(row["claimer_y_max"].ToString()),
+                ClaimerzMin = double.Parse(row["claimer_z_min"].ToString()),
+                ClaimerzMax = double.Parse(row["claimer_z_max"].ToString())
             };
             return radar;
         }
@@ -205,7 +245,7 @@ namespace ARS408.Forms
             }
 
             //排除根节点
-            foreach (Radar radar in this.DataSourceList)
+            foreach (Radar radar in this.RadarList)
             {
                 if (this.DictForms.ContainsKey(radar))
                     continue;
@@ -317,21 +357,12 @@ namespace ARS408.Forms
             if (string.IsNullOrWhiteSpace(name))
                 return null;
 
-            Radar radar = this.DataSourceList.Find(r => r.Name.Equals(name));
+            Radar radar = this.RadarList.Find(r => r.Name.Equals(name));
             return radar;
         }
 
         public string GetInfoString()
         {
-            //            string main = string.Format(@"[
-            //  ""walkpos"": {0},
-            //  ""armpitch"": {1},
-            //  ""armstretch"": {2},
-            //  ""bucketyaw"": {3},
-            //  ""bucketpitch"": {4},
-            //  ""beltspeed"": {5},
-            //  ""stream"": {6}
-            //]", this.OpcHelper.WalkingPosition, this.OpcHelper.PitchAngle, this.OpcHelper.StretchLength, this.OpcHelper.BucketYaw, this.OpcHelper.BucketPitch, this.OpcHelper.BeltSpeed, this.OpcHelper.Stream).Replace('[', '{').Replace(']', '}');
             string main = string.Format(@"[
   ""walkpos"": {0},
   ""armpitch"": {1},
@@ -356,15 +387,6 @@ namespace ARS408.Forms
         {
             this.UpdateDictDistances();
             string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3};shore_north:{4};shore_south:{5}", this.DictDistances["DistLand"], this.DictDistances["DistSea"], this.DictDistances["DistNorth"], this.DictDistances["DistSouth"], this.DictDistances["ShoreNorth"], this.DictDistances["ShoreSouth"]);
-            //IEnumerable<Radar> radars = this.DictForms.Keys;
-            //string result = string.Format("dist_land:{0};dist_sea:{1};dist_north:{2};dist_south:{3};shore_north:{4};shore_south:{5}",
-            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Land).Select(r => this.GetRadarMinDistance(r))),
-            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Sea).Select(r => this.GetRadarMinDistance(r))),
-            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.North).Select(r => this.GetRadarMinDistance(r))),
-            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.South).Select(r => this.GetRadarMinDistance(r))),
-            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("北")).Select(r => this.GetRadarMinDistance(r))),
-            //    BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Shore && r.Name.Contains("南")).Select(r => this.GetRadarMinDistance(r)))
-            //    );
             return result;
         }
 
@@ -373,7 +395,7 @@ namespace ARS408.Forms
         /// </summary>
         private void UpdateDictDistances()
         {
-            IEnumerable<Radar> radars = this.DictForms.Keys;
+            IEnumerable<Radar> radars = this.RadarList;
             this.DictDistances["DistLand"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Land).Select(r => this.GetRadarMinDistance(r))); //陆侧最近距离
             this.DictDistances["DistSea"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.Sea).Select(r => this.GetRadarMinDistance(r))); //海侧最近距离
             this.DictDistances["DistNorth"] = BaseFunc.GetMinValueExceptZero(radars.Where(r => r.GroupType == RadarGroupType.Bucket && r.Direction == Directions.North).Select(r => this.GetRadarMinDistance(r))); //北侧最近距离
@@ -411,8 +433,6 @@ namespace ARS408.Forms
             DataFrameMessages infos;
             if (radar != null && (display = this.DictForms[radar]) != null && (infos = display.Infos) != null)
             {
-                //dynamic obj = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectMostThreat : (dynamic)infos.ClusterMostThreat, obj_other = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectHighest : (dynamic)infos.ClusterHighest;
-                //double obj_dist = obj == null ? 0 : obj.DistanceToBorder, obj_height = obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z;
                 dynamic obj_other = infos.CurrentSensorMode == SensorMode.Object ? (dynamic)infos.ObjectHighest : (dynamic)infos.ClusterHighest;
                 double obj_height = obj_other == null ? 0 : 0 - BaseConst.BucketHeight - obj_other.ModiCoors.Z;
                 result = string.Format(@"  ""radar_{0}"": [
@@ -423,6 +443,145 @@ namespace ARS408.Forms
             }
 
             return result;
+        }
+        #endregion
+
+        #region OPC
+        /// <summary>
+        /// 异步添加OPC组与标签
+        /// </summary>
+        public void AddGroupItemsAsync()
+        {
+            new Thread(new ThreadStart(() =>
+            {
+                this.AddGroupItems();
+                if (this.OpcHelper != null && !string.IsNullOrWhiteSpace(this.OpcHelper.LastErrorMessage))
+                    this.label_opc.SafeInvoke(() => { this.label_opc.Text = this.OpcHelper.LastErrorMessage; });
+                if (this.RadarList != null && this.RadarList.Count > 0 && this.OpcHelper != null)
+                    this.threadWriteItems.Start();
+            }))
+            { IsBackground = true }.Start();
+        }
+
+        /// <summary>
+        /// 添加OPC组与标签
+        /// </summary>
+        /// <returns></returns>
+        public bool AddGroupItems()
+        {
+            bool result = false;
+            if (this.Shiploader == null || this.RadarList == null || this.RadarList.Count == 0 || this.OpcHelper == null)
+                return result;
+            try
+            {
+                this.OpcGroup = this.OpcHelper.OpcServer.OPCGroups.Add("Group_Radar_All");
+                string basic = "[" + this.Shiploader.TopicName + "]" + "{0}";
+                //TODO 添加雷达数据监测标签
+                List<string> names = new List<string>() { string.Format(basic, "ANTICOLL_SYS.SL_SystoPLC_HMBLeiDaZhuangtai"), string.Format(basic, "ANTICOLL_SYS.SL_SystoPLC_LiuTongFangPeng"), string.Format(basic, "ANTICOLL_SYS.SL_SystoPLC_BiJiaFangPeng"), string.Format(basic, "ANTICOLL_SYS.SL_SystoPLC_MenTuiFangPeng") };
+                names.AddRange(this.RadarList.Select(r => string.Format(basic, string.Format("ANTICOLL_SYS.Spare_Real[{0}]", 10 + r.Id))));
+                this.OpcItemNames = names.ToArray();
+
+                int count = this.OpcItemNames.Length;
+                string[] itemIds = new string[count + 1];
+                int[] clientHandlers = new int[count + 1];
+
+                for (int i = 1; i <= count; i++)
+                {
+                    clientHandlers[i] = i;
+                    itemIds[i] = this.OpcItemNames[i - 1];
+                }
+
+                Array errors, strit = itemIds.ToArray(), lci = clientHandlers.ToArray();
+                this.OpcGroup.OPCItems.AddItems(count, ref strit, ref lci, out ServerHandles, out errors);
+                this.OpcGroup.IsSubscribed = true;
+                this.OpcGroup.UpdateRate = 30;
+            }
+            catch (Exception e)
+            {
+                this.OpcHelper.LastErrorMessage = "添加OPC组与标签时出现问题. " + e.Message;
+                FileClient.WriteExceptionInfo(e, this.OpcHelper.LastErrorMessage, false);
+                return result;
+            }
+            return !result;
+        }
+
+        private void UpdateItemsLoop()
+        {
+            int interval = 50;
+            //int interval = BaseConst.RefreshInterval;
+            while (true)
+            {
+                this.UpdateItems();
+                Thread.Sleep(interval);
+            }
+        }
+
+        private void UpdateItems()
+        {
+            if (this.RadarList == null)
+                return;
+
+            StringBuilder states = new StringBuilder(), buckets = new StringBuilder(), arms = new StringBuilder(), feet = new StringBuilder();
+            foreach (Radar radar in this.RadarList)
+            {
+                if (radar == null)
+                    continue;
+                states.Insert(0, radar.RadarState.Working);
+                if (radar.GroupType == RadarGroupType.Bucket)
+                    buckets.Insert(0, radar.ThreatLevelBinary);
+                else if (radar.GroupType == RadarGroupType.Arm)
+                    arms.Insert(0, radar.ThreatLevelBinary);
+                else
+                    feet.Insert(0, radar.ThreatLevelBinary);
+            }
+            this.radarState = Convert.ToUInt32(states.ToString(), 2);
+            this.bucketAlarms = Convert.ToUInt32(buckets.ToString(), 2);
+            this.armAlarms = Convert.ToUInt32(arms.ToString(), 2);
+            this.feetAlarms = Convert.ToUInt32(feet.ToString(), 2);
+
+        }
+
+        /// <summary>
+        /// 向OPC服务写入OPC项的值
+        /// </summary>
+        private void WriteItemValuesLoop()
+        {
+            while (true)
+            {
+                Thread.Sleep(400);
+                if (!BaseConst.WriteItemValue)
+                    continue;
+                try { this.WriteItemValues(); }
+                catch (Exception) { }
+            }
+        }
+
+        /// <summary>
+        /// 向PLC写入信息
+        /// </summary>
+        public void WriteItemValues()
+        {
+            if (this.RadarList == null || this.RadarList.Count == 0 || this.OpcHelper == null || this.OpcGroup == null)
+                return;
+
+            try
+            {
+                //假如未添加任何OPC项
+                if (this.OpcGroup.OPCItems.Count == 0)
+                    return;
+
+                //TODO 写入雷达监测标签
+                List<object> values = new List<object>() { 0, this.radarState, this.bucketAlarms, this.armAlarms, this.feetAlarms };
+                values.AddRange(this.RadarList.Select(r => (object)r.CurrentDistance));
+                Array itemValues = values.ToArray(), errors;
+                this.OpcGroup.SyncWrite(this.OpcItemNames.Length, ref this.ServerHandles, ref itemValues, out errors);
+            }
+            catch (Exception ex)
+            {
+                string info = string.Format("OPC写入时出现问题. {0}. ip_address: {1}", ex.Message, this.OpcHelper.Shiploader.OpcServerIp);
+                this.label_opc.SafeInvoke(() => { this.label_opc.Text = info; });
+                FileClient.WriteExceptionInfo(ex, info, false);
+            }
         }
         #endregion
 

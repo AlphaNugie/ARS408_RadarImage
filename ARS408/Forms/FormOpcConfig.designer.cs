@@ -85,6 +85,7 @@
             this.textBox_ItemName_Stream = new System.Windows.Forms.TextBox();
             this.textBox_ItemName_BeltSpeed = new System.Windows.Forms.TextBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.Column_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -95,6 +96,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -111,13 +113,13 @@
             this.textBox_OpcServerIp.Location = new System.Drawing.Point(73, 28);
             this.textBox_OpcServerIp.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_OpcServerIp.Name = "textBox_OpcServerIp";
-            this.textBox_OpcServerIp.Size = new System.Drawing.Size(137, 27);
+            this.textBox_OpcServerIp.Size = new System.Drawing.Size(165, 27);
             this.textBox_OpcServerIp.TabIndex = 1;
             this.textBox_OpcServerIp.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_OpcServerIp_KeyDown);
             // 
             // button_ServerEnum
             // 
-            this.button_ServerEnum.Location = new System.Drawing.Point(463, 28);
+            this.button_ServerEnum.Location = new System.Drawing.Point(549, 28);
             this.button_ServerEnum.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button_ServerEnum.Name = "button_ServerEnum";
             this.button_ServerEnum.Size = new System.Drawing.Size(64, 29);
@@ -130,15 +132,15 @@
             // 
             this.comboBox_OpcServerList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_OpcServerList.FormattingEnabled = true;
-            this.comboBox_OpcServerList.Location = new System.Drawing.Point(217, 28);
+            this.comboBox_OpcServerList.Location = new System.Drawing.Point(244, 28);
             this.comboBox_OpcServerList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.comboBox_OpcServerList.Name = "comboBox_OpcServerList";
-            this.comboBox_OpcServerList.Size = new System.Drawing.Size(240, 28);
+            this.comboBox_OpcServerList.Size = new System.Drawing.Size(299, 28);
             this.comboBox_OpcServerList.TabIndex = 3;
             // 
             // button_Connect
             // 
-            this.button_Connect.Location = new System.Drawing.Point(533, 28);
+            this.button_Connect.Location = new System.Drawing.Point(619, 28);
             this.button_Connect.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button_Connect.Name = "button_Connect";
             this.button_Connect.Size = new System.Drawing.Size(64, 29);
@@ -155,18 +157,19 @@
             this.groupBox1.Controls.Add(this.button_ServerEnum);
             this.groupBox1.Controls.Add(this.comboBox_OpcServerList);
             this.groupBox1.Controls.Add(this.button_Connect);
-            this.groupBox1.Location = new System.Drawing.Point(12, 14);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(3, 4);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Size = new System.Drawing.Size(717, 79);
+            this.groupBox1.Size = new System.Drawing.Size(1050, 73);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OPC服务器";
             // 
             // button_SaveServerInfo
             // 
-            this.button_SaveServerInfo.Location = new System.Drawing.Point(603, 28);
+            this.button_SaveServerInfo.Location = new System.Drawing.Point(689, 28);
             this.button_SaveServerInfo.Name = "button_SaveServerInfo";
             this.button_SaveServerInfo.Size = new System.Drawing.Size(64, 29);
             this.button_SaveServerInfo.TabIndex = 4;
@@ -177,7 +180,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(431, 18);
+            this.label8.Location = new System.Drawing.Point(590, 15);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(54, 20);
@@ -187,7 +190,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(297, 18);
+            this.label7.Location = new System.Drawing.Point(421, 15);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(69, 20);
             this.label7.TabIndex = 15;
@@ -196,7 +199,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(203, 18);
+            this.label6.Location = new System.Drawing.Point(249, 15);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(80, 20);
             this.label6.TabIndex = 16;
@@ -209,7 +212,7 @@
             this.comboBox_TopicName_WalkingPos.FormattingEnabled = true;
             this.comboBox_TopicName_WalkingPos.Location = new System.Drawing.Point(100, 38);
             this.comboBox_TopicName_WalkingPos.Name = "comboBox_TopicName_WalkingPos";
-            this.comboBox_TopicName_WalkingPos.Size = new System.Drawing.Size(89, 28);
+            this.comboBox_TopicName_WalkingPos.Size = new System.Drawing.Size(122, 28);
             this.comboBox_TopicName_WalkingPos.TabIndex = 19;
             this.comboBox_TopicName_WalkingPos.ValueMember = "SHIPLOADER_ID";
             this.comboBox_TopicName_WalkingPos.SelectedIndexChanged += new System.EventHandler(this.ComboBox_TopicName_WalkingPos_SelectedIndexChanged);
@@ -221,7 +224,7 @@
             this.comboBox_TopicName_PitchAngle.FormattingEnabled = true;
             this.comboBox_TopicName_PitchAngle.Location = new System.Drawing.Point(100, 69);
             this.comboBox_TopicName_PitchAngle.Name = "comboBox_TopicName_PitchAngle";
-            this.comboBox_TopicName_PitchAngle.Size = new System.Drawing.Size(89, 28);
+            this.comboBox_TopicName_PitchAngle.Size = new System.Drawing.Size(122, 28);
             this.comboBox_TopicName_PitchAngle.TabIndex = 19;
             this.comboBox_TopicName_PitchAngle.ValueMember = "SHIPLOADER_ID";
             this.comboBox_TopicName_PitchAngle.SelectedIndexChanged += new System.EventHandler(this.ComboBox_TopicName_PitchAngle_SelectedIndexChanged);
@@ -233,59 +236,59 @@
             this.comboBox_TopicName_StretchLength.FormattingEnabled = true;
             this.comboBox_TopicName_StretchLength.Location = new System.Drawing.Point(100, 100);
             this.comboBox_TopicName_StretchLength.Name = "comboBox_TopicName_StretchLength";
-            this.comboBox_TopicName_StretchLength.Size = new System.Drawing.Size(89, 28);
+            this.comboBox_TopicName_StretchLength.Size = new System.Drawing.Size(122, 28);
             this.comboBox_TopicName_StretchLength.TabIndex = 19;
             this.comboBox_TopicName_StretchLength.ValueMember = "SHIPLOADER_ID";
             this.comboBox_TopicName_StretchLength.SelectedIndexChanged += new System.EventHandler(this.ComboBox_TopicName_StretchLength_SelectedIndexChanged);
             // 
             // textBox_ItemName_WalkingPos
             // 
-            this.textBox_ItemName_WalkingPos.Location = new System.Drawing.Point(300, 38);
+            this.textBox_ItemName_WalkingPos.Location = new System.Drawing.Point(355, 39);
             this.textBox_ItemName_WalkingPos.Name = "textBox_ItemName_WalkingPos";
-            this.textBox_ItemName_WalkingPos.Size = new System.Drawing.Size(128, 27);
+            this.textBox_ItemName_WalkingPos.Size = new System.Drawing.Size(197, 27);
             this.textBox_ItemName_WalkingPos.TabIndex = 20;
             // 
             // textBox_ItemName_PitchAngle
             // 
-            this.textBox_ItemName_PitchAngle.Location = new System.Drawing.Point(300, 69);
+            this.textBox_ItemName_PitchAngle.Location = new System.Drawing.Point(355, 70);
             this.textBox_ItemName_PitchAngle.Name = "textBox_ItemName_PitchAngle";
-            this.textBox_ItemName_PitchAngle.Size = new System.Drawing.Size(128, 27);
+            this.textBox_ItemName_PitchAngle.Size = new System.Drawing.Size(197, 27);
             this.textBox_ItemName_PitchAngle.TabIndex = 20;
             // 
             // textBox_ItemName_StretchLength
             // 
-            this.textBox_ItemName_StretchLength.Location = new System.Drawing.Point(300, 100);
+            this.textBox_ItemName_StretchLength.Location = new System.Drawing.Point(355, 101);
             this.textBox_ItemName_StretchLength.Name = "textBox_ItemName_StretchLength";
-            this.textBox_ItemName_StretchLength.Size = new System.Drawing.Size(128, 27);
+            this.textBox_ItemName_StretchLength.Size = new System.Drawing.Size(197, 27);
             this.textBox_ItemName_StretchLength.TabIndex = 20;
             // 
             // textBox_ItemValue_WalkingPos
             // 
             this.textBox_ItemValue_WalkingPos.Enabled = false;
-            this.textBox_ItemValue_WalkingPos.Location = new System.Drawing.Point(434, 38);
+            this.textBox_ItemValue_WalkingPos.Location = new System.Drawing.Point(558, 38);
             this.textBox_ItemValue_WalkingPos.Name = "textBox_ItemValue_WalkingPos";
-            this.textBox_ItemValue_WalkingPos.Size = new System.Drawing.Size(82, 27);
+            this.textBox_ItemValue_WalkingPos.Size = new System.Drawing.Size(125, 27);
             this.textBox_ItemValue_WalkingPos.TabIndex = 21;
             // 
             // textBox_ItemValue_PitchAngle
             // 
             this.textBox_ItemValue_PitchAngle.Enabled = false;
-            this.textBox_ItemValue_PitchAngle.Location = new System.Drawing.Point(434, 69);
+            this.textBox_ItemValue_PitchAngle.Location = new System.Drawing.Point(558, 69);
             this.textBox_ItemValue_PitchAngle.Name = "textBox_ItemValue_PitchAngle";
-            this.textBox_ItemValue_PitchAngle.Size = new System.Drawing.Size(82, 27);
+            this.textBox_ItemValue_PitchAngle.Size = new System.Drawing.Size(125, 27);
             this.textBox_ItemValue_PitchAngle.TabIndex = 21;
             // 
             // textBox_ItemValue_StretchLength
             // 
             this.textBox_ItemValue_StretchLength.Enabled = false;
-            this.textBox_ItemValue_StretchLength.Location = new System.Drawing.Point(434, 100);
+            this.textBox_ItemValue_StretchLength.Location = new System.Drawing.Point(558, 100);
             this.textBox_ItemValue_StretchLength.Name = "textBox_ItemValue_StretchLength";
-            this.textBox_ItemValue_StretchLength.Size = new System.Drawing.Size(82, 27);
+            this.textBox_ItemValue_StretchLength.Size = new System.Drawing.Size(125, 27);
             this.textBox_ItemValue_StretchLength.TabIndex = 21;
             // 
             // button_GetValue_WalkingPos
             // 
-            this.button_GetValue_WalkingPos.Location = new System.Drawing.Point(522, 37);
+            this.button_GetValue_WalkingPos.Location = new System.Drawing.Point(689, 38);
             this.button_GetValue_WalkingPos.Name = "button_GetValue_WalkingPos";
             this.button_GetValue_WalkingPos.Size = new System.Drawing.Size(53, 25);
             this.button_GetValue_WalkingPos.TabIndex = 22;
@@ -295,7 +298,7 @@
             // 
             // button_GetValue_PitchAngle
             // 
-            this.button_GetValue_PitchAngle.Location = new System.Drawing.Point(522, 68);
+            this.button_GetValue_PitchAngle.Location = new System.Drawing.Point(689, 69);
             this.button_GetValue_PitchAngle.Name = "button_GetValue_PitchAngle";
             this.button_GetValue_PitchAngle.Size = new System.Drawing.Size(53, 25);
             this.button_GetValue_PitchAngle.TabIndex = 22;
@@ -305,7 +308,7 @@
             // 
             // button_GetValue_StretchLength
             // 
-            this.button_GetValue_StretchLength.Location = new System.Drawing.Point(522, 99);
+            this.button_GetValue_StretchLength.Location = new System.Drawing.Point(689, 100);
             this.button_GetValue_StretchLength.Name = "button_GetValue_StretchLength";
             this.button_GetValue_StretchLength.Size = new System.Drawing.Size(53, 25);
             this.button_GetValue_StretchLength.TabIndex = 22;
@@ -333,7 +336,7 @@
             // 
             // button_SaveItemInfo
             // 
-            this.button_SaveItemInfo.Location = new System.Drawing.Point(435, 269);
+            this.button_SaveItemInfo.Location = new System.Drawing.Point(472, 264);
             this.button_SaveItemInfo.Name = "button_SaveItemInfo";
             this.button_SaveItemInfo.Size = new System.Drawing.Size(81, 28);
             this.button_SaveItemInfo.TabIndex = 4;
@@ -357,29 +360,29 @@
             this.comboBox_TopicName_BucketPitch.FormattingEnabled = true;
             this.comboBox_TopicName_BucketPitch.Location = new System.Drawing.Point(100, 131);
             this.comboBox_TopicName_BucketPitch.Name = "comboBox_TopicName_BucketPitch";
-            this.comboBox_TopicName_BucketPitch.Size = new System.Drawing.Size(89, 28);
+            this.comboBox_TopicName_BucketPitch.Size = new System.Drawing.Size(122, 28);
             this.comboBox_TopicName_BucketPitch.TabIndex = 19;
             this.comboBox_TopicName_BucketPitch.ValueMember = "SHIPLOADER_ID";
             this.comboBox_TopicName_BucketPitch.SelectedIndexChanged += new System.EventHandler(this.ComboBox_TopicName_BucketPitch_SelectedIndexChanged);
             // 
             // textBox_ItemName_BucketPitch
             // 
-            this.textBox_ItemName_BucketPitch.Location = new System.Drawing.Point(300, 131);
+            this.textBox_ItemName_BucketPitch.Location = new System.Drawing.Point(355, 132);
             this.textBox_ItemName_BucketPitch.Name = "textBox_ItemName_BucketPitch";
-            this.textBox_ItemName_BucketPitch.Size = new System.Drawing.Size(128, 27);
+            this.textBox_ItemName_BucketPitch.Size = new System.Drawing.Size(197, 27);
             this.textBox_ItemName_BucketPitch.TabIndex = 20;
             // 
             // textBox_ItemValue_BucketPitch
             // 
             this.textBox_ItemValue_BucketPitch.Enabled = false;
-            this.textBox_ItemValue_BucketPitch.Location = new System.Drawing.Point(434, 131);
+            this.textBox_ItemValue_BucketPitch.Location = new System.Drawing.Point(558, 131);
             this.textBox_ItemValue_BucketPitch.Name = "textBox_ItemValue_BucketPitch";
-            this.textBox_ItemValue_BucketPitch.Size = new System.Drawing.Size(82, 27);
+            this.textBox_ItemValue_BucketPitch.Size = new System.Drawing.Size(125, 27);
             this.textBox_ItemValue_BucketPitch.TabIndex = 21;
             // 
             // button_GetValue_BucketPitch
             // 
-            this.button_GetValue_BucketPitch.Location = new System.Drawing.Point(522, 130);
+            this.button_GetValue_BucketPitch.Location = new System.Drawing.Point(689, 131);
             this.button_GetValue_BucketPitch.Name = "button_GetValue_BucketPitch";
             this.button_GetValue_BucketPitch.Size = new System.Drawing.Size(53, 25);
             this.button_GetValue_BucketPitch.TabIndex = 22;
@@ -446,9 +449,10 @@
             this.groupBox2.Controls.Add(this.textBox_ItemName_BucketPitch);
             this.groupBox2.Controls.Add(this.textBox_ItemValue_PitchAngle);
             this.groupBox2.Controls.Add(this.textBox_ItemValue_WalkingPos);
-            this.groupBox2.Location = new System.Drawing.Point(12, 100);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox2.Location = new System.Drawing.Point(3, 84);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(717, 312);
+            this.groupBox2.Size = new System.Drawing.Size(1050, 306);
             this.groupBox2.TabIndex = 24;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "标签配置";
@@ -466,56 +470,56 @@
             // 
             // textBox_TopicName_Stream
             // 
-            this.textBox_TopicName_Stream.Location = new System.Drawing.Point(194, 227);
+            this.textBox_TopicName_Stream.Location = new System.Drawing.Point(228, 228);
             this.textBox_TopicName_Stream.Name = "textBox_TopicName_Stream";
-            this.textBox_TopicName_Stream.Size = new System.Drawing.Size(100, 27);
+            this.textBox_TopicName_Stream.Size = new System.Drawing.Size(121, 27);
             this.textBox_TopicName_Stream.TabIndex = 24;
             // 
             // textBox_TopicName_BeltSpeed
             // 
-            this.textBox_TopicName_BeltSpeed.Location = new System.Drawing.Point(194, 194);
+            this.textBox_TopicName_BeltSpeed.Location = new System.Drawing.Point(228, 195);
             this.textBox_TopicName_BeltSpeed.Name = "textBox_TopicName_BeltSpeed";
-            this.textBox_TopicName_BeltSpeed.Size = new System.Drawing.Size(100, 27);
+            this.textBox_TopicName_BeltSpeed.Size = new System.Drawing.Size(121, 27);
             this.textBox_TopicName_BeltSpeed.TabIndex = 24;
             // 
             // textBox_TopicName_BucketPitch
             // 
-            this.textBox_TopicName_BucketPitch.Location = new System.Drawing.Point(194, 131);
+            this.textBox_TopicName_BucketPitch.Location = new System.Drawing.Point(228, 132);
             this.textBox_TopicName_BucketPitch.Name = "textBox_TopicName_BucketPitch";
-            this.textBox_TopicName_BucketPitch.Size = new System.Drawing.Size(100, 27);
+            this.textBox_TopicName_BucketPitch.Size = new System.Drawing.Size(121, 27);
             this.textBox_TopicName_BucketPitch.TabIndex = 24;
             // 
             // textBox_TopicName_BucketYaw
             // 
-            this.textBox_TopicName_BucketYaw.Location = new System.Drawing.Point(195, 164);
+            this.textBox_TopicName_BucketYaw.Location = new System.Drawing.Point(228, 165);
             this.textBox_TopicName_BucketYaw.Name = "textBox_TopicName_BucketYaw";
-            this.textBox_TopicName_BucketYaw.Size = new System.Drawing.Size(100, 27);
+            this.textBox_TopicName_BucketYaw.Size = new System.Drawing.Size(121, 27);
             this.textBox_TopicName_BucketYaw.TabIndex = 24;
             // 
             // textBox_TopicName_StretchLength
             // 
-            this.textBox_TopicName_StretchLength.Location = new System.Drawing.Point(195, 101);
+            this.textBox_TopicName_StretchLength.Location = new System.Drawing.Point(228, 102);
             this.textBox_TopicName_StretchLength.Name = "textBox_TopicName_StretchLength";
-            this.textBox_TopicName_StretchLength.Size = new System.Drawing.Size(100, 27);
+            this.textBox_TopicName_StretchLength.Size = new System.Drawing.Size(121, 27);
             this.textBox_TopicName_StretchLength.TabIndex = 24;
             // 
             // textBox_TopicName_PitchAngle
             // 
-            this.textBox_TopicName_PitchAngle.Location = new System.Drawing.Point(194, 69);
+            this.textBox_TopicName_PitchAngle.Location = new System.Drawing.Point(228, 70);
             this.textBox_TopicName_PitchAngle.Name = "textBox_TopicName_PitchAngle";
-            this.textBox_TopicName_PitchAngle.Size = new System.Drawing.Size(100, 27);
+            this.textBox_TopicName_PitchAngle.Size = new System.Drawing.Size(121, 27);
             this.textBox_TopicName_PitchAngle.TabIndex = 24;
             // 
             // textBox_TopicName_WalkingPos
             // 
-            this.textBox_TopicName_WalkingPos.Location = new System.Drawing.Point(195, 38);
+            this.textBox_TopicName_WalkingPos.Location = new System.Drawing.Point(228, 39);
             this.textBox_TopicName_WalkingPos.Name = "textBox_TopicName_WalkingPos";
-            this.textBox_TopicName_WalkingPos.Size = new System.Drawing.Size(100, 27);
+            this.textBox_TopicName_WalkingPos.Size = new System.Drawing.Size(121, 27);
             this.textBox_TopicName_WalkingPos.TabIndex = 24;
             // 
             // button_SaveRadar
             // 
-            this.button_SaveRadar.Location = new System.Drawing.Point(347, 269);
+            this.button_SaveRadar.Location = new System.Drawing.Point(384, 264);
             this.button_SaveRadar.Name = "button_SaveRadar";
             this.button_SaveRadar.Size = new System.Drawing.Size(81, 28);
             this.button_SaveRadar.TabIndex = 4;
@@ -552,7 +556,7 @@
             // 
             // button_GetValue_Stream
             // 
-            this.button_GetValue_Stream.Location = new System.Drawing.Point(522, 228);
+            this.button_GetValue_Stream.Location = new System.Drawing.Point(689, 229);
             this.button_GetValue_Stream.Name = "button_GetValue_Stream";
             this.button_GetValue_Stream.Size = new System.Drawing.Size(53, 25);
             this.button_GetValue_Stream.TabIndex = 22;
@@ -562,7 +566,7 @@
             // 
             // button_GetValue_BeltSpeed
             // 
-            this.button_GetValue_BeltSpeed.Location = new System.Drawing.Point(522, 193);
+            this.button_GetValue_BeltSpeed.Location = new System.Drawing.Point(689, 194);
             this.button_GetValue_BeltSpeed.Name = "button_GetValue_BeltSpeed";
             this.button_GetValue_BeltSpeed.Size = new System.Drawing.Size(53, 25);
             this.button_GetValue_BeltSpeed.TabIndex = 22;
@@ -577,14 +581,14 @@
             this.comboBox_TopicName_BucketYaw.FormattingEnabled = true;
             this.comboBox_TopicName_BucketYaw.Location = new System.Drawing.Point(100, 163);
             this.comboBox_TopicName_BucketYaw.Name = "comboBox_TopicName_BucketYaw";
-            this.comboBox_TopicName_BucketYaw.Size = new System.Drawing.Size(89, 28);
+            this.comboBox_TopicName_BucketYaw.Size = new System.Drawing.Size(122, 28);
             this.comboBox_TopicName_BucketYaw.TabIndex = 19;
             this.comboBox_TopicName_BucketYaw.ValueMember = "SHIPLOADER_ID";
             this.comboBox_TopicName_BucketYaw.SelectedIndexChanged += new System.EventHandler(this.ComboBox_TopicName_BucketYaw_SelectedIndexChanged);
             // 
             // button_GetValue_BucketYaw
             // 
-            this.button_GetValue_BucketYaw.Location = new System.Drawing.Point(522, 162);
+            this.button_GetValue_BucketYaw.Location = new System.Drawing.Point(689, 163);
             this.button_GetValue_BucketYaw.Name = "button_GetValue_BucketYaw";
             this.button_GetValue_BucketYaw.Size = new System.Drawing.Size(53, 25);
             this.button_GetValue_BucketYaw.TabIndex = 22;
@@ -599,7 +603,7 @@
             this.comboBox_TopicName_Stream.FormattingEnabled = true;
             this.comboBox_TopicName_Stream.Location = new System.Drawing.Point(100, 227);
             this.comboBox_TopicName_Stream.Name = "comboBox_TopicName_Stream";
-            this.comboBox_TopicName_Stream.Size = new System.Drawing.Size(89, 28);
+            this.comboBox_TopicName_Stream.Size = new System.Drawing.Size(122, 28);
             this.comboBox_TopicName_Stream.TabIndex = 19;
             this.comboBox_TopicName_Stream.ValueMember = "SHIPLOADER_ID";
             this.comboBox_TopicName_Stream.SelectedIndexChanged += new System.EventHandler(this.ComboBox_TopicName_Stream_SelectedIndexChanged);
@@ -611,7 +615,7 @@
             this.comboBox_TopicName_BeltSpeed.FormattingEnabled = true;
             this.comboBox_TopicName_BeltSpeed.Location = new System.Drawing.Point(100, 194);
             this.comboBox_TopicName_BeltSpeed.Name = "comboBox_TopicName_BeltSpeed";
-            this.comboBox_TopicName_BeltSpeed.Size = new System.Drawing.Size(89, 28);
+            this.comboBox_TopicName_BeltSpeed.Size = new System.Drawing.Size(122, 28);
             this.comboBox_TopicName_BeltSpeed.TabIndex = 19;
             this.comboBox_TopicName_BeltSpeed.ValueMember = "SHIPLOADER_ID";
             this.comboBox_TopicName_BeltSpeed.SelectedIndexChanged += new System.EventHandler(this.ComboBox_TopicName_BeltSpeed_SelectedIndexChanged);
@@ -619,46 +623,46 @@
             // textBox_ItemValue_Stream
             // 
             this.textBox_ItemValue_Stream.Enabled = false;
-            this.textBox_ItemValue_Stream.Location = new System.Drawing.Point(434, 227);
+            this.textBox_ItemValue_Stream.Location = new System.Drawing.Point(558, 227);
             this.textBox_ItemValue_Stream.Name = "textBox_ItemValue_Stream";
-            this.textBox_ItemValue_Stream.Size = new System.Drawing.Size(82, 27);
+            this.textBox_ItemValue_Stream.Size = new System.Drawing.Size(125, 27);
             this.textBox_ItemValue_Stream.TabIndex = 21;
             // 
             // textBox_ItemValue_BeltSpeed
             // 
             this.textBox_ItemValue_BeltSpeed.Enabled = false;
-            this.textBox_ItemValue_BeltSpeed.Location = new System.Drawing.Point(434, 194);
+            this.textBox_ItemValue_BeltSpeed.Location = new System.Drawing.Point(558, 194);
             this.textBox_ItemValue_BeltSpeed.Name = "textBox_ItemValue_BeltSpeed";
-            this.textBox_ItemValue_BeltSpeed.Size = new System.Drawing.Size(82, 27);
+            this.textBox_ItemValue_BeltSpeed.Size = new System.Drawing.Size(125, 27);
             this.textBox_ItemValue_BeltSpeed.TabIndex = 21;
             // 
             // textBox_ItemName_BucketYaw
             // 
-            this.textBox_ItemName_BucketYaw.Location = new System.Drawing.Point(300, 163);
+            this.textBox_ItemName_BucketYaw.Location = new System.Drawing.Point(355, 164);
             this.textBox_ItemName_BucketYaw.Name = "textBox_ItemName_BucketYaw";
-            this.textBox_ItemName_BucketYaw.Size = new System.Drawing.Size(128, 27);
+            this.textBox_ItemName_BucketYaw.Size = new System.Drawing.Size(197, 27);
             this.textBox_ItemName_BucketYaw.TabIndex = 20;
             // 
             // textBox_ItemValue_BucketYaw
             // 
             this.textBox_ItemValue_BucketYaw.Enabled = false;
-            this.textBox_ItemValue_BucketYaw.Location = new System.Drawing.Point(434, 163);
+            this.textBox_ItemValue_BucketYaw.Location = new System.Drawing.Point(558, 163);
             this.textBox_ItemValue_BucketYaw.Name = "textBox_ItemValue_BucketYaw";
-            this.textBox_ItemValue_BucketYaw.Size = new System.Drawing.Size(82, 27);
+            this.textBox_ItemValue_BucketYaw.Size = new System.Drawing.Size(125, 27);
             this.textBox_ItemValue_BucketYaw.TabIndex = 21;
             // 
             // textBox_ItemName_Stream
             // 
-            this.textBox_ItemName_Stream.Location = new System.Drawing.Point(300, 227);
+            this.textBox_ItemName_Stream.Location = new System.Drawing.Point(355, 228);
             this.textBox_ItemName_Stream.Name = "textBox_ItemName_Stream";
-            this.textBox_ItemName_Stream.Size = new System.Drawing.Size(128, 27);
+            this.textBox_ItemName_Stream.Size = new System.Drawing.Size(197, 27);
             this.textBox_ItemName_Stream.TabIndex = 20;
             // 
             // textBox_ItemName_BeltSpeed
             // 
-            this.textBox_ItemName_BeltSpeed.Location = new System.Drawing.Point(300, 194);
+            this.textBox_ItemName_BeltSpeed.Location = new System.Drawing.Point(355, 195);
             this.textBox_ItemName_BeltSpeed.Name = "textBox_ItemName_BeltSpeed";
-            this.textBox_ItemName_BeltSpeed.Size = new System.Drawing.Size(128, 27);
+            this.textBox_ItemName_BeltSpeed.Size = new System.Drawing.Size(197, 27);
             this.textBox_ItemName_BeltSpeed.TabIndex = 20;
             // 
             // dataGridView
@@ -674,13 +678,31 @@
             this.Column_ItemNameCollisionState,
             this.Column_ItemNameCollisionState2,
             this.Column_Changed});
-            this.dataGridView.Location = new System.Drawing.Point(12, 418);
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.Location = new System.Drawing.Point(3, 396);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.RowTemplate.Height = 27;
-            this.dataGridView.Size = new System.Drawing.Size(717, 315);
+            this.dataGridView.Size = new System.Drawing.Size(1050, 346);
             this.dataGridView.TabIndex = 25;
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellValueChanged);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.dataGridView, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.groupBox2, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 81F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 312F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 158F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1056, 745);
+            this.tableLayoutPanel1.TabIndex = 26;
             // 
             // Column_Id
             // 
@@ -713,45 +735,47 @@
             // 
             // Column_ItemNameRadarState
             // 
+            this.Column_ItemNameRadarState.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Column_ItemNameRadarState.DataPropertyName = "ITEM_NAME_RADAR_STATE";
             this.Column_ItemNameRadarState.HeaderText = "状态标签";
             this.Column_ItemNameRadarState.MinimumWidth = 6;
             this.Column_ItemNameRadarState.Name = "Column_ItemNameRadarState";
-            this.Column_ItemNameRadarState.Width = 150;
+            this.Column_ItemNameRadarState.Width = 98;
             // 
             // Column_ItemNameCollisionState
             // 
+            this.Column_ItemNameCollisionState.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Column_ItemNameCollisionState.DataPropertyName = "ITEM_NAME_COLLISION_STATE";
             this.Column_ItemNameCollisionState.HeaderText = "碰撞标签1";
             this.Column_ItemNameCollisionState.MinimumWidth = 6;
             this.Column_ItemNameCollisionState.Name = "Column_ItemNameCollisionState";
-            this.Column_ItemNameCollisionState.Width = 150;
+            this.Column_ItemNameCollisionState.Width = 107;
             // 
             // Column_ItemNameCollisionState2
             // 
+            this.Column_ItemNameCollisionState2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Column_ItemNameCollisionState2.DataPropertyName = "ITEM_NAME_COLLISION_STATE_2";
             this.Column_ItemNameCollisionState2.HeaderText = "碰撞标签2";
             this.Column_ItemNameCollisionState2.MinimumWidth = 6;
             this.Column_ItemNameCollisionState2.Name = "Column_ItemNameCollisionState2";
-            this.Column_ItemNameCollisionState2.Width = 125;
+            this.Column_ItemNameCollisionState2.Width = 107;
             // 
             // Column_Changed
             // 
+            this.Column_Changed.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Column_Changed.DataPropertyName = "CHANGED";
             this.Column_Changed.HeaderText = "是否改变";
             this.Column_Changed.MinimumWidth = 6;
             this.Column_Changed.Name = "Column_Changed";
             this.Column_Changed.Visible = false;
-            this.Column_Changed.Width = 125;
+            this.Column_Changed.Width = 98;
             // 
             // FormOpcConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(741, 745);
-            this.Controls.Add(this.dataGridView);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.ClientSize = new System.Drawing.Size(1056, 745);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormOpcConfig";
@@ -762,6 +786,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -825,6 +850,7 @@
         private System.Windows.Forms.CheckBox checkBox_WriteItemValue;
         private System.Windows.Forms.Button button_SaveRadar;
         private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Id;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Address;

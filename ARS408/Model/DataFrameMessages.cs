@@ -23,9 +23,9 @@ namespace ARS408.Model
         private ClusterGeneral cluster_most_threat;
         private ObjectGeneral object_most_threat;
         //private double obs_dist, obs_dist_former;
-        private int _count = 0/*, _real_size = 0*/;
+        private int _count = 0, limit_factor = 1;
         private double _current, _new, _assumed, _diff, _diff1;
-        private readonly double inner = -2.1, outer = 1.3; //黄标线内侧外侧距离
+        //private readonly double inner = -2.1, outer = 1.3; //黄标线内侧外侧距离
         #endregion
 
         #region 属性
@@ -108,15 +108,7 @@ namespace ARS408.Model
             set
             {
                 this.cluster_most_threat = value;
-                //this.CurrentDistance = this.cluster_most_threat != null ? Math.Round(this.cluster_most_threat.DistanceToBorder, 4);
-                //if (this.cluster_most_threat != null)
-                //{
-                //    this.CurrentDistance = Math.Round(this.cluster_most_threat.DistanceToBorder, 4);
-                //    this.cluster_most_threat.ThreatLevel = BaseFunc.GetThreatLevelByValue(this._current, this.Radar != null ? this.Radar.GroupType : RadarGroupType.Bucket);
-                //}
                 this.CurrentDistance = this.cluster_most_threat != null ? Math.Round(this.cluster_most_threat.DistanceToBorder, 4) : 0;
-                if (this.cluster_most_threat != null)
-                    this.cluster_most_threat.ThreatLevel = BaseFunc.GetThreatLevelByValue(this._current, this.Radar != null ? this.Radar.GroupType : RadarGroupType.Bucket);
             }
         }
 
@@ -134,15 +126,7 @@ namespace ARS408.Model
             set
             {
                 this.object_most_threat = value;
-                //this.CurrentDistance = this.object_most_threat != null ? Math.Round(this.object_most_threat.DistanceToBorder, 4) : 0;
-                //if (this.object_most_threat != null)
-                //{
-                //    this.CurrentDistance = Math.Round(this.object_most_threat.DistanceToBorder, 4);
-                //    this.object_most_threat.ThreatLevel = BaseFunc.GetThreatLevelByValue(this._current, this.Radar != null ? this.Radar.GroupType : RadarGroupType.Bucket);
-                //}
                 this.CurrentDistance = this.object_most_threat != null ? Math.Round(this.object_most_threat.DistanceToBorder, 4) : 0;
-                if (this.object_most_threat != null)
-                    this.object_most_threat.ThreatLevel = BaseFunc.GetThreatLevelByValue(this._current, this.Radar != null ? this.Radar.GroupType : RadarGroupType.Bucket);
             }
         }
 
@@ -157,18 +141,33 @@ namespace ARS408.Model
         public double CurrentDistance
         {
             get { return this._current; }
-            set { this.IterateDistance(value); }
+            set
+            {
+                this.IterateDistance(value);
+                this.ThreatLevel = BaseFunc.GetThreatLevelByValue(this._current, this.Radar != null ? this.Radar.GroupType : RadarGroupType.Bucket);
+            }
         }
 
-        public char[] GetCurrentThreatLevels()
+        private int threat_level = 0;
+        /// <summary>
+        /// 报警级数
+        /// </summary>
+        public int ThreatLevel
         {
-            char[] array = new char[] { '0', '0' };
-            if (this.CurrentSensorMode == SensorMode.Cluster && this.ClusterMostThreat != null)
-                array = this.ClusterMostThreat.ThreatLevelBinary.ToCharArray();
-            else if (this.CurrentSensorMode == SensorMode.Object && this.ObjectMostThreat != null)
-                array = this.ObjectMostThreat.ThreatLevelBinary.ToCharArray();
-            return array;
+            get { return this.threat_level; }
+            set
+            {
+                this.threat_level = value;
+                this.ThreatLevelBinary = Convert.ToString(this.threat_level.Between(1, 2) ? 3 - this.threat_level : this.threat_level, 2).PadLeft(2, '0');
+                if (this.Radar != null)
+                {
+                    this.Radar.CurrentDistance = this._current;
+                    this.Radar.ThreatLevelBinary = this.ThreatLevelBinary;
+                }
+            }
         }
+
+        public string ThreatLevelBinary { get; set; }
         #endregion
 
         /// <summary>
@@ -186,15 +185,22 @@ namespace ARS408.Model
         {
             this.ParentForm = form;
             this.Radar = radar;
-            this.Flags = new List<bool>() { false, false, false, false, false, false, false };
+            this.Flags = new List<bool>() { false, false, false, false, false, false, false, true, true };
             this.RadarState = new RadarState();
+            if (this.Radar != null)
+            {
+                this.Radar.RadarState = this.RadarState;
+                this.limit_factor = this.Radar.GroupType == RadarGroupType.Feet ? 10 : 1;
+            }
             this.CurrentSensorMode = SensorMode.Cluster;
+            this.ThreatLevelBinary = "00";
             this.ListBuffer_Cluster = new List<ClusterGeneral>();
             this.ListBuffer_Cluster_Other = new List<ClusterGeneral>();
             this.ListTrigger_Cluster = new List<ClusterGeneral>();
             this.ListBuffer_Object = new List<ObjectGeneral>();
             this.ListBuffer_Object_Other = new List<ObjectGeneral>();
             this.ListTrigger_Object = new List<ObjectGeneral>();
+            //this.ThreatLevelArray = new char[] { '0', '0' };
             this.ThreadCheck = new Thread(new ThreadStart(this.CheckIfRadarsWorking)) { IsBackground = true };
 
             if (this.Radar != null)
@@ -205,8 +211,8 @@ namespace ARS408.Model
                 //根据雷达所在位置给黄标线距离加上符号，用于门腿雷达坐标过滤黄标线之外的点
                 string name = this.Radar.Name;
                 int r = (name.Contains("海") && name.Contains("南")) || (name.Contains("陆") && name.Contains("北")) ? 1 : -1;
-                this.outer *= r;
-                this.inner *= r;
+                //this.outer *= r;
+                //this.inner *= r;
             }
             this.ThreadCheck.Start();
         }
@@ -315,10 +321,9 @@ namespace ARS408.Model
         public void DataPush<T>(T general)
         {
             dynamic g = (dynamic)general;
-            double x = g.ModiCoors.X, z = g.ModiCoors.Z, lon = g.DistLong, lat = g.DistLat;
+            double x = g.ModiCoors.X, y = g.ModiCoors.Y, z = g.ModiCoors.Z, lon = g.DistLong, lat = g.DistLat;
             double rcs = g.RCS, below = 0 - BaseConst.BucketHeight - z;
             dynamic list;
-            bool save2list = false, save2other = false;
 
             #region 目标点的过滤
             Flags[2] = this.ParentForm != null && !rcs.Between(this.ParentForm.RcsMinimum, this.ParentForm.RcsMaximum); //RCS值是否不在范围内
@@ -328,27 +333,41 @@ namespace ARS408.Model
                 //TODO 溜桶雷达Z方向坐标是否低于大铲最低点，或高于检测高度上限
                 Flags[3] = this.Radar.GroupType == RadarGroupType.Bucket && !z.Between(0 - BaseConst.BucketHeight, BaseConst.BucketUpLimit);
                 Flags[5] = below.Between(0, BaseConst.ObsBelowThres) && g.DistanceToBorder < BaseConst.ObsBelowFrontier; //障碍物在溜桶下方的距离在阈值(ObsBelowThres)内，且距边界距离不超过1米(ObsBelowFrontier)
+                Flags[7] = !this.Radar.RadarCoorsLimited || (lon.Between(this.Radar.RadarxMin, this.Radar.RadarxMax) && lat.Between(this.Radar.RadaryMin, this.Radar.RadaryMax)); //雷达坐标系坐标的限制
+                Flags[8] = !this.Radar.ClaimerCoorsLimited || (x.Between(this.Radar.ClaimerxMin, this.Radar.ClaimerxMax) && y.Between(this.Radar.ClaimeryMin, this.Radar.ClaimeryMax) && z.Between(this.Radar.ClaimerzMin, this.Radar.ClaimerzMax)); //单机坐标系坐标的限制
             }
-            //TODO 岸基雷达过滤方式：RCS值在范围内，有效区域为Z轴（竖直）方向±1米，X轴（南北）方向±5米
-            if (this.IsShore)
-                save2list = !Flags[2] && z.Between(-1, 1) && x.Between(-5, 5);
-            else
+            //TODO (所有雷达)过滤条件Lv1：RCS值、坐标在限定范围内 / RCS值在范围内
+            bool save2list = !Flags[2] && Flags[7] && Flags[8], save2other = false;
+            //非岸基雷达额外判断
+            if (!this.IsShore)
             {
-                //TODO 非岸基输出结果过滤条件1：距边界范围在阈值内，RCS值在范围内，溜桶雷达Z方向坐标不低于大铲最低点
-                if (!(Flags[1] || Flags[2] || Flags[3]))
-                {
-                    //非大臂陆侧
-                    if (!Flags[4])
-                        //非门腿雷达直接返回true，门腿雷达判断：横向距离在黄标线范围内,高度高于地面0.1米以上
-                        save2list = !Flags[6] ? true : lat.Between(this.outer, this.inner) && z > BaseConst.FeetFilterHeight - this.Radar.RadarHeight;
-                    else
-                        //TODO 大臂陆侧过滤条件：横向坐标在5~10，纵向坐标在5~10之间
-                        save2list = lat.Between(0, 5) && lon.Between(5, 10);
-                }
-                //TODO 溜桶下方障碍物过滤条件：RCS值在范围内，障碍物在溜桶下方的距离在阈值内、且距边界距离不超过1米
-                else
-                    save2other = !(Flags[2]) && Flags[5];
+                //TODO (非溜桶下方)过滤条件Lv2：距边界范围在阈值内，溜桶雷达Z方向坐标不低于大铲最低点
+                save2list = save2list && !(Flags[1] || Flags[3]);
+                //TODO (溜桶下方)过滤条件Lv2：障碍物在溜桶下方的距离在阈值内、且距边界距离不超过1米
+                if (!save2list)
+                    save2other = !Flags[2] && Flags[5];
             }
+            #region 旧判断逻辑
+            //if (this.IsShore)
+            //    save2list = !Flags[2] && z.Between(-1, 1) && x.Between(-5, 5);
+            //else
+            //{
+            //    //非岸基输出结果过滤条件1：距边界范围在阈值内，RCS值在范围内，溜桶雷达Z方向坐标不低于大铲最低点
+            //    if (!(Flags[1] || Flags[2] || Flags[3]))
+            //    {
+            //        //非大臂陆侧
+            //        if (!Flags[4])
+            //            //非门腿雷达直接返回true，门腿雷达判断：横向距离在黄标线范围内,高度高于地面0.1米以上
+            //            save2list = !Flags[6] ? true : lat.Between(this.outer, this.inner) && z > BaseConst.FeetFilterHeight - this.Radar.RadarHeight;
+            //        else
+            //            //大臂陆侧过滤条件：横向坐标在5~10，纵向坐标在5~10之间
+            //            save2list = lat.Between(0, 5) && lon.Between(5, 10);
+            //    }
+            //    //溜桶下方障碍物过滤条件：RCS值在范围内，障碍物在溜桶下方的距离在阈值内、且距边界距离不超过1米
+            //    else
+            //        save2other = !(Flags[2]) && Flags[5];
+            //}
+            #endregion
             #endregion
 
             //TODO 溜桶下方物体检测：另外添加2个ListBuffer，分别对应cluster和object，添加点，DataPushFinalize时一起压入ListTrigger
@@ -458,7 +477,7 @@ namespace ARS408.Model
             _diff = Math.Abs(_new - _current); //新值与当前值的差
             _diff1 = Math.Abs(_new - _assumed); //新值与假定值的差
             //假如未启用迭代 / 当前值为0 / 新值与当前值的差不超过距离限定值：计数置0，用新值取代现有值
-            if (!BaseConst.IterationEnabled || /*this._current == 0 || */_diff <= BaseConst.IteDistLimit)
+            if (!BaseConst.IterationEnabled || _diff <= BaseConst.IteDistLimit * this.limit_factor)
             {
                 _count = 0;
                 _current = _new;
@@ -467,9 +486,7 @@ namespace ARS408.Model
             else
             {
                 //假如新值与假定值的差未超过距离限定值，计数+1（否则置0）
-                _count = _diff1 <= BaseConst.IteDistLimit ? _count + 1 : 0;
-                //if (_diff1 <= BaseConst.IteDistLimit)
-                //    _count++;
+                _count = _diff1 <= BaseConst.IteDistLimit * this.limit_factor ? _count + 1 : 0;
                 _assumed = _new;
                 //假如计数超过计数限定值，则用新值取代现有值
                 if (_count > BaseConst.IteCountLimit)

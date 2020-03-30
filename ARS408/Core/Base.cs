@@ -257,7 +257,6 @@ property float rcs";
                 BaseConst.Port = ushort.Parse(BaseConst.IniHelper.ReadData("Connection", "Port"));
                 BaseConst.ConnectionMode = (ConnectionMode)int.Parse(BaseConst.IniHelper.ReadData("Connection", "ConnectionMode"));
                 BaseConst.UsingLocal = BaseConst.IniHelper.ReadData("Connection", "UsingLocal").Equals("1");
-                //BaseConst.IpAddress_Local = Functions.GetLocalIp();
                 BaseConst.IpAddress_Local = Functions.GetIPAddressV4();
                 BaseConst.Port_Local = int.Parse(BaseConst.IniHelper.ReadData("Connection", "PortLocal"));
                 BaseConst.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMinimum"));
@@ -448,17 +447,6 @@ property float rcs";
         public static int GetThreatLevelByValue(double value)
         {
             return GetThreatLevelByValue(value, RadarGroupType.Bucket);
-            //int level = 0;
-            //if (BaseConst.ThreatLevelValues != null && BaseConst.ThreatLevelValues.Length > 0)
-            //    for (int i = BaseConst.ThreatLevelValues.Length - 1; i >= 0; i--)
-            //    {
-            //        level = BaseConst.ThreatLevelValues.Length - i - 1;
-            //        if (value >= BaseConst.ThreatLevelValues[i])
-            //            break;
-            //        level++;
-            //    }
-
-            //return level;
         }
 
         /// <summary>

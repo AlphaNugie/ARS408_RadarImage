@@ -63,7 +63,7 @@ namespace ARS408.Core
         public DataTable GetRadars(int shiploader_id, string orderby)
         {
             string sql = string.Format(@"
-select t.*, g.group_type, 0 changed from t_base_radar_info t
+select t.*, g.group_type, s.shiploader_id, s.topic_name, 0 changed from t_base_radar_info t
   left join t_base_radargroup_info g on t.owner_group_id = g.group_id
   left join t_base_shiploader_info s on g.owner_shiploader_id = s.shiploader_id
   where {0} = 0 or s.shiploader_id = {0} {1}", shiploader_id, string.IsNullOrWhiteSpace(orderby) ? string.Empty : "order by t." + orderby);
