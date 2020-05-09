@@ -1,0 +1,1457 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SocketHelper</name>
+    </assembly>
+    <members>
+        <member name="T:SocketHelper.Helper.SocketExtensionClass">
+            <summary>
+            套接字扩展类
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.SocketExtensionClass.GetName(System.Net.Sockets.Socket,System.Net.IPEndPoint@,System.Net.IPEndPoint@)">
+            <summary>
+            获取Socket连接名称，格式：(本地终结点不为空)本地IP:端口->服务端IP:端口(远程终结点不为空)
+            </summary>
+            <param name="socket">套接字接口对象</param>
+            <param name="remote">远程IP终结点</param>
+            <param name="local">本地IP终结点</param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.Helper.SocketExtensionClass.GetName(System.Net.Sockets.Socket)">
+            <summary>
+            获取Socket连接名称，格式：(本地终结点不为空)本地IP:端口->服务端IP:端口(远程终结点不为空)
+            </summary>
+            <param name="socket">套接字接口对象</param>
+            <returns></returns>
+        </member>
+        <member name="T:SocketHelper.Helper.TimerEventRaiser">
+            <summary>
+            计时事件触发器
+            </summary>
+        </member>
+        <member name="T:SocketHelper.Helper.TimerEventRaiser.ThresholdReachedEventHandler">
+            <summary>
+            计时器达到计时阈值后触发事件的委托
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:SocketHelper.Helper.TimerEventRaiser.ClickedEventHandler">
+            <summary>
+            点击事件的委托
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="E:SocketHelper.Helper.TimerEventRaiser.ThresholdReached">
+            <summary>
+            计时器达到计时阈值
+            </summary>
+        </member>
+        <member name="E:SocketHelper.Helper.TimerEventRaiser.Clicked">
+            <summary>
+            点击
+            </summary>
+        </member>
+        <member name="P:SocketHelper.Helper.TimerEventRaiser.Interval">
+            <summary>
+            计时间隔，两次计时累加间的时间长度，单位毫秒，默认1000
+            </summary>
+        </member>
+        <member name="P:SocketHelper.Helper.TimerEventRaiser.RaiseInterval">
+            <summary>
+            触发间隔，两次触发事件间允许的最短时间长度，单位毫秒，默认5000
+            </summary>
+        </member>
+        <member name="P:SocketHelper.Helper.TimerEventRaiser.Counter">
+            <summary>
+            计时器，计时间隔的累加，大于触发间隔后不再累加
+            </summary>
+        </member>
+        <member name="P:SocketHelper.Helper.TimerEventRaiser.RaisedTimes">
+            <summary>
+            计时达到阈值的次数
+            </summary>
+        </member>
+        <member name="P:SocketHelper.Helper.TimerEventRaiser.RaiseThreshold">
+            <summary>
+            计时阈值，计时达到此值触发事件，单位毫秒，默认5000
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.#ctor(System.UInt32)">
+            <summary>
+            以指定的计时间隔初始化
+            </summary>
+            <param name="interval">计时间隔（毫秒）</param>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.#ctor">
+            <summary>
+            以默认的计时间隔初始化
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.Run">
+            <summary>
+            开始计时
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.Stop">
+            <summary>
+            结束计时
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.Reset">
+            <summary>
+            重置计时器以及达到计时的次数
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.Raise">
+            <summary>
+            事件触发
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.Click(System.String)">
+            <summary>
+            手动点击，提供指定信息
+            </summary>
+            <param name="message">点击信息</param>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.Click">
+            <summary>
+            手动点击
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.TimerEventRaiser.TimerElapsed(System.Object,System.Timers.ElapsedEventArgs)">
+            <summary>
+            计时器触发事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:SocketHelper.Helper.ThresholdReachedEventArgs">
+            <summary>
+            计时器达到阈值后触发事件的事件参数类
+            </summary>
+        </member>
+        <member name="P:SocketHelper.Helper.ThresholdReachedEventArgs.Counter">
+            <summary>
+            触发时的计时器大小
+            </summary>
+        </member>
+        <member name="P:SocketHelper.Helper.ThresholdReachedEventArgs.RaisedTimes">
+            <summary>
+            触发的次数
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.ThresholdReachedEventArgs.#ctor(System.UInt64,System.UInt32)">
+            <summary>
+            构造器
+            </summary>
+            <param name="counter">触发时的计时器大小</param>
+            <param name="raised_times">触发次数</param>
+        </member>
+        <member name="M:SocketHelper.Helper.ThresholdReachedEventArgs.#ctor">
+            <summary>
+            默认构造器
+            </summary>
+        </member>
+        <member name="T:SocketHelper.Helper.ClickedEventArgs">
+            <summary>
+            点击事件参数类
+            </summary>
+        </member>
+        <member name="P:SocketHelper.Helper.ClickedEventArgs.ClickMessage">
+            <summary>
+            点击信息
+            </summary>
+        </member>
+        <member name="M:SocketHelper.Helper.ClickedEventArgs.#ctor(System.String)">
+            <summary>
+            构造器
+            </summary>
+            <param name="message">点击信息</param>
+        </member>
+        <member name="M:SocketHelper.Helper.ClickedEventArgs.#ctor">
+            <summary>
+            构造器
+            </summary>
+        </member>
+        <member name="M:SocketHelper.ImageHelper.ImageToBytes(System.Drawing.Image)">
+            <summary>
+            Convert Image to Byte[]
+            </summary>
+            <param name="image"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.ImageHelper.BytesToImage(System.Byte[])">
+            <summary>
+            Convert Byte[] to Image
+            </summary>
+            <param name="buffer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.ImageHelper.CreateImageFromBytes(System.String,System.Byte[])">
+            <summary>
+            Convert Byte[] to a picture and Store it in file
+            </summary>
+            <param name="fileName"></param>
+            <param name="buffer"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SocketHelper.ReceivedEventArgs">
+            <summary>
+            数据接收事件的事件数据类
+            </summary>
+        </member>
+        <member name="P:SocketHelper.ReceivedEventArgs.ReceivedByteArray">
+            <summary>
+            接收到的byte数组
+            </summary>
+        </member>
+        <member name="P:SocketHelper.ReceivedEventArgs.ReceivedString">
+            <summary>
+            接收数据的字符串格式
+            </summary>
+        </member>
+        <member name="P:SocketHelper.ReceivedEventArgs.ReceivedHexString">
+            <summary>
+            接收数据的16进制字符串格式
+            </summary>
+        </member>
+        <member name="M:SocketHelper.ReceivedEventArgs.#ctor">
+            <summary>
+            默认构造器
+            </summary>
+        </member>
+        <member name="M:SocketHelper.ReceivedEventArgs.#ctor(System.Byte[])">
+            <summary>
+            用byte数组初始化
+            </summary>
+            <param name="data">接收到的byte[]数组</param>
+        </member>
+        <member name="T:SocketHelper.StateInfoEventArgs">
+            <summary>
+            连接状态改变时返回连接状态事件参数
+            </summary>
+        </member>
+        <member name="P:SocketHelper.StateInfoEventArgs.StateInfo">
+            <summary>
+            连接状态消息
+            </summary>
+        </member>
+        <member name="P:SocketHelper.StateInfoEventArgs.State">
+            <summary>
+            连接状态
+            </summary>
+        </member>
+        <member name="M:SocketHelper.StateInfoEventArgs.#ctor(System.String,SocketHelper.SocketState)">
+            <summary>
+            用状态消息与连接状态初始化
+            </summary>
+            <param name="stateInfo">连接状态消息</param>
+            <param name="state">连接状态</param>
+        </member>
+        <member name="T:SocketHelper.SocketTcpClient">
+            <summary>
+            TCP客户端对象
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.#ctor">
+            <summary>
+            构造器
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.#ctor(System.ComponentModel.IContainer)">
+            <summary>
+            构造器
+            </summary>
+            <param name="container">父容器</param>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.ServerIp">
+            <summary>
+            服务端IP
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.ServerPort">
+            <summary>
+            服务端监听端口
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.AssignLocalAddress">
+            <summary>
+            是否指定本地地址
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.LocalIp">
+            <summary>
+            指定的本地IP
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.LocalPort">
+            <summary>
+            指定的本地端口
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.Name">
+            <summary>
+            Tcp连接名称，格式：本地端口->服务端IP:端口
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.LocalEndPoint">
+            <summary>
+            本地IP终结点，未初始化则为空
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.RemoteEndPoint">
+            <summary>
+            远程IP终结点，未连接则为空
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.BaseClient">
+            <summary>
+            TcpClient客户端
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.TcpThread">
+            <summary>
+            Tcp客户端连接线程
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.IsStartTcpThreading">
+            <summary>
+            是否启动Tcp连接线程
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.IsStart">
+            <summary>
+            TCP是否启动
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.IsConnected_Socket">
+            <summary>
+            Tcp Socket的真实连接状态
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.ReconnectWhenReceiveNone">
+            <summary>
+            在无返回数据时是否重新连接
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.IsReconnection">
+            <summary>
+            是否重连
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.ReConnectionTime">
+            <summary>
+            设置断开重连时间间隔单位（毫秒）（默认3000毫秒）
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.ReceiveBufferSize">
+            <summary>
+            接收缓冲区大小（字节数）
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpClient.ReConnectedCount">
+            <summary>
+            重新连接成功次数
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.GetTcpClientInstance">
+            <summary>
+            获取一个新的TcpClient实例
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.HexStringToByteArray(System.String)">
+            <summary>
+            十六进制字字符串转为节数组
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.ByteArrayToHexString(System.Byte[])">
+            <summary>
+            十六进制字节数组转为字符串
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.SetName">
+            <summary>
+            设置Tcp连接名称，格式：本地端口->服务端IP:端口
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.StartConnection">
+            <summary>
+            启动连接Socket服务器
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.CreateTcpClient">
+            <summary>
+            创建线程连接
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.Reconnect">
+            <summary>
+            重连方法
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.StartTcpThread">
+            <summary>
+             线程接收Socket上传的数据
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.StopConnection">
+            <summary>
+            断开连接
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.SendData(System.Byte[])">
+            <summary>
+            发送byte数组
+            </summary>
+            <param name="byteMsg"></param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.SendData(System.String)">
+            <summary>
+            发送字符串
+            </summary>
+            <param name="cmdstr"></param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.SendFile(System.String)">
+            <summary>
+            发送文件
+            </summary>
+            <param name="filename">文件名</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.IsOnline">
+            <summary>
+            检查一个Socket是否可连接
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.IsOnlineCheckThread">
+            <summary>
+            循环检查一个Socket是否可连接
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.IsOnlineCheckStart">
+            <summary>
+            启动循环检查一个Socket是否可连接的线程
+            </summary>
+        </member>
+        <member name="T:SocketHelper.SocketTcpClient.ReceivedEventHandler">
+            <summary>
+            数据接收事件的委托
+            </summary>
+            <param name="sender">触发事件的对象</param>
+            <param name="args">事件数据类对象</param>
+        </member>
+        <member name="E:SocketHelper.SocketTcpClient.OnReceive">
+            <summary>
+            接收数据事件
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.OnTcpClientRecevice(System.Object,SocketHelper.ReceivedEventArgs)">
+            <summary>
+            数据接收事件方法
+            </summary>
+            <param name="sender">触发事件的对象</param>
+            <param name="args">事件数据类对象</param>
+        </member>
+        <member name="T:SocketHelper.SocketTcpClient.ErrorMsgEventHandler">
+            <summary>
+            返回错误消息事件委托
+            </summary>
+            <param name="msg">字符串信息</param>
+        </member>
+        <member name="E:SocketHelper.SocketTcpClient.OnErrorMsg">
+            <summary>
+            返回错误消息事件
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.OnTcpClientErrorMsgEnterHead(System.String)">
+            <summary>
+            返回错误消息事件方法
+            </summary>
+            <param name="msg">字符串信息</param>
+        </member>
+        <member name="T:SocketHelper.SocketTcpClient.StateInfoEventHandler">
+            <summary>
+            连接状态改变时返回连接状态事件委托
+            </summary>
+            <param name="eventArgs"></param>
+            <param name="sender"></param>
+        </member>
+        <member name="E:SocketHelper.SocketTcpClient.OnStateInfo">
+            <summary>
+            连接状态改变时返回连接状态事件
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.OnTcpClientStateInfoEnterHead(System.String,SocketHelper.SocketState)">
+            <summary>
+            连接状态改变时返回连接状态事件方法
+            </summary>
+            <param name="msg">字符串信息</param>
+            <param name="state">Socket状态</param>
+        </member>
+        <member name="F:SocketHelper.SocketTcpClient.components">
+            <summary>
+            必需的设计器变量。
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.Dispose(System.Boolean)">
+            <summary> 
+            清理所有正在使用的资源。
+            </summary>
+            <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpClient.InitializeComponent">
+            <summary>
+            设计器支持所需的方法 - 不要
+            使用代码编辑器修改此方法的内容。
+            </summary>
+        </member>
+        <member name="F:SocketHelper.TCP.AxTcpWebClient.components">
+            <summary>
+            必需的设计器变量。
+            </summary>
+        </member>
+        <member name="M:SocketHelper.TCP.AxTcpWebClient.Dispose(System.Boolean)">
+            <summary> 
+            清理所有正在使用的资源。
+            </summary>
+            <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        </member>
+        <member name="M:SocketHelper.TCP.AxTcpWebClient.InitializeComponent">
+            <summary>
+            设计器支持所需的方法 - 不要
+            使用代码编辑器修改此方法的内容。
+            </summary>
+        </member>
+        <member name="F:SocketHelper.AxUdpClient._remoteIp">
+            <summary>
+            远程主机IP
+            </summary>
+        </member>
+        <member name="F:SocketHelper.AxUdpClient._remotePort">
+            <summary>
+            远程主机端口
+            </summary>
+        </member>
+        <member name="F:SocketHelper.AxUdpClient._localPort">
+            <summary>
+            本地监听端口
+            </summary>
+        </member>
+        <member name="F:SocketHelper.AxUdpClient._sendFileManagerList">
+            <summary>
+            文件发送列表管理器
+            </summary>
+        </member>
+        <member name="F:SocketHelper.AxUdpClient._receiveFileManagerList">
+            <summary>
+            文件接收列表管理器
+            </summary>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.Start">
+            <summary>
+            启动监听
+            </summary>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.Stop">
+            <summary>
+            关闭监听
+            </summary>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.UdpLibraryReceiveData(System.Object,SocketHelper.ReceiveDataEventArgs)">
+            <summary>
+            继承Udp基类接收数据方法
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.CanSend(SocketHelper.SendFileManager)">
+            <summary>
+            返回是否允许发送，在发送列表中的文件不能重复发送（避免文件被占用导致错误）
+            </summary>
+            <param name="sendFileManager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.SendFile(System.String)">
+            <summary>
+            发送文件
+            </summary>
+            <param name="fileName">文件路径（包含完整的文件名）</param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.SendFile(SocketHelper.SendFileManager,System.Drawing.Image)">
+            <summary>
+            发送文件
+            </summary>
+            <param name="sendFileManager">需要发送的文件类</param>
+            <param name="image">文件ICO图标</param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.CancelSend(System.String)">
+            <summary>
+            取消发送
+            </summary>
+            <param name="md5">MD5校验文件</param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.SendFileManageReadFileBuffer(System.Object,SocketHelper.ReadFileBufferEventArgs)">
+            <summary>
+            读取文件并发送文件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.Send(System.Int32,System.Object)">
+            <summary>
+            发送信息
+            </summary>
+            <param name="messageId">消息标识</param>
+            <param name="data">序列化数据</param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.Send(System.Int32,System.Object,System.Net.IPEndPoint)">
+            <summary>
+            发送信息
+            </summary>
+            <param name="messageId">消息标识</param>
+            <param name="data">序列化数据</param>
+            <param name="remoteIp">远程主机IP</param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.Send(System.Byte[])">
+            <summary>
+            发送信息
+            </summary>
+            <param name="data">数据</param>
+            <param name="remoteIp">远程主机IP</param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnResponeSendFile(SocketHelper.ResponeTraFransfersFile)">
+            <summary>
+            响应发送文件方法
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnResponeSendFilePack(SocketHelper.ResponeTraFransfersFile)">
+            <summary>
+            响应发送文件包方法
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnRequestCancelReceiveFile(System.String)">
+            <summary>
+            请求取消接收文件方法
+            </summary>
+            <param name="md5"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.AcceptReceive(SocketHelper.RequestSendFileEventArgs)">
+            <summary>
+            允许接收
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.CancelReceive(System.String,System.Net.IPEndPoint)">
+            <summary>
+            取消接收
+            </summary>
+            <param name="md5"></param>
+            <param name="remoteIP"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.ReceiveFileManagerReceiveFileComplete(System.Object,SocketHelper.FileReceiveCompleteEventArgs)">
+            <summary>
+            完成接收文件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileSendCancel(SocketHelper.FileSendEventArgs)">
+            <summary>
+            文件发送时被取消时触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileSendAccept(SocketHelper.FileSendEventArgs)">
+            <summary>
+            文件被接收时触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileSendBuffer(SocketHelper.FileSendBufferEventArgs)">
+            <summary>
+            文件正在发送时触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileSendRefuse(SocketHelper.FileSendEventArgs)">
+            <summary>
+            发送文件被拒绝接收时触发事件
+            </summary>Refuse to receive file
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileSendComplete(SocketHelper.FileSendEventArgs)">
+            <summary>
+            文件发送完成时触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnRequestCancelSendFile(System.String,System.Net.IPEndPoint)">
+            <summary>
+            取消发送文件事件方法
+            </summary>
+            <param name="md5"></param>
+            <param name="remoteIP"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnReceiveTextMsg(SocketHelper.MsgTypeCell)">
+            <summary>
+            文件被接收时触发事件
+            </summary>
+            <param name="bytes"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileRecieveRequest(SocketHelper.RequestSendFileEventArgs)">
+            <summary>
+            请求接收文件响应时触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileReceiveBuffer(SocketHelper.FileReceiveBufferEventArgs)">
+            <summary>
+            文件被读取时（正在读取）触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileReceiveComplete(SocketHelper.FileReceiveEventArgs)">
+            <summary>
+            文件接收完成时触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnFileReceiveCancel(SocketHelper.FileReceiveEventArgs)">
+            <summary>
+            文件接收时被取消发送触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnRecieveBuffer(SocketHelper.TraFransfersFile,System.Net.IPEndPoint)">
+            <summary>
+            接收文件事件方法
+            </summary>
+            <param name="traFransfersFile"></param>
+            <param name="remoteEp"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnStartRecieve(SocketHelper.TraFransfersFileStart,System.Net.IPEndPoint)">
+            <summary>
+            开始接收文件事件方法（尚未开始接收文件）
+            </summary>
+            <param name="traFransfersFileStart"></param>
+            <param name="remoteEp"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.OnReceiveByte(SocketHelper.ReceiveDataEventArgs)">
+            <summary>
+            文件被接收时触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.AddReadyReceiveItem(SocketHelper.RequestSendFileEventArgs)">
+            <summary>
+            添加准备接收文件Item
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.ItemSaveToButtonClick(System.Object,System.EventArgs)">
+            <summary>
+            文件另存为按钮事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.ItemSaveButtonClick(System.Object,System.EventArgs)">
+            <summary>
+            保存文件按钮事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.ItemRefuseButtonClick(System.Object,System.EventArgs)">
+            <summary>
+            拒绝接收文件按钮事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.ItemCancelButtonClick(System.Object,System.EventArgs)">
+            <summary>
+            取消按钮事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.AddSendItems(SocketHelper.SendFileManager,System.Drawing.Image)">
+            <summary>
+            添加发送文件控件Item
+            </summary>
+            <param name="sendFileManager"></param>
+            <param name="image"></param>
+        </member>
+        <member name="F:SocketHelper.AxUdpClient.components">
+            <summary>
+            必需的设计器变量。
+            </summary>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.Dispose(System.Boolean)">
+            <summary> 
+            清理所有正在使用的资源。
+            </summary>
+            <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        </member>
+        <member name="M:SocketHelper.AxUdpClient.InitializeComponent">
+            <summary>
+            设计器支持所需的方法 - 不要
+            使用代码编辑器修改此方法的内容。
+            </summary>
+        </member>
+        <member name="T:SocketHelper.FileTansfersContainer">
+            <summary>
+            发送接收文件管理器
+            </summary>
+        </member>
+        <member name="M:SocketHelper.FileTansfersContainer.AddItem(System.String,System.String,System.String,System.Drawing.Image,System.Int64,SocketHelper.FileTransfersItemStyle)">
+            <summary>
+            添加FileTransfersItem文件项
+            </summary>
+            <param name="md5">名称（MD5校验值）</param>
+            <param name="typetext">文件类型（发送文件/接收文件）</param>
+            <param name="fileName">文件路径</param>
+            <param name="image">文件图标</param>
+            <param name="fileSize">文件大小</param>
+            <param name="style">文件状态（详情查看：FileTransfersItemStyle）</param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.FileTansfersContainer.RemoveItem(SocketHelper.FileTransfersItem)">
+            <summary>
+            移除对应FileTransfersItem
+            </summary>
+            <param name="item">FileTransfersItem</param>
+        </member>
+        <member name="M:SocketHelper.FileTansfersContainer.RemoveItem(System.String)">
+            <summary>
+            根据MD5键值移除对应控件
+            </summary>
+            <param name="md5"></param>
+        </member>
+        <member name="M:SocketHelper.FileTansfersContainer.Search(System.String)">
+            <summary>
+            根据MD5校验值查找FileTransfersItem
+            </summary>
+            <param name="md5"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SocketHelper.FileTransfersItemStyle">
+            <summary>
+            文件状态
+            </summary>
+        </member>
+        <member name="F:SocketHelper.FileTransfersItemStyle.Send">
+            <summary>
+            发送文件
+            </summary>
+        </member>
+        <member name="F:SocketHelper.FileTransfersItemStyle.ReadyReceive">
+            <summary>
+            准备接收文件
+            </summary>
+        </member>
+        <member name="F:SocketHelper.FileTransfersItemStyle.Receive">
+            <summary>
+            接收文件
+            </summary>
+        </member>
+        <member name="T:SocketHelper.SendFileManager">
+            <summary>
+            文件管理类
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SendFileManager.Create(System.String)">
+            <summary>
+            创建初始化文件管理类
+            </summary>
+            <param name="fileName">文件路径</param>
+        </member>
+        <member name="M:SocketHelper.SendFileManager.Read(System.Int32)">
+            <summary>
+            读取文件
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="M:SocketHelper.SendFileManager.EndRead(System.IAsyncResult)">
+            <summary>
+            结束读取文件
+            </summary>
+            <param name="result"></param>
+        </member>
+        <member name="E:SocketHelper.SendFileManager.ReadFileBuffer">
+            <summary>
+            读取文件事件
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SendFileManager.OnReadFileBuffer(SocketHelper.ReadFileBufferEventArgs)">
+            <summary>
+            读取文件方法
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="T:SocketHelper.SerHelper">
+            <summary>
+            负责将对象序列化成byte[]数组
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SerHelper.Serialize(System.Object)">
+            <summary>
+            将实体序列化成byte[]数组
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.SerHelper.Deserialize``1(System.Byte[])">
+            <summary>
+            根据byte[]字节数组反序列化成 对象实体
+            </summary>
+            <param name="buffer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.SerHelper.Deserialize(System.Byte[],System.Int32)">
+            <summary>
+            根据byte[]字节数组反序列化成 对象实体
+            </summary>
+            <param name="datas"></param>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SocketHelper.IDataCell">
+            <summary>
+            消息数据单元接口
+            </summary>
+        </member>
+        <member name="T:SocketHelper.MsgCell">
+            <summary>
+            消息单元类（可序列化）
+            </summary>
+        </member>
+        <member name="P:SocketHelper.MsgCell.MessageId">
+            <summary>
+            消息标识
+            </summary>
+        </member>
+        <member name="P:SocketHelper.MsgCell.Data">
+            <summary>
+            消息序列化数据
+            </summary>
+        </member>
+        <member name="M:SocketHelper.MsgCell.#ctor(System.Int32,System.Object)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="messageId">消息标识</param>
+            <param name="data">序列化数据</param>
+        </member>
+        <member name="M:SocketHelper.MsgCell.ToBuffer">
+            <summary>
+            将数据序列化成Byte[]数组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.MsgCell.FromBuffer(System.Byte[])">
+            <summary>
+            将Byte[]数组反序列化成数据结构
+            </summary>
+            <param name="buffer"></param>
+        </member>
+        <member name="P:SocketHelper.MsgTypeCell.Msgtype">
+            <summary>
+            消息类型
+            </summary>
+        </member>
+        <member name="P:SocketHelper.MsgTypeCell.ImageSuffix">
+            <summary>
+            图片后缀格式
+            </summary>
+        </member>
+        <member name="F:SocketHelper.UdpLibrary._port">
+            <summary>
+            UDP监听端口
+            </summary>
+        </member>
+        <member name="T:SocketHelper.SocketState">
+            <summary>
+            Socket状态枚举
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketState.Connecting">
+            <summary>
+            正在连接服务端
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketState.Connected">
+            <summary>
+            已连接服务端
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketState.Reconnection">
+            <summary>
+            重新连接服务端
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketState.Disconnect">
+            <summary>
+            断开服务端连接
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketState.StartListening">
+            <summary>
+            正在监听
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketState.StopListening">
+            <summary>
+            停止监听
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketState.ClientOnline">
+            <summary>
+            客户端上线
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketState.ClientOnOff">
+            <summary>
+            客户端下线
+            </summary>
+        </member>
+        <member name="T:SocketHelper.Command">
+            <summary>
+            发送接收命令枚举
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.RequestSendFile">
+            <summary>
+            发送请求接收文件
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.ResponeSendFile">
+            <summary>
+            响应发送请求接收文件
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.RequestSendFilePack">
+            <summary>
+            请求发送文件包
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.ResponeSendFilePack">
+            <summary>
+            响应发送文件包
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.RequestCancelSendFile">
+            <summary>
+            请求取消发送文件包
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.ResponeCancelSendFile">
+            <summary>
+            响应取消发送文件包
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.RequestCancelReceiveFile">
+            <summary>
+            请求取消接收发送文件
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.ResponeCancelReceiveFile">
+            <summary>
+            响应取消接收发送文件
+            </summary>
+        </member>
+        <member name="F:SocketHelper.Command.RequestSendTextMSg">
+            <summary>
+            请求发送文本消息
+            </summary>
+        </member>
+        <member name="F:SocketHelper.MsgType.TxtMsg">
+            <summary>
+            文本消息
+            </summary>
+        </member>
+        <member name="F:SocketHelper.MsgType.Shake">
+            <summary>
+            抖动窗体
+            </summary>
+        </member>
+        <member name="F:SocketHelper.MsgType.Face">
+            <summary>
+            表情
+            </summary>
+        </member>
+        <member name="F:SocketHelper.MsgType.Pic">
+            <summary>
+            图片
+            </summary>
+        </member>
+        <member name="T:SocketHelper.SocketTcpServer">
+            <summary>
+            TCP监听服务
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketTcpServer.semap">
+            <summary>
+            信号量
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.#ctor">
+            <summary>
+            默认构造器
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.#ctor(System.ComponentModel.IContainer)">
+            <summary>
+            构造器
+            </summary>
+            <param name="container">控件容器</param>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.ServerSocket">
+            <summary>
+            监听Socket
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.StartSockst">
+            <summary>
+            监听线程
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.HeartBeatCheck">
+            <summary>
+            心跳检测线程
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.ServerIp">
+            <summary>
+            本机监听IP,默认是本地ip
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.ServerPort">
+            <summary>
+            监听端口
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.Name">
+            <summary>
+            Tcp连接名称，格式：本地端口->服务端IP:端口
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.LocalEndPoint">
+            <summary>
+            本地IP终结点，未初始化则为空
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.RemoteEndPoint">
+            <summary>
+            远程IP终结点，未连接则为空
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.HeartBeatPacket">
+            <summary>
+            心跳包检测字符串
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.IsHeartCheck">
+            <summary>
+            是否开启心跳检测
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.CheckTime">
+            <summary>
+            心跳检测时间,单位：毫秒
+            </summary>
+        </member>
+        <member name="P:SocketHelper.SocketTcpServer.IsStartListening">
+            <summary>
+            是否已启动监听
+            </summary>
+        </member>
+        <member name="F:SocketHelper.SocketTcpServer.ClientSocketList">
+            <summary>
+            客户端列表
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.HeartBeatCheckThread">
+            <summary>
+            循环心跳检测
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.ForeachCheck">
+            <summary>
+            对每个连接的TCP客户端进行心跳检测
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.Start">
+            <summary>
+            TCP服务启动
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.Stop">
+            <summary>
+            关闭监听
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.SetName">
+            <summary>
+            设置Tcp连接名称，格式：本地端口->服务端IP:端口
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.ShutdownClient">
+            <summary>
+            关闭所有连接的TCP客户端
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.StartSocketListening">
+            <summary>
+            开始监听
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.ClientSocketCallBack(System.Object)">
+            <summary>
+            线程池回调
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.WebSocketHandShake(CarServer.ClientModel,SocketHelper.ReceivedEventArgs)">
+            <summary>
+            网络WebSocket协议握手
+            </summary>
+            <param name="cModel"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.AnalyticData(System.Byte[],System.Int32)">
+            <summary>
+            解析WebSocket数据
+            </summary>
+            <param name="recBytes"></param>
+            <param name="recByteLength"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.SendToWebClient(CarServer.ClientModel,System.String)">
+            <summary>
+            向客户端发送信息
+            </summary>
+            <param name="client">客户端</param>
+            <param name="sendData">发送的字符串数据包</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.SendToWebClient(CarServer.ClientModel,System.Byte[])">
+            <summary>
+            向客户端发送信息
+            </summary>
+            <param name="client">客户端</param>
+            <param name="sendData">发送的byte数组数据包</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.PackData(System.String)">
+            <summary>
+            打包服务器数据
+            </summary>
+            <param name="message">数据</param>
+            <returns>数据包</returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.PackHandShakeData(System.String)">
+            <summary>
+            打包握手信息
+            </summary>
+            <param name="secKeyAccept">Sec-WebSocket-Accept</param>
+            <returns>数据包</returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.GetSecKeyAccetp(System.Byte[],System.Int32)">
+            <summary>
+            生成Sec-WebSocket-Accept
+            </summary>
+            <param name="handShakeBytes">客户端握手信息</param>
+            <param name="bytesLength">客户端握手信息长度</param>
+            <returns>Sec-WebSocket-Accept</returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.GetSecKey(System.Byte[],System.Int32)">
+            <summary>
+            通过握手协议字节组获取WebSocket密钥
+            </summary>
+            <param name="handShakeBytes">握手协议字节组</param>
+            <param name="bytesLength">握手协议字节组长度</param>
+            <returns></returns>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.SendData(System.String,System.Int32,System.String)">
+            <summary>
+            向指定IP端口发送字符串，假如不是已连接的客户端则忽视
+            </summary>
+            <param name="ip">远程IP</param>
+            <param name="port">远程端口</param>
+            <param name="data">待发送字符串，ANSI编码</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.SendData(CarServer.ClientModel,System.String)">
+            <summary>
+            向指定客户端发送数据
+            </summary>
+            <param name="cModel">客户端</param>
+            <param name="data">字符串数据，ANSI编码</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.SendData(CarServer.ClientModel,System.Byte[])">
+            <summary>
+            向指定客户端发送数据
+            </summary>
+            <param name="cModel">客户端</param>
+            <param name="data">字节数组数据</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.SendData(System.Byte[])">
+            <summary>
+            向所有客户端发送命令（byte数组）
+            </summary>
+            <param name="data">待发送的数据（byte数组）</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.SendData(System.String)">
+            <summary>
+            向所有客户端发送命令（字符串）
+            </summary>
+            <param name="data">待发送的数据（字符串）</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.ResolveSocket(System.String,System.Int32)">
+            <summary>
+            根据IP,端口查找Socket客户端
+            </summary>
+            <param name="ip"></param>
+            <param name="port"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SocketHelper.SocketTcpServer.ReceviceEventHandler">
+            <summary>
+            数据接收事件委托
+            </summary>
+            <param name="temp">Socket对象</param>
+            <param name="e">事件参数</param>
+        </member>
+        <member name="E:SocketHelper.SocketTcpServer.TcpServerRecevice">
+            <summary>
+            TCP服务接收事件
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.OnTcpServerRecevice(System.Net.Sockets.Socket,SocketHelper.ReceivedEventArgs)">
+            <summary>
+            数据接收事件
+            </summary>
+            <param name="temp">Socket对象</param>
+            <param name="e">事件参数</param>
+        </member>
+        <member name="T:SocketHelper.SocketTcpServer.LogEventHandler">
+            <summary>
+            服务端有涉及到客户端读写操作时的返回日志事件委托
+            </summary>
+            <param name="temp">与服务端连接的客户端</param>
+            <param name="logType">日志类型，获取数据或发送数据</param>
+            <param name="logMsg">数据内容</param>
+        </member>
+        <member name="E:SocketHelper.SocketTcpServer.OnGetLog">
+            <summary>
+            服务端有涉及到客户端读写操作时的返回日志事件
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.OnGetLogEnterHead(CarServer.ClientModel,CarServer.LogType,System.String)">
+            <summary>
+            触发服务端有涉及到客户端读写操作时的返回日志事件委托
+            </summary>
+            <param name="temp">与服务端连接的客户端</param>
+            <param name="logType">日志类型，获取数据或发送数据</param>
+            <param name="logMsg">数据内容</param>
+        </member>
+        <member name="F:SocketHelper.SocketTcpServer.components">
+            <summary>
+            必需的设计器变量。
+            </summary>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.Dispose(System.Boolean)">
+            <summary> 
+            清理所有正在使用的资源。
+            </summary>
+            <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        </member>
+        <member name="M:SocketHelper.SocketTcpServer.InitializeComponent">
+            <summary>
+            设计器支持所需的方法 - 不要
+            使用代码编辑器修改此方法的内容。
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.RecevidMsg">
+            <summary>
+            接受的数据缓存
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.RecevidBuffer">
+            <summary>
+            缓存数据
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.ClientSocket">
+            <summary>
+            PC嵌套字
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.ClientType">
+            <summary>
+            客户端类型1
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.ClientStyle">
+            <summary>
+            Socket类型（网页版或者PC版）
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.Id">
+            <summary>
+            客户端编号
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.ClientNo">
+            <summary>
+            若是小车类型，则该标示表示车辆编号，若是信号机类型，则该标示表示信号机编号，其他则不使用该类型
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.UserName">
+            <summary>
+            若是PC客户端类型，则下面两个表示表示用户登陆账号和密码
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientModel.IsOnline">
+            <summary>
+            是否在线
+            </summary>
+        </member>
+        <member name="M:CarServer.ClientModel.AnalyzeClientType(System.String)">
+            <summary>
+            解析客户端类型
+            </summary>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CarServer.ClientType">
+            <summary>
+            客户端类型（根据需求自己增加）
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientType.Client1">
+            <summary>
+            Client1
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientType.Client2">
+            <summary>
+            Client2
+            </summary>
+        </member>
+        <member name="F:CarServer.ClientType.Client3">
+            <summary>
+            Client3
+            </summary>
+        </member>
+    </members>
+</doc>
