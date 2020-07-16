@@ -12,6 +12,18 @@ namespace ARS408.Model
     /// </summary>
     class ObjectQuality : SensorMessage
     {
+        #region 静态属性，过滤器
+        /// <summary>
+        /// 测量状态过滤器
+        /// </summary>
+        public static List<MeasState> MeasStateFilter { get; set; }
+
+        /// <summary>
+        /// 存在概率过滤器
+        /// </summary>
+        public static List<ProbOfExist> ProbOfExistFilter { get; set; }
+        #endregion
+
         #region 属性
         /// <summary>
         /// 目标ID（编号）

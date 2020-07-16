@@ -83,8 +83,6 @@
             this.trackBar_RcsMax = new System.Windows.Forms.TrackBar();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.comboBox_ProbMinimum = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.label_opc = new System.Windows.Forms.Label();
             this.timer_GraphicRefresh = new System.Windows.Forms.Timer(this.components);
             this.timer_GridRefresh = new System.Windows.Forms.Timer(this.components);
@@ -115,12 +113,12 @@
             // 
             this.textBox_Input.AllowDrop = true;
             this.textBox_Input.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox_Input.Location = new System.Drawing.Point(3, 371);
+            this.textBox_Input.Location = new System.Drawing.Point(3, 350);
             this.textBox_Input.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_Input.Multiline = true;
             this.textBox_Input.Name = "textBox_Input";
             this.textBox_Input.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_Input.Size = new System.Drawing.Size(379, 362);
+            this.textBox_Input.Size = new System.Drawing.Size(379, 383);
             this.textBox_Input.TabIndex = 1;
             // 
             // dataGridView_Output
@@ -287,10 +285,10 @@
             // textBox_Info
             // 
             this.textBox_Info.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox_Info.Location = new System.Drawing.Point(3, 264);
+            this.textBox_Info.Location = new System.Drawing.Point(3, 237);
             this.textBox_Info.Multiline = true;
             this.textBox_Info.Name = "textBox_Info";
-            this.textBox_Info.Size = new System.Drawing.Size(379, 100);
+            this.textBox_Info.Size = new System.Drawing.Size(379, 106);
             this.textBox_Info.TabIndex = 3;
             // 
             // tableLayoutPanel1
@@ -480,7 +478,7 @@
             this.tableLayoutPanel_Sub.RowCount = 5;
             this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 162F));
+            this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 135F));
             this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22.27F));
             this.tableLayoutPanel_Sub.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 77.73F));
             this.tableLayoutPanel_Sub.Size = new System.Drawing.Size(385, 737);
@@ -619,28 +617,25 @@
             this.tableLayoutPanel4.Controls.Add(this.trackBar_RcsMax, 0, 3);
             this.tableLayoutPanel4.Controls.Add(this.label4, 1, 2);
             this.tableLayoutPanel4.Controls.Add(this.label6, 1, 3);
-            this.tableLayoutPanel4.Controls.Add(this.comboBox_ProbMinimum, 0, 4);
-            this.tableLayoutPanel4.Controls.Add(this.label3, 3, 4);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 102);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 5;
+            this.tableLayoutPanel4.RowCount = 4;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(379, 156);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(379, 129);
             this.tableLayoutPanel4.TabIndex = 5;
             // 
             // label_RcsMax
             // 
             this.label_RcsMax.AutoSize = true;
             this.label_RcsMax.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label_RcsMax.Location = new System.Drawing.Point(314, 101);
+            this.label_RcsMax.Location = new System.Drawing.Point(314, 102);
             this.label_RcsMax.Margin = new System.Windows.Forms.Padding(5);
             this.label_RcsMax.Name = "label_RcsMax";
-            this.label_RcsMax.Size = new System.Drawing.Size(119, 20);
+            this.label_RcsMax.Size = new System.Drawing.Size(119, 22);
             this.label_RcsMax.TabIndex = 18;
             this.label_RcsMax.Text = "0";
             this.label_RcsMax.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -652,7 +647,7 @@
             this.label_RcsMin.Location = new System.Drawing.Point(314, 71);
             this.label_RcsMin.Margin = new System.Windows.Forms.Padding(5);
             this.label_RcsMin.Name = "label_RcsMin";
-            this.label_RcsMin.Size = new System.Drawing.Size(119, 20);
+            this.label_RcsMin.Size = new System.Drawing.Size(119, 21);
             this.label_RcsMin.TabIndex = 17;
             this.label_RcsMin.Text = "0";
             this.label_RcsMin.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -748,7 +743,7 @@
             this.trackBar_RcsMin.Maximum = 64;
             this.trackBar_RcsMin.Minimum = -64;
             this.trackBar_RcsMin.Name = "trackBar_RcsMin";
-            this.trackBar_RcsMin.Size = new System.Drawing.Size(222, 24);
+            this.trackBar_RcsMin.Size = new System.Drawing.Size(222, 25);
             this.trackBar_RcsMin.TabIndex = 14;
             this.trackBar_RcsMin.TickFrequency = 10;
             this.trackBar_RcsMin.ValueChanged += new System.EventHandler(this.TrackBar_RcsMin_ValueChanged);
@@ -757,11 +752,11 @@
             // 
             this.tableLayoutPanel4.SetColumnSpan(this.trackBar_RcsMax, 3);
             this.trackBar_RcsMax.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBar_RcsMax.Location = new System.Drawing.Point(3, 99);
+            this.trackBar_RcsMax.Location = new System.Drawing.Point(3, 100);
             this.trackBar_RcsMax.Maximum = 64;
             this.trackBar_RcsMax.Minimum = -64;
             this.trackBar_RcsMax.Name = "trackBar_RcsMax";
-            this.trackBar_RcsMax.Size = new System.Drawing.Size(222, 24);
+            this.trackBar_RcsMax.Size = new System.Drawing.Size(222, 26);
             this.trackBar_RcsMax.TabIndex = 15;
             this.trackBar_RcsMax.TickFrequency = 10;
             this.trackBar_RcsMax.ValueChanged += new System.EventHandler(this.TrackBar_RcsMax_ValueChanged);
@@ -773,7 +768,7 @@
             this.label4.Location = new System.Drawing.Point(233, 71);
             this.label4.Margin = new System.Windows.Forms.Padding(5);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(71, 20);
+            this.label4.Size = new System.Drawing.Size(71, 21);
             this.label4.TabIndex = 16;
             this.label4.Text = "最小RCS";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -782,37 +777,13 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(233, 101);
+            this.label6.Location = new System.Drawing.Point(233, 102);
             this.label6.Margin = new System.Windows.Forms.Padding(5);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(71, 20);
+            this.label6.Size = new System.Drawing.Size(71, 22);
             this.label6.TabIndex = 16;
             this.label6.Text = "最大RCS";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // comboBox_ProbMinimum
-            // 
-            this.tableLayoutPanel4.SetColumnSpan(this.comboBox_ProbMinimum, 3);
-            this.comboBox_ProbMinimum.DisplayMember = "NAME";
-            this.comboBox_ProbMinimum.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_ProbMinimum.FormattingEnabled = true;
-            this.comboBox_ProbMinimum.Location = new System.Drawing.Point(3, 129);
-            this.comboBox_ProbMinimum.Name = "comboBox_ProbMinimum";
-            this.comboBox_ProbMinimum.Size = new System.Drawing.Size(222, 28);
-            this.comboBox_ProbMinimum.TabIndex = 19;
-            this.comboBox_ProbMinimum.ValueMember = "VALUE";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(233, 131);
-            this.label3.Margin = new System.Windows.Forms.Padding(5);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 20);
-            this.label3.TabIndex = 20;
-            this.label3.Text = "最低概率";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label_opc
             // 
@@ -862,7 +833,7 @@
             this.SocketTcpClient.ServerIp = null;
             this.SocketTcpClient.ServerPort = 0;
             this.SocketTcpClient.TcpThread = null;
-            this.SocketTcpClient.OnRecevice += new SocketHelper.SocketTcpClient.ReceviceEventHandler(this.SocketTcpClient_OnRecevice);
+            this.SocketTcpClient.OnReceive += new SocketHelper.SocketTcpClient.ReceivedEventHandler(this.SocketTcpClient_OnRecevice);
             // 
             // SocketTcpServer
             // 
@@ -966,8 +937,6 @@
         private System.Windows.Forms.Label label_RcsMin;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comboBox_ProbMinimum;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Timer timer_UIUpdate;
         private SocketHelper.SocketTcpClient SocketTcpClient;
         private SocketHelper.SocketTcpServer SocketTcpServer;

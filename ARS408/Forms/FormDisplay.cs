@@ -157,10 +157,10 @@ namespace ARS408.Forms
             }
         }
 
-        /// <summary>
-        /// 允许的存在概率最低值
-        /// </summary>
-        public double ProbOfExistMinimum { get; set; }
+        ///// <summary>
+        ///// 允许的存在概率最低值
+        ///// </summary>
+        //public double ProbOfExistMinimum { get; set; }
         #endregion
         #region OPC属性
         /// <summary>
@@ -227,7 +227,7 @@ namespace ARS408.Forms
             this.UsingLocal = radar == null ? BaseConst.UsingLocal : radar.UsingLocal;
             this.IpAddress_Local = BaseConst.IpAddress_Local;
             this.Port_Local = radar == null ? BaseConst.Port_Local : radar.PortLocal;
-            this.ProbOfExistMinimum = radar == null ? BaseConst.ProbOfExistMinimum : radar.ProbOfExistMinimum;
+            //this.ProbOfExistMinimum = radar == null ? BaseConst.ProbOfExistMinimum : radar.ProbOfExistMinimum;
             this.rcsMinimum = radar == null ? BaseConst.RcsMinimum : radar.RcsMinimum;
             this.rcsMaximum = radar == null ? BaseConst.RcsMaximum : radar.RcsMaximum;
 
@@ -261,9 +261,9 @@ namespace ARS408.Forms
             this.comboBox_ConnMode.SelectedIndexChanged += new System.EventHandler(this.ComboBox_ConnMode_SelectedIndexChanged);
             this.comboBox_ConnMode.SelectedValue = (int)this.ConnectionMode;
 
-            this.comboBox_ProbMinimum.DataSource = this.dataService.GetAllExistProbs();
-            this.comboBox_ProbMinimum.SelectedIndexChanged += new System.EventHandler(this.ComboBox_ProbMinimum_SelectedIndexChanged);
-            this.comboBox_ProbMinimum.SelectedValue = this.ProbOfExistMinimum;
+            //this.comboBox_ProbMinimum.DataSource = this.dataService.GetAllExistProbs();
+            //this.comboBox_ProbMinimum.SelectedIndexChanged += new System.EventHandler(this.ComboBox_ProbMinimum_SelectedIndexChanged);
+            //this.comboBox_ProbMinimum.SelectedValue = this.ProbOfExistMinimum;
 
             this.checkBox_UsingLocal.Checked = this.UsingLocal;
             this.textBox_IpAddress_Local.Text = this.IpAddress_Local;
@@ -297,7 +297,7 @@ namespace ARS408.Forms
             BaseConst.IniHelper.WriteData("Connection", "UsingLocal", this.checkBox_UsingLocal.Checked ? "1" : "0");
             BaseConst.IniHelper.WriteData("Connection", "IpAddressLocal", this.textBox_IpAddress_Local.Text);
             BaseConst.IniHelper.WriteData("Connection", "PortLocal", this.numeric_Port_Local.Value.ToString());
-            BaseConst.IniHelper.WriteData("Detection", "ProbOfExistMinimum", this.ProbOfExistMinimum.ToString());
+            //BaseConst.IniHelper.WriteData("Detection", "ProbOfExistMinimum", this.ProbOfExistMinimum.ToString());
         }
 
         /// <summary>
@@ -856,7 +856,7 @@ namespace ARS408.Forms
         private void Button_Send_Click(object sender, EventArgs e)
         {
             if (this.ConnectionMode == ConnectionMode.TCP_CLIENT && this.SocketTcpClient.IsConnected_Socket)
-                this.SocketTcpClient.SendCommand(this.textBox_SendContent.Text);
+                this.SocketTcpClient.SendData(this.textBox_SendContent.Text);
             else if (this.ConnectionMode == ConnectionMode.UDP && this.UdpClient.IsConnected)
                 this.UdpClient.SendString(this.textBox_SendContent.Text);
             else if (this.ConnectionMode == ConnectionMode.TCP_SERVER)
@@ -870,10 +870,10 @@ namespace ARS408.Forms
             this.button_Connect.Enabled = this.ConnectionMode != ConnectionMode.TCP_SERVER && !this.button_ServerInit.Enabled; //非Tcp Server模式连接按钮是否可用取决于初始化按钮
         }
 
-        private void ComboBox_ProbMinimum_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            this.ProbOfExistMinimum = double.Parse(this.comboBox_ProbMinimum.SelectedValue.ToString());
-        }
+        //private void ComboBox_ProbMinimum_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    //this.ProbOfExistMinimum = double.Parse(this.comboBox_ProbMinimum.SelectedValue.ToString());
+        //}
 
         private void Timer_WriteItems_Tick(object sender, EventArgs e)
         {

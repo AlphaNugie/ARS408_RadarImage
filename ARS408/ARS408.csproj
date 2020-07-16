@@ -38,6 +38,9 @@
     <Reference Include="CommonLib">
       <HintPath>..\..\..\..\CommonLib\CommonLib\CommonLib\bin\Debug\CommonLib.dll</HintPath>
     </Reference>
+    <Reference Include="CommonLib.DataUtil.SqliteProviderLib">
+      <HintPath>..\..\..\..\CommonLib\CommonLib\CommonLib.DataUtil.SqliteProviderLib\bin\Debug\CommonLib.DataUtil.SqliteProviderLib.dll</HintPath>
+    </Reference>
     <Reference Include="Interop.OPCAutomation">
       <HintPath>..\..\..\..\OPC\DLL\Interop.OPCAutomation.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -47,6 +50,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.106.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\DLL\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -181,6 +188,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="bin\Debug\base.db" />
+    <None Include="bin\Debug\Config.ini" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

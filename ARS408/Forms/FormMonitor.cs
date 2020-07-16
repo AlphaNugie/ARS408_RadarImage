@@ -476,7 +476,6 @@ namespace ARS408.Forms
             {
                 this.OpcGroup = this.OpcHelper.OpcServer.OPCGroups.Add("Group_Radar_All");
                 string basic = "[" + this.Shiploader.TopicName + "]" + "{0}";
-                //TODO 添加雷达数据监测标签
                 List<string> names = new List<string>() { string.Format(basic, "ANTICOLL_SYS.SL_SystoPLC_HMBLeiDaZhuangtai"), string.Format(basic, "ANTICOLL_SYS.SL_SystoPLC_LiuTongFangPeng"), string.Format(basic, "ANTICOLL_SYS.SL_SystoPLC_BiJiaFangPeng"), string.Format(basic, "ANTICOLL_SYS.SL_SystoPLC_MenTuiFangPeng") };
                 names.AddRange(this.RadarList.Select(r => string.Format(basic, string.Format("ANTICOLL_SYS.Spare_Real[{0}]", 10 + r.Id))));
                 this.OpcItemNames = names.ToArray();
@@ -534,10 +533,10 @@ namespace ARS408.Forms
                 else
                     feet.Insert(0, radar.ThreatLevelBinary);
             }
-            this.radarState = Convert.ToUInt32(states.ToString(), 2);
-            this.bucketAlarms = Convert.ToUInt32(buckets.ToString(), 2);
-            this.armAlarms = Convert.ToUInt32(arms.ToString(), 2);
-            this.feetAlarms = Convert.ToUInt32(feet.ToString(), 2);
+            this.radarState = Convert.ToUInt32(states.Length > 0 ? states.ToString() : "0", 2);
+            this.bucketAlarms = Convert.ToUInt32(buckets.Length > 0 ? buckets.ToString() : "0", 2);
+            this.armAlarms = Convert.ToUInt32(arms.Length > 0 ? arms.ToString() : "0", 2);
+            this.feetAlarms = Convert.ToUInt32(feet.Length > 0 ? feet.ToString() : "0", 2);
 
         }
 
@@ -570,7 +569,6 @@ namespace ARS408.Forms
                 if (this.OpcGroup.OPCItems.Count == 0)
                     return;
 
-                //TODO 写入雷达监测标签
                 List<object> values = new List<object>() { 0, this.radarState, this.bucketAlarms, this.armAlarms, this.feetAlarms };
                 values.AddRange(this.RadarList.Select(r => (object)r.CurrentDistance));
                 Array itemValues = values.ToArray(), errors;

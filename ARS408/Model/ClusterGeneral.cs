@@ -93,8 +93,7 @@ namespace ARS408.Model
             {
                 this.prop = value;
                 this.DynPropString = this.prop.GetDescription();
-                //this.Color = BaseFunc.GetColorByRcs(this.rcs, this.Color);
-                this.Color = BaseFunc.GetColorByDynProp(this.DynProp, this.Color);
+                this.Color = BaseFunc.GetColorByDynProp(this.prop, this.Color);
             }
         }
 
@@ -208,22 +207,6 @@ namespace ARS408.Model
             get { return this.distance_border; }
             set { this.distance_border = value; }
         }
-
-        //private int threat_level = 0;
-        ///// <summary>
-        ///// 报警级数
-        ///// </summary>
-        //public int ThreatLevel
-        //{
-        //    get { return this.threat_level; }
-        //    set
-        //    {
-        //        this.threat_level = value;
-        //        this.ThreatLevelBinary = Convert.ToString(this.threat_level, 2).PadLeft(2, '0');
-        //    }
-        //}
-
-        //public string ThreatLevelBinary { get; set; }
         #endregion
 
         /// <summary>
@@ -288,8 +271,8 @@ namespace ARS408.Model
                 //假如方向为上下，则只计算竖直方向Z坐标的值
                 this.DistanceToBorder = (dir == Directions.Up || dir == Directions.Down) ? z : Math.Sqrt((Math.Sign(4 - m) == 1 ? 1 : 0) * Math.Pow(x, 2) + (Math.Sign(3 - m) == 1 ? 1 : 0) * Math.Pow(z, 2) + (Math.Sign(2 - m) == 1 ? 1 : 0) * Math.Pow(y, 2));
                 this.DistanceToBorder = (dir == Directions.Down ? -1 : 1) * this.DistanceToBorder + this.Radar.Offset; //当方向向下时，在距离前乘以一个值为-1的系数（向下指时Z坐标均为负数）
-                //TODO 假如防御模式为面，再添加处理步骤：乘以x的符号，效果为使边界距离带符号；假如面向北或陆，则再乘以-1（所面向方向坐标均为负数）
-                if (m == 3)
+                //假如防御模式为面，再添加处理步骤：乘以x的符号，效果为使边界距离带符号；假如面向北或陆，则再乘以-1（所面向方向坐标均为负数）
+                if (m == 3 && dir != Directions.Up && dir != Directions.Down)
                     this.DistanceToBorder *= Math.Sign(x) * (dir == Directions.North || dir == Directions.Land ? -1 : 1);
             }
         }

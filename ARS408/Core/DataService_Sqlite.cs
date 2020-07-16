@@ -10,7 +10,7 @@ namespace ARS408.Core
 {
     public class DataService_Sqlite
     {
-        private SqliteProvider provider = new SqliteProvider();
+        private readonly SqliteProvider provider = new SqliteProvider();
 
         /// <summary>
         /// 获取所有装船机、雷达组、雷达中每一项的本层id、名称与上层id

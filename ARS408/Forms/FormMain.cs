@@ -316,31 +316,31 @@ namespace ARS408.Forms
             this.tcp_info_receive = info;
         }
 
-        /// <summary>
-        /// 向客户端发送命令
-        /// </summary>
-        /// <param name="data"></param>
-        private void SendData(object data)
-        {
-            List<ClientModel> list = this.tcpServer_Watchdog.ClientSocketList;
-            if (list == null || list.Count == 0)
-                return;
+        ///// <summary>
+        ///// 向客户端发送命令
+        ///// </summary>
+        ///// <param name="data"></param>
+        //private void SendData(object data)
+        //{
+        //    List<ClientModel> list = this.tcpServer_Watchdog.ClientSocketList;
+        //    if (list == null || list.Count == 0)
+        //        return;
 
-            foreach (ClientModel clientModel in list)
-            {
-                if (clientModel == null)
-                    continue;
-                if (clientModel.ClientStyle == ClientStyle.WebSocket)
-                    SocketTcpServer.SendToWebClient(clientModel, data.ToString());
-                else
-                    this.tcpServer_Watchdog.SendData(clientModel, data.ToString());
-            }
-        }
+        //    foreach (ClientModel clientModel in list)
+        //    {
+        //        if (clientModel == null)
+        //            continue;
+        //        if (clientModel.ClientStyle == ClientStyle.WebSocket)
+        //            SocketTcpServer.SendToWebClient(clientModel, data.ToString());
+        //        else
+        //            this.tcpServer_Watchdog.SendData(clientModel, data.ToString());
+        //    }
+        //}
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
             if (this.first_monitor != null)
-                this.SendData(this.first_monitor.GetBucketSideDistances());
+                this.tcpServer_Watchdog.SendData(this.first_monitor.GetBucketSideDistances());
             this.label_Error.Text = this.tcp_info_error;
             this.label_State.Text = this.tcp_info_state;
             this.label_Receive.Text = this.tcp_info_receive;

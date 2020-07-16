@@ -182,10 +182,10 @@ property float rcs";
         /// </summary>
         public static bool UsePublicRcsRange { get; set; }
 
-        /// <summary>
-        /// 允许的存在概率最低值
-        /// </summary>
-        public static double ProbOfExistMinimum { get; set; }
+        ///// <summary>
+        ///// 允许的存在概率最低值
+        ///// </summary>
+        //public static double ProbOfExistMinimum { get; set; }
 
         /// <summary>
         /// 溜桶高度，溜桶雷达安装平面距溜桶底端的最大距离
@@ -218,9 +218,14 @@ property float rcs";
         public static double[] ThreatLevelValues = new double[] { 0 };
 
         /// <summary>
-        /// 过滤器是否启用
+        /// 集群过滤器是否启用
         /// </summary>
-        public static bool FilterEnabled { get; set; }
+        public static bool ClusterFilterEnabled { get; set; }
+
+        /// <summary>
+        /// 目标过滤器是否启用
+        /// </summary>
+        public static bool ObjectFilterEnabled { get; set; }
 
         /// <summary>
         /// 距离迭代是否启用，启用则在收到新值时先进行检定再决定是否替代当前值，未启用则直接取代
@@ -284,23 +289,25 @@ property float rcs";
                     BaseConst.R = double.Parse(BaseConst.IniHelper.ReadData("Main", "PixelRadarRatio"));
                     BaseConst.T = float.Parse(BaseConst.IniHelper.ReadData("Main", "Thickness"));
                     BaseConst.BorderDistThres = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BorderDistThres"));
-                    BaseConst.ProbOfExistMinimum = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ProbOfExistMinimum"));
+                    //BaseConst.ProbOfExistMinimum = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ProbOfExistMinimum"));
                     BaseConst.BucketHeight = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BucketHeight"));
                     BaseConst.BucketUpLimit = double.Parse(BaseConst.IniHelper.ReadData("Detection", "BucketUpLimit"));
                     BaseConst.ObsBelowThres = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ObsBelowThres"));
                     BaseConst.ObsBelowFrontier = double.Parse(BaseConst.IniHelper.ReadData("Detection", "ObsBelowFrontier"));
                     BaseConst.FeetFilterHeight = double.Parse(BaseConst.IniHelper.ReadData("Detection", "FeetFilterHeight"));
                     BaseConst.UsePublicRcsRange = BaseConst.IniHelper.ReadData("Detection", "UsePublicRcsRange").Equals("1");
-                    //BaseConst.RcsMinimum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMinimum"));
-                    //BaseConst.RcsMaximum = int.Parse(BaseConst.IniHelper.ReadData("Detection", "RcsMaximum"));
                     BaseConst.ReceiveRestTime = int.Parse(BaseConst.IniHelper.ReadData("Connection", "ReceiveRestTime"));
                     BaseConst.RefreshInterval = int.Parse(BaseConst.IniHelper.ReadData("Main", "RefreshInterval"));
                     BaseConst.WriteItemValue = BaseConst.IniHelper.ReadData("OPC", "WriteItemValue").Equals("1");
-                    BaseConst.FilterEnabled = BaseConst.IniHelper.ReadData("Detection", "FilterEnabled").Equals("1"); //过滤器是否启用
-                    //初始化过滤器
+                    BaseConst.ClusterFilterEnabled = BaseConst.IniHelper.ReadData("Detection", "ClusterFilterEnabled").Equals("1"); //集群过滤器是否启用
+                    BaseConst.ObjectFilterEnabled = BaseConst.IniHelper.ReadData("Detection", "ObjectFilterEnabled").Equals("1"); //目标过滤器是否启用
+                    //初始化集群过滤器
                     ClusterQuality.FalseAlarmFilter = BaseConst.IniHelper.ReadData("Detection", "FalseAlarmFilter").Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (FalseAlarmProbability)int.Parse(p)).ToList();
                     ClusterQuality.AmbigStateFilter = BaseConst.IniHelper.ReadData("Detection", "AmbigStateFilter").Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (AmbigState)int.Parse(p)).ToList();
                     ClusterQuality.InvalidStateFilter = BaseConst.IniHelper.ReadData("Detection", "InvalidStateFilter").Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (InvalidState)int.Parse(p)).ToList();
+                    //初始化目标过滤器
+                    ObjectQuality.MeasStateFilter = BaseConst.IniHelper.ReadData("Detection", "MeasStateFilter").Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (MeasState)int.Parse(p)).ToList();
+                    ObjectQuality.ProbOfExistFilter = BaseConst.IniHelper.ReadData("Detection", "ProbOfExistFilter").Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => (ProbOfExist)int.Parse(p)).ToList();
                     //初始化迭代参数
                     BaseConst.IterationEnabled = BaseConst.IniHelper.ReadData("Detection", "IterationEnabled").Equals("1");
                     BaseConst.IteDistLimit = double.Parse(BaseConst.IniHelper.ReadData("Detection", "IteDistLimit"));

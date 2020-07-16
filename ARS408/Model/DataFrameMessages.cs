@@ -1,5 +1,6 @@
 ﻿using ARS408.Core;
 using ARS408.Forms;
+using CommonLib.Extensions;
 using CommonLib.Function;
 using System;
 using System.Collections.Generic;
@@ -208,9 +209,9 @@ namespace ARS408.Model
                 this.IsShore = this.Radar.GroupType == RadarGroupType.Shore; //是否为岸基雷达
                 this.Flags[4] = this.Radar.GroupType == RadarGroupType.Arm && this.Radar.Name.Contains("陆"); //是否为大臂陆侧雷达
                 this.Flags[6] = this.Radar.GroupType == RadarGroupType.Feet; //是否为门腿雷达
-                //根据雷达所在位置给黄标线距离加上符号，用于门腿雷达坐标过滤黄标线之外的点
-                string name = this.Radar.Name;
-                int r = (name.Contains("海") && name.Contains("南")) || (name.Contains("陆") && name.Contains("北")) ? 1 : -1;
+                ////根据雷达所在位置给黄标线距离加上符号，用于门腿雷达坐标过滤黄标线之外的点
+                //string name = this.Radar.Name;
+                //int r = (name.Contains("海") && name.Contains("南")) || (name.Contains("陆") && name.Contains("北")) ? 1 : -1;
                 //this.outer *= r;
                 //this.inner *= r;
             }
@@ -330,8 +331,7 @@ namespace ARS408.Model
             if (this.Radar != null)
             {
                 Flags[1] = (this.Radar.GroupType == RadarGroupType.Bucket && g.DistanceToBorder < 0) || (BaseConst.BorderDistThres > 0 && g.DistanceToBorder > BaseConst.BorderDistThres); //距边界距离是否小于0（溜桶雷达）或超出阈值
-                //TODO 溜桶雷达Z方向坐标是否低于大铲最低点，或高于检测高度上限
-                Flags[3] = this.Radar.GroupType == RadarGroupType.Bucket && !z.Between(0 - BaseConst.BucketHeight, BaseConst.BucketUpLimit);
+                Flags[3] = this.Radar.GroupType == RadarGroupType.Bucket && !z.Between(0 - BaseConst.BucketHeight, BaseConst.BucketUpLimit); //溜桶雷达Z方向坐标是否低于大铲最低点，或高于检测高度上限
                 Flags[5] = below.Between(0, BaseConst.ObsBelowThres) && g.DistanceToBorder < BaseConst.ObsBelowFrontier; //障碍物在溜桶下方的距离在阈值(ObsBelowThres)内，且距边界距离不超过1米(ObsBelowFrontier)
                 Flags[7] = !this.Radar.RadarCoorsLimited || (lon.Between(this.Radar.RadarxMin, this.Radar.RadarxMax) && lat.Between(this.Radar.RadaryMin, this.Radar.RadaryMax)); //雷达坐标系坐标的限制
                 Flags[8] = !this.Radar.ClaimerCoorsLimited || (x.Between(this.Radar.ClaimerxMin, this.Radar.ClaimerxMax) && y.Between(this.Radar.ClaimeryMin, this.Radar.ClaimeryMax) && z.Between(this.Radar.ClaimerzMin, this.Radar.ClaimerzMax)); //单机坐标系坐标的限制
@@ -343,7 +343,7 @@ namespace ARS408.Model
             {
                 //TODO (非溜桶下方)过滤条件Lv2：距边界范围在阈值内，溜桶雷达Z方向坐标不低于大铲最低点
                 save2list = save2list && !(Flags[1] || Flags[3]);
-                //TODO (溜桶下方)过滤条件Lv2：障碍物在溜桶下方的距离在阈值内、且距边界距离不超过1米
+                //TODO (溜桶下方)过滤条件Lv2：RCS值在范围内，障碍物在溜桶下方的距离在阈值内、且距边界距离不超过1米
                 if (!save2list)
                     save2other = !Flags[2] && Flags[5];
             }
@@ -399,7 +399,7 @@ namespace ARS408.Model
                     general.InvalidState = quality.InvalidState;
                     general.AmbigState = quality.AmbigState;
                     //TODO 集群模式输出结果过滤条件2：（过滤器启用、过滤器不为空）不在集群/不确定性/有效性过滤器内
-                    if (BaseConst.FilterEnabled && ((ClusterQuality.FalseAlarmFilter.Count > 0 && !ClusterQuality.FalseAlarmFilter.Contains(general.Pdh0)) ||
+                    if (BaseConst.ClusterFilterEnabled && ((ClusterQuality.FalseAlarmFilter.Count > 0 && !ClusterQuality.FalseAlarmFilter.Contains(general.Pdh0)) ||
                         (ClusterQuality.AmbigStateFilter.Count > 0 && !ClusterQuality.AmbigStateFilter.Contains(general.AmbigState)) ||
                         (ClusterQuality.InvalidStateFilter.Count > 0 && !ClusterQuality.InvalidStateFilter.Contains(general.InvalidState))))
                         list.Remove(general);
@@ -407,15 +407,26 @@ namespace ARS408.Model
                 else
                 {
                     ObjectQuality quality = (dynamic)q;
-                    ObjectGeneral general = this.ListBuffer_Object.Find(c => c.Id == quality.Id);
+                    //在普通缓冲区查找ID，找不到则在其它缓冲区查找，还找不到则跳出
+                    List<ObjectGeneral> list = this.ListBuffer_Object;
+                    ObjectGeneral general = list.Find(c => c.Id == quality.Id);
                     if (general == null)
-                        general = this.ListBuffer_Object_Other.Find(c => c.Id == quality.Id);
+                    {
+                        list = this.ListBuffer_Object_Other;
+                        general = list.Find(c => c.Id == quality.Id);
+                    }
+                    if (general == null)
+                        return;
+
                     general.MeasState = quality.MeasState;
                     general.ProbOfExist = quality.ProbOfExist;
-                    //TODO 目标模式输出结果过滤条件2
-                    //（假如过滤器启用）判断存在概率的可能最小值是否小于允许的最低值
-                    if (BaseConst.FilterEnabled && general.ProbOfExistMinimum < this.ParentForm.ProbOfExistMinimum)
-                        this.ListBuffer_Object.Remove(general);
+                    //TODO 目标模式输出结果过滤条件2：（假如过滤器启用）判断存在概率的可能最小值是否小于允许的最低值
+                    if (BaseConst.ObjectFilterEnabled && ((ObjectQuality.MeasStateFilter.Count > 0 && !ObjectQuality.MeasStateFilter.Contains(general.MeasState)) ||
+                        (ObjectQuality.ProbOfExistFilter.Count > 0 && !ObjectQuality.ProbOfExistFilter.Contains(general.ProbOfExist))))
+                        list.Remove(general);
+                    ////目标模式输出结果过滤条件2：（假如过滤器启用）判断存在概率的可能最小值是否小于允许的最低值
+                    //if (BaseConst.ClusterFilterEnabled && general.ProbOfExistMinimum < this.ParentForm.ProbOfExistMinimum)
+                    //    this.ListBuffer_Object.Remove(general);
                 }
             }
             catch (Exception) { }
